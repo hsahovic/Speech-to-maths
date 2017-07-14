@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+	{% load static %}
+
+	<head>
+		<title> {% block title %} {% endblock %}</title>
+		<link rel="stylesheet" href={% static "css/style.css" %}> 
+		<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> 
+		<meta charset="UTF-8">
+		{% block head %} {% endblock %}
+	</head>
+	
+	<body>
+	
+		{% block nav %}
+		<nav>
+			<ul>
+				<a href = "{% url "index" %}"><li> Speech to Maths</li></a>
+				<a href = "{% url "index" %}#techno"><li> Notre technologie</li></a>
+				<a href = "{% url "index" %}#equipe"><li> Qui sommes-nous ?</li></a>
+				<a href = ""><li> Contact</li></a>
+			</ul>
+			
+			{% if user.is_authenticated %}
+			<span class = "a_droite"> Connecté en tant que <strong> {{ user.username }} </strong> - <a href = "{% url "deconnexion" %}"> Déconnexion </a> </span>
+			{% else %}
+			
+			<span class = "a_droite"> 
+				<ul> 
+					<li class = "special_nav"> <a href = "{% url "inscription" %}"> Inscription </a> </li> 
+					<li> <a href = "{% url "connexion" %}"> Connexion </a> </li> 
+				</ul> 
+			</span>
+			{% endif %}
+			
+		</nav>
+		{% endblock %}
+			
+		{% block content %} {% endblock %}
+		
+	</body>
+
+</html>

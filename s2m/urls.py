@@ -20,5 +20,5 @@ from interface import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'', include('interface.urls'))
+    url(r'', include('interface.urls')),
 ]

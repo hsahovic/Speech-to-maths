@@ -3,21 +3,39 @@ article {
 	padding : 2em;
 	color : white;
 	text-align : left;
+	transition : font-size .5s;
+	margin : 0;
+}
+
+article a:hover {
+	color : white;
+	text-decoration : underline;
+}
+
+article, .boite {
+	transition : padding .5s;
+}
+
+article:hover, .boite:hover {
+	/* font-size : 1.2em; */
+	padding-bottom : 8em;
 }
 
 body {
 	margin : 0;
 	background : 0;
+	text-align : center;
+	font-family: 'Varela Round', sans-serif;
 	background-image : url("../img/background-index.jpeg");
 	background-size : cover;
 	background-repeat: no-repeat;
-    background-attachment: fixed;
-	text-align : center;
-	font-family: 'Varela Round', sans-serif;
+	background-attachment: fixed;
+	color : #001f33;
 }
 
 h1 {
 	font-size : 3em;
+	text-decoration : none;
 }
 
 h2 {
@@ -30,13 +48,11 @@ nav {
 	text-align : left;
 	background-color : rgba(255,255,255,1);
 	padding : 1em;
-	border : 0 #001f33 solid;
-	border-width : 0 0 3px 0;
 }
 
 nav li {
 	display : inline;
-	margin-right : 1em;
+	margin : 0 1em 0 1em;
 }
 
 nav ul {
@@ -56,7 +72,6 @@ nav ul {
 .boite {
 	text-align : center;
 	padding : 1em;
-	/* background-color : rgba(255,255,255,.9); */
 }
 
 .boites div .boite-content, article .boite-content  {
@@ -81,4 +96,51 @@ nav ul {
 .boites .boite:nth-child(3n+3) {
 	background-color : rgba(0,153,255,.9);
 	color : white;
+}
+
+a {
+	color : inherit;
+	text-decoration : none;
+}
+
+a:hover {
+	color : rgba(0,153,255,1);
+}
+
+button {
+	font-family: 'Varela Round', sans-serif;
+	background-color : white;
+	padding : .2em;
+}
+
+button:hover {
+	color : rgba(0,153,255,1);
+}
+
+.no-zoom:hover {
+	font-size : 1em;
+}
+
+.special_nav {
+	background-color : rgba(0,153,255,1);
+	color : white;
+	height : 100%;
+	padding : 1em;
+	margin : -1em;	
+	margin-right : 0em;
+	transition : background-color .1s, color .1s;
+}
+
+.special_nav:hover {
+	background-color : white;
+	color : #001f33;
+}
+
+article form table{
+		width : 100%;
+}
+
+article form ul {
+	display : inline;
+	
 }

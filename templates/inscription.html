@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %} Inscription {% endblock %}
+{% block content %} 
+<article class = "no-zoom"> 
+	<div class = "boite-content"> 
+	
+		{% if user.is_authenticated %}
+
+		<h2> {{ user.username }}, tu es déjà connecté.e ! </h2>
+
+		{% else %}
+		
+		<h1> Nous rejoindre  </h1>
+		<form id = "inscription" method = "post" action = "">
+			{% csrf_token %}
+			<table>
+				{{ form }}
+			</table>
+			<br>
+			<button type = "submit" form = "inscription"> Inscription </button>
+		</form>
+		
+		{% endif %}
+		
+	</div>
+</article>
+{% endblock %}

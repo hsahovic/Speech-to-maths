@@ -1,0 +1,27 @@
+﻿{% extends "base.html" %}
+{% block title %} Connexion {% endblock %}
+{% block content %} 
+<article class = "no-zoom"> 
+	<div class = "boite-content"> 
+	
+		{% if user.is_authenticated %}
+
+		<h2> {{ user.username }}, tu es déjà connecté.e ! </h2>
+
+		{% else %}
+		
+		<h1> Se connecter  </h1>
+		<form id = "connexion" method = "post" action = "">
+			{% csrf_token %}
+			<table>
+				{{ form }}
+			</table>
+			<br>
+			<button type = "submit" form = "connexion"> Connexion </button>
+		</form>
+		
+		{% endif %}
+		
+	</div>
+</article>
+{% endblock %}
