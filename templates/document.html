@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} {{ doc.titre }} {% endblock %}
+{% block head %} 
+	<link rel="stylesheet" href={% static "css/doc_style.css" %}> 
+{% endblock %}
+{% block nav %} {% endblock %}
+{% block content %} 
+
+	<div class = "doc_top_bar">
+		<a href = "{% url "docs" %}"> 
+			<h3> 
+				<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
+				Mes documents 
+			</h3>	
+		</a>
+		<div class = "ligne">
+			<input type = "text" name = "titre" value = "{{ doc.titre }}" form = "enregistrement">
+			<span class = "a_droite">
+				<form method = "POST" id = "enregistrement">
+					{% csrf_token %}
+					<input type = "submit" name = "Enregistrer" class = "bouton" value = "Enregistrer" form = "enregistrement">
+				</form>
+			</span>
+		</div>
+	</div>	
+	
+	<div class = "doc_content">
+		<div class = "text_container">
+			<textarea name = "contenu" form = "enregistrement" autofocus>{{ doc.contenu }}</textarea>
+		</div>
+	</div>
+	
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %} Mes documents {% endblock %}
+{% block head %} 
+{% endblock %}
+{% block content %} 
+	
+	<div class = "top_list">	
+		<h2> Mes documents </h2>
+		<i class="fa fa-search" aria-hidden="true"></i>
+		<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(search, 0)" class = "search_bar">
+		<span class = "a_droite">
+			<a href = "{% url "add_doc" %}"> <button type="button"> Nouveau document </button> </a>
+		</span>
+	</div>
+	
+	<div class = "filler"> <h2> &nbsp; </h2> </div>
+	
+	<div class = "content_list">
+		<table>
+		
+		{% if docs %}
+			<tr>
+				<th> Titre </th> 
+				<th> Auteur </th> 				
+				<th> Dernière modification </th>
+			</tr>
+		{% endif %}
+		
+		{% for doc in docs %}
+			<tr class = "_document affiche"> 
+				<td> 
+					<a href = "{% url "document" doc.id %}"> 
+						<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+						{{ doc.titre }} 
+					</a> 
+				</td>
+				<td> {{ doc.auteur }} </td>
+				<td> 
+					{{ doc.date_derniere_modification }} 
+					<span class = "a_droite"> 
+						<a href = "{% url "docs" %}?s={{ doc.id }}" class = "supprimer">
+							<i class="fa fa-trash-o" aria-hidden="true"> </i> 
+						</a> 
+					</span>
+				</td> 
+			</tr>
+
+		{% empty %}
+			<tr> <td> Aucun document </td> </tr>
+
+		{% endfor %}
+	
+		</table>
+	</div>
+	
+	<script>
+	
+		function search() {
+			var lignes =  document.getElementsByClassName("_document");
+			var search_value = document.getElementsByClassName("search_bar")[0].value;
+			for (var i = 0; i < lignes.length ; i++) {
+				if(lignes[i].textContent.indexOf(search_value) >= 0) {
+					lignes[i].className = "_document affiche"
+				}
+				else {
+					lignes[i].className = "_document cache"
+				}
+			}
+		}
+		search();
+		
+	</script>
+
+{% endblock %}

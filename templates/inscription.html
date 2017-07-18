@@ -1,15 +1,23 @@
 {% extends "base.html" %}
 {% block title %} Inscription {% endblock %}
+{% block head %} 
+<style>
+	body {
+		background-image : url("../static/img/background-index.jpeg");
+		background-size : cover;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+	}
+</style>
+{% endblock %}
 {% block content %} 
 <article class = "no-zoom"> 
 	<div class = "boite-content"> 
 	
 		{% if user.is_authenticated %}
-
-		<h2> {{ user.username }}, tu es déjà connecté.e ! </h2>
+		<h2> Vous êtes déjà connecté en tant que {{ user.username|title }} </h2>
 
 		{% else %}
-		
 		<h1> Nous rejoindre  </h1>
 		<form id = "inscription" method = "post" action = "">
 			{% csrf_token %}
@@ -21,7 +29,6 @@
 		</form>
 		
 		{% endif %}
-		
 	</div>
 </article>
 {% endblock %}

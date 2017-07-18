@@ -1,12 +1,14 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="fr">
-
-	{% load static %}
 
 	<head>
 		<title> {% block title %} {% endblock %}</title>
 		<link rel="stylesheet" href={% static "css/style.css" %}> 
 		<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"> 
+		<link rel="stylesheet" href={% static "font/font-awesome-4.7.0/css/font-awesome.min.css" %}>
 		<meta charset="UTF-8">
 		{% block head %} {% endblock %}
 	</head>
@@ -16,14 +18,20 @@
 		{% block nav %}
 		<nav>
 			<ul>
-				<a href = "{% url "index" %}"><li> Speech to Maths</li></a>
+				<a href = "{% url "index" %}"><li> Speech to Maths</li></a> 
 				<a href = "{% url "index" %}#techno"><li> Notre technologie</li></a>
 				<a href = "{% url "index" %}#equipe"><li> Qui sommes-nous ?</li></a>
-				<a href = ""><li> Contact</li></a>
+				<a href="mailto:contact@s2m.io?subject=Question"> Contact </a> 
 			</ul>
 			
 			{% if user.is_authenticated %}
-			<span class = "a_droite"> Connecté en tant que <strong> {{ user.username }} </strong> - <a href = "{% url "deconnexion" %}"> Déconnexion </a> </span>
+			<span class = "a_droite"> 
+				<ul>
+					<li> Connecté en tant que <a href = "{% url "docs" %}"> <strong> {{ user.username }} </strong> </a> </li>
+					<li> <a href = "{% url "docs" %}"> Mes documents </a> </li>
+					<li> <a href = "{% url "deconnexion" %}"> Déconnexion </a> </li>
+				</ul>
+			</span>
 			{% else %}
 			
 			<span class = "a_droite"> 
@@ -35,6 +43,8 @@
 			{% endif %}
 			
 		</nav>
+		
+		<div class = "nav_filler"> 1sbsp; </div>
 		{% endblock %}
 			
 		{% block content %} {% endblock %}

@@ -1,6 +1,8 @@
 from django import forms
 
-class InscriptionForm(forms.Form):
+from . import models
+
+class InscriptionForm (forms.Form):
     username = forms.CharField(max_length=150, label = "Nom d'utilisateur")
     password = forms.CharField(widget=forms.PasswordInput, label = "Mot de passe")
     password_confirm = forms.CharField(widget=forms.PasswordInput, label = "Confirmation mot de passe")
@@ -25,4 +27,12 @@ class InscriptionForm(forms.Form):
         username = self.cleaned_data['username']
         if len(username) <= 4 :
             raise forms.ValidationError ("Veuillez entrer un nom d'utilisateur comportant plus de cinq caractères")
+        if models.Utilisateur.objects.filter(username = username) :
+            raise forms.ValidationError ("Nom d'utilisateur indisponible")
         return username
+    
+    def clean_email (self) :
+        email = self.cleaned_data['email']
+        if models.Utilisateur.objects.filter(email = email) :
+            raise forms.ValidationError ("Cette adresse email possède déjà un compte")
+        return email
