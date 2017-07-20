@@ -1,74 +1,79 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %} Mes documents {% endblock %}
 {% block head %} 
 {% endblock %}
 {% block content %} 
 	
-	<div class = "top_list">	
-		<h2> Mes documents </h2>
+	<div class = "top-bar">	
+		<h3> 
+			<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
+			Mes documents 
+		</h3>
 		<i class="fa fa-search" aria-hidden="true"></i>
-		<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(search, 0)" class = "search_bar">
-		<span class = "a_droite">
-			<a href = "{% url "add_doc" %}"> <button type="button"> Nouveau document </button> </a>
+		<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(search, 0)">
+		<span class = "a-droite">
+			<a href = "{% url "add_doc" %}"><!---->
+				<button type="button"> 
+					<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+					Nouveau document 
+				</button> 
+			</a>
 		</span>
 	</div>
 	
 	<div class = "filler"> <h2> &nbsp; </h2> </div>
 	
-	<div class = "content_list">
-		<table>
-		
-		{% if docs %}
-			<tr>
-				<th> Titre </th> 
-				<th> Auteur </th> 				
-				<th> Dernière modification </th>
-			</tr>
-		{% endif %}
-		
-		{% for doc in docs %}
-			<tr class = "_document affiche"> 
-				<td> 
-					<a href = "{% url "document" doc.id %}"> 
-						<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
-						{{ doc.titre }} 
-					</a> 
-				</td>
-				<td> {{ doc.auteur }} </td>
-				<td> 
-					{{ doc.date_derniere_modification }} 
-					<span class = "a_droite"> 
-						<a href = "{% url "docs" %}?s={{ doc.id }}" class = "supprimer">
-							<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-						</a> 
-					</span>
-				</td> 
-			</tr>
-
-		{% empty %}
-			<tr> <td> Aucun document </td> </tr>
-
-		{% endfor %}
+	<table class = "docs-table">
 	
-		</table>
+	{% if docs %}
+		<tr>
+			<th> Titre </th> 
+			<th> Auteur </th> 				
+			<th> Dernière modification </th>
+		</tr>
+	{% endif %}
+	
+	{% for doc in docs %}
+		<tr class = "_document"> 
+			<td> 
+				<a href = "{% url "document" doc.id %}"> 
+					<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+					{{ doc.titre }} 
+				</a> 
+			</td>
+			<td> 
+				<i class="fa fa-user" aria-hidden="true"></i> &nbsp; {{ doc.auteur }}
+			</td>
+			<td> 
+				<i class="fa fa-calendar-o" aria-hidden="true"></i> &nbsp;
+				{{ doc.date_derniere_modification }} 
+				<span class = "a-droite"> 
+					<span onclick = "confirmation('{% url 'docs' %}?s={{ doc.id }}', '{{ doc.titre }}');" class = "supprimer">
+						<i class="fa fa-trash-o" aria-hidden="true"> </i>
+					</span>
+				</span>
+			</td> 
+		</tr>
+
+	{% empty %}
+		<tr> <td> Aucun document </td> </tr>
+
+	{% endfor %}
+
+	</table>
+	
+	<div class = "confirm"> 
+		<div class = "question"> 
+			<h2> Supprimer <span class = "_contenu"> </span> ? </h2>
+			<ul> 
+				<li> <a href = ""> Supprimer </a> </li> 
+				<li> Annuler </li>
+			</ul>
+		</div>
 	</div>
 	
-	<script>
-	
-		function search() {
-			var lignes =  document.getElementsByClassName("_document");
-			var search_value = document.getElementsByClassName("search_bar")[0].value;
-			for (var i = 0; i < lignes.length ; i++) {
-				if(lignes[i].textContent.indexOf(search_value) >= 0) {
-					lignes[i].className = "_document affiche"
-				}
-				else {
-					lignes[i].className = "_document cache"
-				}
-			}
-		}
-		search();
-		
-	</script>
+	<script src = "{% static 'js/mes_documents.js' %}"> </script>
 
 {% endblock %}

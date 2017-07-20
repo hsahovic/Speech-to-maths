@@ -1,19 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %} Speech to Maths {% endblock %}
 {% block head %} 
-<style>
-	body {
-		background-image : url("../static/img/background-index.jpeg");
-		background-size : cover;
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	}
-</style>
+		
+		<link rel="stylesheet" href={% static "css/background_image_style.css" %}> 
+
 {% endblock %}
 {% block content %} 
 <div class = "page-pleine">
 	<article>
-		<div class = "boite-content">
+		<div class = "contenu-cintre">
 		<h1> Faire des maths un jeu d'enfant</h1>
 		<h2> Speech to Maths permet de dicter des documents LaTeX. <br> Tout simplement. </h2>
 		<h3> <a href = "#techno"> Découvrez Speech to Maths </a> </h3>
@@ -21,10 +18,10 @@
 	</article>	
 </div>
 
-<div class = "boites"> 
+<!-- <div class = "boites">  -->
 
 	<div class = "boite">
-		<div class = "boite-content"> 
+		<div class = "contenu-cintre"> 
 		<h1 id = "techno"> Truc sur notre techno </h1>
 		<h2> Sous-truc sur notre techno ! </h2>
 		<p> {% lorem %} </p>
@@ -32,7 +29,7 @@
 	</div>	
 	
 	<div class = "boite">
-		<div class = "boite-content"> 
+		<div class = "contenu-cintre"> 
 		<h1 id = "equipe"> Truc sur notre équipe </h1>
 		<h2> Sous-truc sur notre équipe ! </h2>
 		<p> {% lorem %} </p>
@@ -40,11 +37,11 @@
 	</div>
 	
 	<div class = "boite">
-		<div class = "boite-content"> 
+		<div class = "contenu-cintre"> 
 		<h1 id = "lx"> Truc sur l'X et autres </h1>
 		<h2> Sous-truc sur l'X etc. ! </h2>
 		<p> {% lorem %} </p>
 		</div>
 	</div> 
-</div>
+<!-- </div> -->
 {% endblock %}

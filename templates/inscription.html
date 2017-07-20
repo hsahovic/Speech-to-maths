@@ -1,32 +1,34 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %} Inscription {% endblock %}
 {% block head %} 
-<style>
-	body {
-		background-image : url("../static/img/background-index.jpeg");
-		background-size : cover;
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	}
-</style>
+<link rel="stylesheet" href={% static "css/background_image_style.css" %}> 
 {% endblock %}
 {% block content %} 
-<article class = "no-zoom"> 
-	<div class = "boite-content"> 
+<article> 
+	<div class = "contenu-cintre"> 
 	
 		{% if user.is_authenticated %}
 		<h2> Vous êtes déjà connecté en tant que {{ user.username|title }} </h2>
 
 		{% else %}
-		<h1> Nous rejoindre  </h1>
+		
+		{% block form_content %}
+		
+		<h1> Nous rejoindre </h1>
 		<form id = "inscription" method = "post" action = "">
 			{% csrf_token %}
 			<table>
 				{{ form }}
 			</table>
 			<br>
-			<button type = "submit" form = "inscription"> Inscription </button>
+			<button type = "submit" form = "inscription"> 			
+				<i class="fa fa-user-plus" aria-hidden="true"></i> &nbsp;Inscription 
+			</button>
 		</form>
+		
+		{% endblock %}
 		
 		{% endif %}
 	</div>

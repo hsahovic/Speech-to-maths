@@ -1,4 +1,4 @@
-"""[PSC Speech-to-Math]                (Streichholzschaechtelchen)
+1   """[PSC Speech-to-Math]                (Streichholzschaechtelchen)
                        number_parser.py
   ***************************************************************
   *Convertit les "nombres en lettres" en "nombres en chiffres". *

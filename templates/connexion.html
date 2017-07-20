@@ -1,34 +1,17 @@
-﻿{% extends "base.html" %}
-{% block title %} Connexion {% endblock %}
-{% block head %} 
-<style>
-	body {
-		background-image : url("../static/img/background-index.jpeg");
-		background-size : cover;
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	}
-</style>
-{% endblock %}
-{% block content %} 
-<article class = "no-zoom"> 
-	<div class = "boite-content"> 
-	
-		{% if user.is_authenticated %}
-		<h2> Vous êtes déjà connecté en tant que {{ user.username|title }} </h2>
+﻿{% extends "inscription.html" %}
 
-		{% else %}
-		<h1> Se connecter  </h1>
+{% block title %} Connexion {% endblock %}
+{% block form_content %} 
+		<h1> Se connecter </h1>
 		<form id = "connexion" method = "post" action = "">
 			{% csrf_token %}
 			<table>
 				{{ form }}
 			</table>
 			<br>
-			<button type = "submit" form = "connexion"> Connexion </button>
+			<button type = "submit" form = "connexion">
+				<i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp; 
+				Connexion 
+			</button>
 		</form>
-		
-		{% endif %}
-	</div>
-</article>
 {% endblock %}
