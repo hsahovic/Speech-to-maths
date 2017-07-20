@@ -14,12 +14,12 @@
 		<i class="fa fa-search" aria-hidden="true"></i>
 		<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(search, 0)">
 		<span class = "a-droite">
-			<a href = "{% url "add_doc" %}"><!---->
-				<button type="button"> 
+			<form action = "{% url "add_doc" %}"><!---->
+				<button type="submit"> 
 					<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
 					Nouveau document 
 				</button> 
-			</a>
+			</form>
 		</span>
 	</div>
 	
