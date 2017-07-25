@@ -1,232 +1,249 @@
-1   """[PSC Speech-to-Math]                (Streichholzschaechtelchen)
-                       number_parser.py
-  ***************************************************************
-  *Convertit les "nombres en lettres" en "nombres en chiffres". *
-  *Supporte les nombres decimaux positifs inferieurs à 10e66-1. *
-  *Syntaxe d'appel : parse_number('quarante deux')              *
-  *Sortie : un flottant ou None                                 *
-  *Les mots 'vingt', 'cent', 'million', etc. ne s'accordent pas.*
-  *La partie decimale peut etre dictee en blocs de taille qcque.*
-  *Aucun trait d'union ni accent n'est utilise.                 *
-  ***********************************************************"""
+from utils import natural_log, _set_words
+    
+class NumberParser () : 
 
-##UTILS
-
-words_to_parse = []
-len_words_to_parse = 0
-i = 0
-
-n2to9 = {'deux':2, 'trois':3, 'quatre':4, 'cinq':5,
-         'six':6, 'sept':7, 'huit':8, 'neuf':9}
-n7to9 = {'sept':7, 'huit':8, 'neuf':9}
-n20to50 = {'vingt':2, 'trente':3, 'quarante':4,
-           'cinquante':5, 'septante':7, 'octante':8,
-           'nonante':9}
-n12to16 = {'douze':12, 'treize':13, 'quatorze':14,
-           'quinze': 15, 'seize': 16}
-e3s = {'million':6, 'milliard':9, 'billion':12, 'billard':15,
-       'trillion':18, 'trilliard':21, 'quatrillon':24, 'quadrillard':27,
-       'quintillion':30, 'quintillard':33, 'sextillion':36, 'sextillard':39,
-       'septillion':42, 'septilliard':45, 'octillon':48, 'octilliard':51,
-       'nonillion':54, 'nonilliard':57, 'decillion':60, 'decilliard':63}
-
-def eof(o=0):
-    """Indique si le caractere a la position i+o se trouve au-dela de la
-       fin de chaine ou correspond a la position de la virgule"""
-    return i+o >= len_words_to_parse or words_to_parse[i+o] == 'virgule'
-
-def log(x):
-    """Calcule la partie entiere du log decimal d'un entier > 0"""
-    if x < 10:
-        return 1
-    else:
-        return 1 + log(x // 10)
-
-##CORE
-
-def parse_number(words):
-    """Fonction mère -- renvoie le nombre correspondant à la chaine
-       Effectue une passe unique sur le texte a analyser"""
-    global words_to_parse, i, len_words_to_parse
-    words_to_parse = words.split(' ')
-    len_words_to_parse = len(words_to_parse)
-    i = 0
-    d = 0
-    b, v = parse_integer()
-    if b \
-       and (i == len_words_to_parse or words_to_parse[i] == 'virgule'):
-        if i < len_words_to_parse:
-            i += 1
-        if eof() and words_to_parse[i-1] == 'virgule':
-            return None
-        while i < len_words_to_parse:
-            c, w = parse_integer()
-            if c:
-                d -= log(w)
-                v += w * (10 ** d)
-            else:
-                return None
-        return v
-    else:
+    DIGITS = {'deux' : 2, 
+            'trois' : 3, 
+            'quatre' : 4, 
+            'cinq' : 5,
+            'six' : 6, 
+            'sept' : 7, 
+            'huit' : 8, 
+            'neuf' : 9,
+            }
+    
+    NUMBERS = {'douze' : 12, 
+               'treize' : 13, 
+               'quatorze' : 14,
+               'quinze' : 15, 
+               'seize' : 16,
+               }
+    
+    OTHER_NUMBERS = {'zero' : 0,
+              'un' : 1,
+              'onze' : 11,
+              }
+    
+    OTHERS = ['dix', 'onze', 'soixante', 'cent', 'mille']
+    
+    POWERS = { 'mille' : 3,
+               'million' : 6, 
+               'milliard' : 9, 
+               'billion' : 12, 
+               'billard' : 15,
+               'trillion' : 18,
+               'trilliard' : 21, 
+               'quatrillon' : 24, 
+               'quadrillard' : 27,
+               'quintillion' : 30,
+               'quintillard' : 33, 
+               'sextillion' : 36, 
+               'sextillard' : 39,
+               'septillion' : 42, 
+               'septilliard' : 45, 
+               'octillon' : 48,
+               'octilliard' : 51,
+               'nonillion' : 54, 
+               'nonilliard' : 57, 
+               'decillion' : 60, 
+               'decilliard' : 63,
+               }
+    
+    SAFE_DOZENS = {'vingt' : 20, 
+                   'trente' : 30, 
+                   'quarante' : 40,
+                   'cinquante' : 50, 
+                   'septante' : 70, 
+                   'octante' : 80,
+                   'nonante' : 90,
+                  }
+    
+    def integer_parser (self, words = None) : 
+        if words : 
+            self.words = _set_words (words) 
+        total_value = 0
+        while self.words : 
+            value = self._integer_parser_lt1000 ()
+            if value and not self._end_of_parsed_integer () : 
+                if self.words[0] in self.POWERS : 
+                    total_value += value * (10 ** self.POWERS[self.words[0]]) 
+                    self.words = self.words[1:]
+                    if self._end_of_parsed_integer () : 
+                        return total_value
+                else : 
+                    return total_value + value
+            elif not self._end_of_parsed_integer () and \
+            self.words[0] == 'mille' : 
+                total_value += 1000
+                self.words = self.words[1:]
+                if not self._end_of_parsed_integer () : 
+                    value = self._integer_parser_lt1000 () 
+                    return total_value + value
+                return total_value
+            else : 
+                if value :
+                    total_value += value 
+                return total_value
+            
+    def number_parser (self, words) :
+        value = self.integer_parser(words)
+        if self.words :
+            if self.words[0] in ['virgule', 'point'] :
+                self.words = self.words[1:]
+                decimal = 0
+                while True :
+                    while self.words and self.words[0] == 'zero' :
+                        decimal += 1
+                        self.words = self.words[1:]
+                    comp = self.integer_parser()
+                    if comp :
+                        decimal += natural_log(comp) + 1
+                        value += comp / (10 ** decimal)
+                    else :
+                        break                    
+        return value
+                
+    def _end_of_parsed_integer (self) : 
+        return (not self.words) or self.words[0] == 'virgule' or self.words[0] == 'point'
+    
+    def _integer_parser_60_80 (self) : 
+        if self.words[0] == 'soixante': 
+            self.words = self.words[1:]
+            if len (self.words) > 1 and self.words[0] == 'et' and self.words[1] in ['un', 'onze'] : 
+                value = 60 + self.OTHER_NUMBERS[self.words[1]]
+                self.words = self.words[2:]
+                return value
+            elif not self._end_of_parsed_integer() : 
+                value = self._integer_parser_lt20 () 
+                if value :
+                    return value + 60
+                return 60
+        elif len (self.words) > 2 and self.words[0] == 'quatre' and self.words[1] == 'vingt' : 
+            if self.words[2] in self.DIGITS : 
+                value = 80 + self.DIGITS[self.words[2]]
+                self.words = self.words[3:]
+                return value
+            elif self.words[2] in ['un', 'onze'] : 
+                value = 80 + self.OTHER_NUMBERS[self.words[2]]
+                self.words = self.words[3:]
+                return value
+            elif self.words[2] in self.NUMBERS : 
+                value = 80 + self.NUMBERS[self.words[2]]
+                self.words = self.words[3:]
+                return value
+            elif self.words[2] == 'dix' : 
+                self.words = self.words[3:]
+                if len (self.words) != 0 and self.words[0] in self.DIGITS : 
+                    value = 90 + self.DIGITS[self.words[0]]
+                    self.words = self.words[1:]
+                    return value
+                return 90
         return None
-
-def parse_integer():
-    """Fonction auxiliaire -- renvoie le prochain entier lisible sur
-       la chaine"""
-    global words_to_parse, i
-    j = i
-    k = 1764
-    a = 0
-    while(True):
-        b, v = ls999()
-        if b:
-            if not eof():
-                if words_to_parse[i] == 'mille':
-                    i += 1
-                    if not eof():
-                        c, w  = ls999()
-                        return c, a + v * 1000 + w
-                    else:
-                        return True, a + v * 1000
-                elif words_to_parse[i] in e3s.keys() \
-                     and e3s[words_to_parse[i]] < k:
-                    k = e3s[words_to_parse[i]]
-                    i += 1
-                    if eof():
-                        return True, a + v * (10 ** k)
-                    else:
-                        a += v * (10 ** k)
-                else:
-                    return True, v
-            else:
-                return True, a + v
-        elif not eof() and words_to_parse[i] == 'mille':
-            i += 1
-            if not eof():
-                c, w = ls999()
-                return c, a + 1000 + w
-            else:
-                return True, a + 1000
-        else:
-            return False, 0
-
-def ls999():
-    """Construction des nombres <= a 999"""
-    global words_to_parse, i, n2to9
-    if words_to_parse[i] == 'cent':
-        i += 1
-        if not eof():
-            b, v = ls99()
-            return b, 100 + v
-        else:
-            return True, 100
-    elif not eof(1) \
-         and words_to_parse[i] in n2to9.keys() \
-         and words_to_parse[i+1] == 'cent':
-        w = n2to9[words_to_parse[i]]
-        i += 2
-        if not eof() \
-           and not words_to_parse[i] == 'mille' \
-           and not words_to_parse[i] in e3s.keys():
-            b, v = ls99()
-            return b, w * 100 + v
-        else:
-            return True, w * 100
-    else:
-        return ls99()
-
-def p6080(p80):
-    """Construction des nombres >= a 60 et <= a 99"""
-    global n2to9, n7to9, n12to16, i
-    if eof():
-        return True, 60
-    i += 1
-    if not eof() \
-       and not p80 \
-       and words_to_parse[i-1] == 'et':
-        i += 1
-        if words_to_parse[i-1] == 'un':
-            return True, 61
-        elif words_to_parse[i-1] == 'onze':
-            return True, 71
-        else:
-            return False, 0
-    elif not eof() \
-         and words_to_parse[i-1] == 'dix' \
-         and words_to_parse[i] in n7to9.keys():
-            i += 1
-            return True, 70 + n7to9[words_to_parse[i-1]]
-    elif words_to_parse[i-1] == 'dix':
-        return True, 70
-    elif words_to_parse[i-1] in n2to9.keys():
-        return True, 60 + n2to9[words_to_parse[i-1]]
-    elif words_to_parse[i-1] in n12to16.keys():
-        return True, 60 + n12to16[words_to_parse[i-1]]
-    elif p80 and words_to_parse[i-1] == 'un':
-        return True, 61
-    elif p80 and words_to_parse[i-1] == 'onze':
-        return True, 71
-    else:
-        i -= 1
-        return True, 60
+    
+    def _integer_parser_lt100 (self) : 
+        if self.words[0] in self.SAFE_DOZENS : 
+            value = self.SAFE_DOZENS[self.words[0]] 
+            self.words = self.words[1:]
+            if not self._end_of_parsed_integer () : 
+                if self.words[0] == 'et' : 
+                    if len (self.words) > 1 and self.words[1] == 'un' : 
+                        self.words = self.words[2:]
+                        return value + 1
+                elif self.words[0] in self.DIGITS : 
+                    value += self.DIGITS[self.words[0]]
+                    self.words = self.words[1:]
+            return value
+        elif self.words[0] == 'soixante' or (len (self.words) > 1 and self.words[0] == 'quatre' and self.words[1] == 'vingt') : 
+            return self._integer_parser_60_80 () 
+        return self._integer_parser_lt20 () 
         
-def ls99():
-    """Construction des nombres <= a 99"""
-    global words_to_parse, i, n2to9, n12to16, n20to50
-    if words_to_parse[i] in n20to50.keys():
-        if not eof(1) \
-           and words_to_parse[i+1] in n2to9.keys():
-            v = n20to50[words_to_parse[i]] * 10 + n2to9[words_to_parse[i+1]]
-            i += 2
-            return True, v
-        elif not eof(2) \
-             and words_to_parse[i+1] == 'et' \
-             and words_to_parse[i+2] == 'un':
-            i += 3
-            return True, n20to50[words_to_parse[i-3]] * 10 + 1
-        else:
-            i += 1
-            return True, n20to50[words_to_parse[i-1]] * 10
-    elif words_to_parse[i] == 'soixante':
-        i += 1
-        return p6080(False)
-    elif not eof(1) \
-         and words_to_parse[i] == 'quatre' \
-         and words_to_parse[i+1] == 'vingt':
-        i += 2
-        b, v = p6080(True)
-        return b, v + 20
-    else:
-        return ls19()
-
-def ls19():
-    """Construction des nombres <= a 19"""
-    global words_to_parse, i, n2to9, n12to16
-    i += 1
-    if words_to_parse[i-1] == 'zero':
-        return True, 0
-    elif words_to_parse[i-1] == 'un':
-        return True, 1
-    elif words_to_parse[i-1] == 'onze':
-        return True, 11
-    elif words_to_parse[i-1] in n2to9.keys():
-        return True, n2to9[words_to_parse[i-1]]
-    elif words_to_parse[i-1] in n12to16.keys():
-        return True, n12to16[words_to_parse[i-1]]
-    elif words_to_parse[i-1] == 'dix':
-        if not eof():
-            i += 1
-            if words_to_parse[i-1] == 'sept':
-                return True, 17
-            elif words_to_parse[i-1] == 'huit':
-                return True, 18
-            elif words_to_parse[i-1] == 'neuf':
-                return True, 19
-        return True, 10
-    else:
-        i -= 1
-        return False, 0
-
-#END
+    def _integer_parser_lt1000 (self) : 
+        if self.words[0] == 'cent' : 
+            self.words = self.words[1:]
+            if self._end_of_parsed_integer () : 
+                return 100
+            value = self._integer_parser_lt100 () 
+            if value : 
+                return 100 + value
+            return None
+        elif len (self.words) > 1 and self.words[1] == 'cent' : 
+            try : 
+                value = 100 * self.DIGITS[self.words[0]]
+                self.words = self.words[2:]
+                if not self._end_of_parsed_integer () : 
+                    new_value = self._integer_parser_lt100 () 
+                    if new_value :
+                        return value + new_value
+                return value
+            except Exception : 
+                pass
+        return self._integer_parser_lt100 () 
+    
+    def _integer_parser_lt20 (self) : 
+        if self.words[0] in self.DIGITS : 
+            value = self.DIGITS[self.words[0]]
+            self.words = self.words [1:]
+            return value
+        if self.words[0] in self.OTHER_NUMBERS : 
+            value = self.OTHER_NUMBERS[self.words[0]]
+            self.words = self.words [1:]
+            return value
+        if self.words[0] in self.NUMBERS : 
+            value = self.NUMBERS[self.words[0]]
+            self.words = self.words [1:]
+            return value
+        if self.words[0] == 'dix' : 
+            self.words = self.words [1:]
+            value = 10
+            if not self._end_of_parsed_integer () : 
+                if self.words[0] in self.DIGITS : 
+                    value += self.DIGITS[self.words[0]]
+                    self.words = self.words [1:]
+            return value
+        return None
         
-        
+    def __call__ (self, words) : 
+        return self.number_parser (words) 
+    
+#==============================================================================
+#     
+#==============================================================================
+    
+if __name__ == "__main__" : 
+    
+    parser = NumberParser () 
+    assert parser(['un']) == 1
+    assert parser(['huit']) == 8
+    assert parser(['dix']) == 10 
+    assert parser(['onze']) == 11
+    assert parser(['quatorze']) == 14
+    assert parser(['dix','sept']) == 17
+    assert parser(['vingt','et', 'un']) == 21 
+    assert parser(['trente', 'quatre']) == 34
+    assert parser(['quarante', 'huit']) == 48 
+    assert parser(['cinquante']) == 50 
+    assert parser(['soixante','sept']) == 67
+    assert parser(['soixante','et', 'onze']) == 71 
+    assert parser(['soixante','quatorze']) == 74
+    assert parser(['soixante','dix', 'huit']) == 78 
+    assert parser(['quatre','vingt', 'huit']) == 88
+    assert parser(['quatre', 'vingt', 'douze']) == 92 
+    assert parser(['quatre', 'vingt', 'dix', 'huit']) == 98
+    assert parser(['nonante', 'neuf']) == 99
+    assert parser(['cent']) == 100
+    assert parser('trois cent quatre') == 304
+    assert parser(['huit','cent']) == 800
+    assert parser('huit cent douze') == 812
+    assert parser(['mille']) == 1000
+    assert parser(['mille', 'deux']) == 1002
+    assert parser(['mille', 'deux', 'cent']) == 1200 
+    assert parser(['mille', 'deux', 'cent', 'deux']) == 1202
+    assert parser(['deux', 'mille', 'deux', 'cent', 'deux']) == 2202 
+    assert parser(['douze', 'mille', 'deux', 'cent', 'deux']) == 12202
+    assert parser('sept cent million') == 700000000
+    assert parser('onze milliard sept cent million deux cent mille trois cent quatre') == 11700200304
+    assert parser('trois cent quatorze trillion onze milliard sept cent million deux cent mille trois cent quatre') == 314000000011700200304
+    assert parser ('trois virgule quarante deux quarante deux') == 3.4242
+    assert parser ('trente trois point zero zero huit cent quatre') == 33.00804
+    assert parser ('cent cinquante et un virgule quarante six') == 151.46
+    assert parser ('deux cent soixante et un mille six cent quarante trois virgule huit million quatre cent quatre vingt trois mille cinq cent douze') == 261643.8483512

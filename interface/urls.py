@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^deconnexion$', auth_views.logout, {'next_page': 'index'}, name = 'deconnexion'),
     url(r'^mes_documents$', views.docs, name = 'docs'),
     url(r'^nouveau_document$', views.add_doc, name = 'add_doc'),
-    url(r'^document/(\d+)$', views.document, name = 'document')
+    url(r'^document/(\d+)$', views.document, name = 'document'),
+    url(r'^mon_compte$', views.compte, name = 'compte'),
+#    url(r'^suppression_compte$', views.suppression_compte, name = 'suppression_compte'),
 ]

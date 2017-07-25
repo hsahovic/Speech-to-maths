@@ -24,4 +24,38 @@ function search () {
 	}
 }
 
+function classer(classement) {
+	var lignes = [].slice.call(document.getElementsByClassName("_document"));
+	var table = document.getElementsByTagName("table")[0];
+	var table_head = table.getElementsByTagName("th");
+	var icons = 0;
+	
+	lignes.sort(function(a,b) {
+		if (a.getElementsByTagName("td")[classement].textContent > b.getElementsByTagName("td")[classement].textContent) {
+			return 1;
+		}
+		return -1;
+	});
+	for (var i = 0; i < table_head.length ; i++) {
+		icons = table_head[i].getElementsByTagName("i");
+		for (var j = 0; j < icons.length ; j++) {
+			icons[j].remove();
+		}
+	}
+	if (classement_courant == classement) {
+		lignes.reverse();
+		classement_courant = -1;
+		table_head[classement].innerHTML += "<i class='fa fa-arrow-up' aria-hidden='true'></i>";
+	}
+	else {
+		classement_courant = classement;
+		table_head[classement].innerHTML += "<i class='fa fa-arrow-down' aria-hidden='true'></i>";
+	}
+	for (var i = 0; i < lignes.length ; i++) {
+		table.appendChild(lignes[i]);
+	}
+	return 0;
+}
+
+classement_courant = -1;
 search();

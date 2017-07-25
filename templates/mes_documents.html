@@ -29,9 +29,9 @@
 	
 	{% if docs %}
 		<tr>
-			<th> Titre </th> 
-			<th> Auteur </th> 				
-			<th> Dernière modification </th>
+			<th onclick = "classer(0)"> Titre &nbsp;</th> 
+			<th onclick = "classer(1)"> Auteur &nbsp; </th> 				
+			<th onclick = "classer(2)"> Dernière modification &nbsp; </th>
 		</tr>
 	{% endif %}
 	
@@ -58,7 +58,12 @@
 		</tr>
 
 	{% empty %}
-		<tr> <td> Aucun document </td> </tr>
+		<tr> 
+			<td> 
+				<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+				Aucun document 
+			</td> 
+		</tr>
 
 	{% endfor %}
 
@@ -75,5 +80,6 @@
 	</div>
 	
 	<script src = "{% static 'js/mes_documents.js' %}"> </script>
+	<script> search();</script>
 
 {% endblock %}

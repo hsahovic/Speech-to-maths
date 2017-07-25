@@ -1,5 +1,20 @@
-/* Définition des styles généraux */
 /* TO DO : Checker les styles erreurs formulaire */
+
+/* Définition des animations */
+
+@keyframes tremblotte {
+	0%, 50%, 100% {
+		transform : rotate(0);
+	}
+	25% {
+		transform : rotate(3deg);
+	}
+	75% {
+		transform : rotate(-3deg);
+	}
+}
+
+/* Définition des styles généraux */
 
 a {
 	color : inherit;
@@ -63,6 +78,10 @@ form table {
 	width : 100%;
 }
 
+form li {
+	display : inline;
+}
+
 h1 {
 	font-size : 3em;
 }
@@ -108,6 +127,26 @@ nav li, nav ul {
 	max-width : 1024px;
 	text-align : justify;
 	margin : auto;
+}
+
+.dangerous-input {
+	background-color : #f44;
+	color : white;
+}
+
+.dangerous-input:hover {
+	box-shadow : 0 0 .3em #f44;
+	animation-name : tremblotte;
+	animation-duration : .2s;
+	animation-iteration-count : infinite;
+}
+
+.form-on-white input, .form-on-white button {
+	background-color : #e6e6e6;
+}
+
+.form-on-white input:hover, .form-on-white button:hover {
+	box-shadow : 0 0 .1em #001f33;
 }
 
 .nav_filler {
@@ -194,6 +233,10 @@ nav li, nav ul {
 	text-align : center;
 }
 
+.confirm a:hover {
+	color : inherit;
+}
+
 .docs-table {
 	width : 100%;
 	border-collapse: collapse;
@@ -208,10 +251,6 @@ nav li, nav ul {
 
 .docs-table td:first-child, .docs-table th:first-child {
 	width : 50%;
-}
-
-.docs-table tr {
-	transition : .1s;
 }
 
 .docs-table tr:hover {
@@ -267,4 +306,31 @@ nav li, nav ul {
 	padding : 2vh;
 	border-radius : 1em;
 	background-color : white;
+}
+
+/* Classes de mon compte */
+
+.compte-section {
+	padding : 2em;
+	border-radius : 1em;
+	border : 1px solid #001f33;	
+	margin : 1em 0 ;
+}
+
+.compte-section span {
+	display : block;
+	margin : -2em -2em 1em -2em;
+	padding : 2em 2em 1em 2em;
+	background-color : #09f;
+	border-radius : 1em 1em 0 0;
+}
+
+.compte-section h2 {
+	margin : 0;
+	padding : 0;
+	color : white;
+}
+
+.dangerous-section span {
+	background-color : #f44;
 }

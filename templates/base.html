@@ -6,9 +6,18 @@
 	<head>
 		<title> {% block title %} {% endblock %}</title>
 		<link rel="stylesheet" href={% static "css/style.css" %}> 
-		<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> 
-		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 		<link rel="stylesheet" href={% static "font/font-awesome-4.7.0/css/font-awesome.min.css" %}>
+		
+		<link rel="apple-touch-icon" type="image/png" href={% static "img/favicon-192.png" %} sizes="192x192">
+		
+		<link rel="icon" type="image/png" href={% static "img/favicon-192.png" %} sizes="192x192">
+		<link rel="icon" type="image/png" href={% static "img/favicon-96.png" %} sizes="96x96">
+		<link rel="icon" type="image/png" href={% static "img/favicon-64.png" %} sizes="64x64">
+		<link rel="icon" type="image/png" href={% static "img/favicon-48.png" %} sizes="48x48">
+		<link rel="icon" type="image/png" href={% static "img/favicon-16.png" %} sizes="16x16">
+		<link rel="icon" type="image/png" href={% static "img/favicon-32.png" %} sizes="32x32">
 		<meta charset="UTF-8">
 		
 		{% block head %} {% endblock %}
@@ -31,7 +40,7 @@
 			<span class = "a-droite"> 
 				<ul>
 					<li> Connecté en tant que 
-						<a href = "{% url "docs" %}"><!---->
+						<a href = "{% url "compte" %}"><!---->
 							<strong> {{ user.username }} </strong> 
 						</a> 
 					</li>

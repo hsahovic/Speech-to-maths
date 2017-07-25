@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -24,12 +24,37 @@ def add_doc (request) :
     doc.save()
     return redirect("document", doc.id)
 
+#En construction
+@login_required
+def compte (request) :
+    user = get_user(request)
+    email_form = forms.ChangeEmailForm(request.POST or None, initial = {'email' : request.user.email})
+    password_form = forms.ChangePasswordForm(request.user, request.POST or None)
+    suppression_form = forms.SuppressionCompte(request.user, request.POST or None)
+    if email_form.is_valid() :
+        user.email = email_form.cleaned_data['email']
+        user.save()
+    if suppression_form.is_valid() :
+        mdp = request.POST['password']
+        user = get_user(request)
+        docs = models.Document.objects.filter (auteur = user)
+        for doc in docs :
+            doc.delete()
+        user.delete()
+        return redirect("index")
+    if password_form.is_valid () :
+        user.set_password(password_form.cleaned_data['new_password'])
+        user.save()
+        update_session_auth_hash(request, user)
+    return render(request, 'compte.html', locals())
+
 @login_required
 def docs (request) :
     user = get_user (request)
     try :
         doc = get_document(request, request.GET['s'])
-        doc.delete()
+        if doc.auteur.username == request.user.username :
+            doc.delete()
     except Exception :
         pass
     docs = models.Document.objects.filter(auteur = user)
