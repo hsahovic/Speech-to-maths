@@ -1,5 +1,3 @@
-/* TO DO : Checker les styles erreurs formulaire */
-
 /* Définition des animations */
 
 @keyframes tremblotte {
@@ -247,6 +245,10 @@ nav li, nav ul {
 	padding : .5em 2em;
 	border-bottom : #e6e6e6 1px solid;
 	text-align : left;
+}
+
+.docs-table th{
+	cursor : pointer; 
 }
 
 .docs-table td:first-child, .docs-table th:first-child {
