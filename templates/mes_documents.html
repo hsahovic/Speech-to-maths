@@ -14,29 +14,41 @@
 		<i class="fa fa-search" aria-hidden="true"></i>
 		<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(search, 0)">
 		<span class = "a-droite">
+			<form id = "_delete" style = "visibility: hidden;" method = "POST"><!---->
+				{% csrf_token %}
+				<button type="submit"> 
+					<i class="fa fa-trash bouton-icone" aria-hidden="true"></i> &nbsp;
+					Supprimer
+					<input type = "hidden" value = "" id = "_delete-value" name = 'delete-value'>
+				</button> 
+			</form>	&nbsp;
 			<form action = "{% url "add_doc" %}"><!---->
 				<button type="submit"> 
-					<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+					<i class="fa fa-file" aria-hidden="true"></i> &nbsp;
 					Nouveau document 
 				</button> 
 			</form>
 		</span>
 	</div>
 	
-	<div class = "filler"> <h2> &nbsp; </h2> </div>
+	<div class = "top-bar-filler"> 
+		<button type="submit"> 
+					<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+		</button>
+	</div>
 	
 	<table class = "docs-table">
 	
 	{% if docs %}
 		<tr>
 			<th onclick = "classer(0)"> Titre &nbsp;</th> 
-			<th onclick = "classer(1)"> Auteur &nbsp; </th> 				
-			<th onclick = "classer(2)"> Dernière modification &nbsp; </th>
+			<th onclick = "classer(1)"> <i class="fa fa-user" aria-hidden="true"></i> &nbsp;  Auteur &nbsp; </th> 				
+			<th onclick = "classer(2)"> <i class="fa fa-calendar-o" aria-hidden="true"></i> &nbsp; Dernière modification &nbsp; </th>
 		</tr>
 	{% endif %}
 	
 	{% for doc in docs %}
-		<tr class = "_document"> 
+		<tr class = "_document" id = "{{ doc.id }}" onclick = "select({{ doc.id }});" ondblclick='window.open("{% url "document" doc.id %}", "_self")'>
 			<td> 
 				<a href = "{% url "document" doc.id %}"> 
 					<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
@@ -44,40 +56,23 @@
 				</a> 
 			</td>
 			<td> 
-				<i class="fa fa-user" aria-hidden="true"></i> &nbsp; {{ doc.auteur }}
+				{{ doc.auteur }}
 			</td>
 			<td> 
-				<i class="fa fa-calendar-o" aria-hidden="true"></i> &nbsp;
-				{{ doc.date_derniere_modification }} 
-				<span class = "a-droite"> 
-					<span onclick = "confirmation('{% url 'docs' %}?s={{ doc.id }}', '{{ doc.titre }}');" class = "supprimer">
-						<i class="fa fa-trash-o" aria-hidden="true"> </i>
-					</span>
-				</span>
-			</td> 
+				<time> {{ doc.date_derniere_modification }} </time>
+				<input type = "hidden" value = "{{ doc.date_derniere_modification|date:'Y m d'}}">
 		</tr>
 
 	{% empty %}
 		<tr> 
 			<td> 
-				<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
-				Aucun document 
-			</td> 
+				<i class="fa fa-info-circle" aria-hidden="true"> </i> &nbsp; Aucun document
+			</td>
 		</tr>
 
 	{% endfor %}
 
 	</table>
-	
-	<div class = "confirm"> 
-		<div class = "question"> 
-			<h2> Supprimer <span class = "_contenu"> </span> ? </h2>
-			<ul> 
-				<li> <a href = ""> Supprimer </a> </li> 
-				<li> Annuler </li>
-			</ul>
-		</div>
-	</div>
 	
 	<script src = "{% static 'js/mes_documents.js' %}"> </script>
 	<script> search();</script>

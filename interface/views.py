@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 
 from . import forms, models
 
@@ -21,16 +21,26 @@ def add_doc (request) :
     doc.auteur = user
     doc.titre = "Nouveau document %d" % n_doc
     doc.contenu = ""
+    doc.is_in_trash = False
     doc.save()
     return redirect("document", doc.id)
 
-#En construction
 @login_required
 def compte (request) :
     user = get_user(request)
-    email_form = forms.ChangeEmailForm(request.POST or None, initial = {'email' : request.user.email})
-    password_form = forms.ChangePasswordForm(request.user, request.POST or None)
-    suppression_form = forms.SuppressionCompte(request.user, request.POST or None)
+    if request.POST and "Changer adresse email" in request.POST :
+        email_form = forms.ChangeEmailForm(request.POST, initial = {'email' : request.user.email})
+    else :
+        email_form = forms.ChangeEmailForm(None, initial = {'email' : request.user.email})
+    if request.POST and "Changer mot de passe" in request.POST :
+        password_form = forms.ChangePasswordForm(request.user, request.POST)
+    else :
+        password_form = forms.ChangePasswordForm(request.user, None)
+        
+    if request.POST and "Suppresion compte" in request.POST :
+        suppression_form = forms.SuppressionCompte(request.user, request.POST)
+    else :
+        suppression_form = forms.SuppressionCompte(request.user, None)
     if email_form.is_valid() :
         user.email = email_form.cleaned_data['email']
         user.save()
@@ -52,16 +62,17 @@ def compte (request) :
 def docs (request) :
     user = get_user (request)
     try :
-        doc = get_document(request, request.GET['s'])
-        if doc.auteur.username == request.user.username :
-            doc.delete()
-    except Exception :
+        doc = get_document(request, request.POST['delete-value'])
+        doc.is_in_trash = True
+        doc.save()
+    except :
         pass
-    docs = models.Document.objects.filter(auteur = user)
+    docs = models.Document.objects.filter(auteur = user, is_in_trash = False)
     return render(request, 'mes_documents.html', locals())
 
 @login_required
 def document(request, n) :
+    print(request.POST)
     doc = get_document(request, n)
     if doc :
         try : 
@@ -72,7 +83,6 @@ def document(request, n) :
             pass
         return render(request, 'document.html', locals())
     return redirect('docs')
-
 
 def index (request) :
     return render(request, 'index.html', locals())

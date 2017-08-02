@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^nouveau_document$', views.add_doc, name = 'add_doc'),
     url(r'^document/(\d+)$', views.document, name = 'document'),
     url(r'^mon_compte$', views.compte, name = 'compte'),
-#    url(r'^suppression_compte$', views.suppression_compte, name = 'suppression_compte'),
+    url(r'^$', views.index),
 ]

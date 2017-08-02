@@ -12,6 +12,7 @@ class Document (models.Model) :
     date_derniere_modification = models.DateField(auto_now = True)
     date_creation = models.DateField(auto_now_add = True)
     titre = models.CharField(max_length = 2048)
+    is_in_trash = models.BooleanField()
     
     def __str__(self) :
         return self.titre

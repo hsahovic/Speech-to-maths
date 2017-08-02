@@ -15,63 +15,80 @@
 		
 	</div>
 	
-	<div class = "filler"> <h2> &nbsp; </h2> </div>
+	<div class = "top-bar-filler"> <h3> &nbsp; </h3> </div>
 	
-	<div class = "contenu-cintre">
-		
-		<div class = "compte-section">
-			<span> <h2> Informations diverses </h2> </span>
-			<table>
-				<tr> 
-					<td> Nom d'utilisateur </td>
-					<td> {{ user.username }} </td>
-				</tr>			
-				<tr> 
-					<td> Date de création du compte </td>
-					<td> {{ user.date_joined|date:'d F Y' }} </td>
-				</tr>
-			</table>
-		</div>	
-		
-		<div class = "compte-section">
-			<span> <h2> Modifier adresse email </h2> </span>
-			<form method = "POST" id = "changer_email" class = "form-on-white">
-				{% csrf_token %}
-				<table> {{ email_form }} </table>
-				<br>
-				<button type = "submit" name = "Changer adresse email" form = "changer_email"> 
-					Enregistrer nouvel email
-				</button> 
-			</form>
-		</div>		
-		
-		<div class = "compte-section">
-			<span> <h2> Modifier mon mot de passe </h2> </span>
-			<form method = "POST" id = "changer_mdp"  class = "form-on-white">
-				{% csrf_token %}
-				<table> {{ password_form }} </table>
-				<br>
-				<button type = "submit" name = "Changer mot de passe" form = "changer_mdp" class = "input-on-white"> 
-					Changer de mot de passe
-				</button> 
-			</form>
-		</div>	
-		
-		<div class = "compte-section dangerous-section">
-			<span> <h2> Supprimer mon compte </h2> </span>
-			<form method = "POST" id = "suppresion_compte">
-				{% csrf_token %}
-				<table class = "form-on-white">	{{ suppression_form }} </table>
-				<br>
-				<button type = "submit" name = "suppresion_compte" form = "suppresion_compte" class = "dangerous-input"> 
-					Supprimer mon compte
-				</button> 
-			</form>
+	<nav class = "side-nav">
+		<div class = "side-nav-container">
+			<ul>
+				<li> <a href = "#inf_div"> <i class="fa fa-info-circle" aria-hidden="true"></i> &nbsp;
+ Informations diverses </a> </li>
+				<li> <a href = "#mod_ema"> <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+ Modifier adresse email </a> </li>
+				<li> <a href = "#mod_mdp"> <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+ &nbsp; Modifier mot de passe </a> </li>
+				<li> <a href = "#sup_com"> <i class="fa fa-trash" aria-hidden="true"></i>
+ &nbsp; Supprimer mon compte </a> </li>
+			</ul>
 		</div>
+	</nav>
 	
-	  </div>
-	  <table>
-	  {{ form }} </table>
+	<div class = "side-nav-filler"></div><!--
 	
+	
+ --><div class = "contenu-cintre-side-container">
+		<div class = "contenu-cintre-side">
+			<div class = "compte-section"  id = "inf_div"> 
+				<span> <h2> <i class="fa fa-info-circle" aria-hidden="true"></i> &nbsp;
+ Infomations diverses </h2> </span>
+				<table>
+					<tr> 
+						<td> <strong> Nom d'utilisateur </strong> </td>
+						<td> {{ user.username }} </td>
+					</tr>			
+					<tr> 
+						<td> <strong> Date de création du compte </strong> </td>
+						<td> {{ user.date_joined|date:'d F Y' }} </td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class = "compte-section"  id = "mod_ema">
+				<span> <h2> <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp; Modifier adresse email </h2> </span>
+				<form method = "POST" id = "changer_email" class = "form-on-white">
+					{% csrf_token %}
+					<table> {{ email_form }} </table>
+					<br>
+					<button type = "submit" name = "Changer adresse email" form = "changer_email"> 
+						Enregistrer nouvel email
+					</button> 
+				</form>
+			</div>		
+			
+			<div class = "compte-section" id = "mod_mdp">
+				<span> <h2> <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+ &nbsp; Modifier mot de passe </h2> </span>
+				<form method = "POST" id = "changer_mdp"  class = "form-on-white">
+					{% csrf_token %}
+					<table> {{ password_form }} </table>
+					<br>
+					<button type = "submit" name = "Changer mot de passe" form = "changer_mdp" class = "input-on-white"> 
+						Changer de mot de passe
+					</button> 
+				</form>
+			</div>	
+			
+			<div class = "compte-section dangerous-section" id = "sup_com">
+				<span> <h2> <i class="fa fa-trash" aria-hidden="true"></i>
+ &nbsp; Supprimer mon compte </h2> </span>
+				<form method = "POST" id = "suppresion_compte">
+					{% csrf_token %}
+					<table class = "form-on-white">	{{ suppression_form }} </table>
+					<br>
+					<button type = "submit" name = "Suppresion compte" form = "suppresion_compte" class = "dangerous-input"> 
+						Supprimer mon compte
+					</button> 
+				</form>
+			</div>
+		</div>
 
 {% endblock %}

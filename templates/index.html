@@ -4,7 +4,7 @@
 {% block title %} Speech to Maths {% endblock %}
 {% block head %} 
 		
-		<link rel="stylesheet" href={% static "css/background_image_style.css" %}> 
+		<link rel="stylesheet" href={% static "css/background_image_style.css" %}>
 
 {% endblock %}
 {% block content %} 
@@ -18,30 +18,28 @@
 	</article>	
 </div>
 
-<!-- <div class = "boites">  -->
-
-	<div class = "boite">
+	<section>
 		<div class = "contenu-cintre"> 
 		<h1 id = "techno"> Truc sur notre techno </h1>
 		<h2> Sous-truc sur notre techno ! </h2>
 		<p> {% lorem %} </p>
 		</div>	
-	</div>	
+	</section>
 	
-	<div class = "boite">
+	<section>
 		<div class = "contenu-cintre"> 
 		<h1 id = "equipe"> Truc sur notre équipe </h1>
 		<h2> Sous-truc sur notre équipe ! </h2>
 		<p> {% lorem %} </p>
 		</div>
-	</div>
+	</section>
 	
-	<div class = "boite">
+	<section>
 		<div class = "contenu-cintre"> 
 		<h1 id = "lx"> Truc sur l'X et autres </h1>
 		<h2> Sous-truc sur l'X etc. ! </h2>
 		<p> {% lorem %} </p>
 		</div>
-	</div> 
-<!-- </div> -->
+	</section>
+
 {% endblock %}

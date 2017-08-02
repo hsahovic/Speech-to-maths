@@ -1,5 +1,14 @@
 /* Définition des animations */
 
+@keyframes clignote {
+	0%, 100% {
+		opacity : 1;
+	}
+	50% {
+		opacity : 0;
+	}
+}
+
 @keyframes tremblotte {
 	0%, 50%, 100% {
 		transform : rotate(0);
@@ -38,19 +47,20 @@ article form ul {
 	display : inline;
 }
 
-article, .boite {
+article, section {
 	transition : .5s;
 }
 
-article:hover, .boite:hover {
+article:hover, section:hover {
 	padding-bottom : 8em;
 }
 
 body {
 	margin : 0;
-	background : 0;
 	font-family: 'Lato', sans-serif;
 	color : #001f33;
+	min-width : 1024px;
+	background-color : #e6e6e6;
 }
 
 button {
@@ -97,6 +107,7 @@ input {
 }
 
 nav {
+	min-width : 1024px;
 	width : 100%;
 	position : fixed;
 	padding : 1em;
@@ -104,12 +115,22 @@ nav {
 }
 
 nav li {
-	margin : 0 1em;
+	margin : 0 .8em;
 }
 
 nav li, nav ul {
 	display : inline;
 	padding : 0;
+}
+
+section {
+	background-color : rgba(255,255,255,.9);
+	padding : 1em;
+}
+
+section:nth-child(2n) {
+	background-color : rgba(0,153,255,.9);
+	color : white;
 }
 
 /* Classes transversales */
@@ -122,9 +143,23 @@ nav li, nav ul {
 }
 
 .contenu-cintre {
+	width : 100%;
 	max-width : 1024px;
 	text-align : justify;
 	margin : auto;
+}
+
+.contenu-cintre-side {
+	display : block;
+	width : 100%;
+	max-width : 1024px;
+	text-align : justify;
+	margin : auto;
+}
+
+.contenu-cintre-side-container {
+	display : inline-block;
+	width : 75%;
 }
 
 .dangerous-input {
@@ -155,6 +190,40 @@ nav li, nav ul {
 	min-height : 100vh;
 }
 
+.side-nav {
+	width : 254px;
+	min-width : 254px;
+	position : fixed;
+	padding : 0;
+	display : inline-block;
+	border-right : #09f solid 2px;
+	height : 100%;
+	
+	/* Test de style alternatif */
+	/* border-right : white solid 2px; */
+	/* background-color : #09f; */
+	/* color : white; */
+	
+	font-variant : small-caps;
+	font-weight : bold;
+}
+
+.side-nav li {
+	margin : .5em 0;
+	display : inline-block;
+}
+
+.side-nav-container {
+	padding : 1em;
+}
+
+.side-nav-filler {
+	width : 256px;
+	display : inline-block;
+	top : 0;
+	vertical-align : top;
+}
+
 .special-nav {
 	background-color : #09f;
 	color : white;
@@ -169,16 +238,21 @@ nav li, nav ul {
 	color : inherit;
 }
 
-.top-bar {
+.top-bar, .top-bar-filler {
 	padding : 1em;
-	background-color : #09f;
-	color : white;
-	position : fixed;
-	width : 100%;
-	z-index : 1;
 }
 
-.top-bar a {
+.top-bar {
+	position : fixed;
+	z-index : 1;
+	width : 100%;	
+	background-color : #09f;
+	color : white;
+	min-width : 1024px;
+	border-bottom : 2px solid white;
+}
+
+.top-bar a, .top-bar-filler a {
 	padding : 1.5em 0 1.5em 1.5em;
 	margin : -1.5em 0 -1.5em -1.5em;
 }
@@ -187,12 +261,12 @@ nav li, nav ul {
 	background-color : white;
 }
 
-.top-bar h3{
+.top-bar h3, .top-bar-filler h3{
 	margin : 0 1em 0 0;
 	display : inline-block;
 }
 
-.top-bar i {
+.top-bar i, .top-bar-filler i {
 	margin : 0 .2em;
 }
 
@@ -201,16 +275,8 @@ nav li, nav ul {
 	padding : .6em;
 }
 
-/* Classes de l'index */
-
-.boite {
-	background-color : rgba(255,255,255,.9);
-	padding : 1em;
-}
-
-.boite:nth-child(2n) {
-	background-color : rgba(0,153,255,.9);
-	color : white;
+.top-bar form {
+	display : inline-block;
 }
 
 /* Classes de mes documents */
@@ -219,25 +285,10 @@ nav li, nav ul {
 	display : none;
 }
 
-.confirm {
-	display : none;
-	height : 100vh;
-	width : 100%;
-	background-color : rgba(0,0,0,.5);
-	z-index : 3;
-	position : fixed;
-	left : 0;
-	top : 0;
-	text-align : center;
-}
-
-.confirm a:hover {
-	color : inherit;
-}
-
 .docs-table {
 	width : 100%;
 	border-collapse: collapse;
+	background-color : white;
 }
 
 .docs-table td, .docs-table th{
@@ -256,31 +307,16 @@ nav li, nav ul {
 }
 
 .docs-table tr:hover {
-	background-color : #e6e6e6;
+	background-color : #cdcdcd;
 }
 
-.question {
-	display : inline-block;
-	padding : 2em;
-	border-radius : 1em;
-	margin-top : 10vh;
-	background-color : white;
-	text-align : center;
-}
-
-.question ul li {
-	display : inline-block;
-	margin : .5em;
-	padding : .5em;
-	border-radius : .5em;
-	border : 1px solid #001f33;	
-}
-
-.question ul li:hover{
+.selected, .docs-table .selected:hover {
 	background-color : #09f;
 	color : white;
-	border-color : #09f;
-	cursor : pointer;
+}
+
+.selected a:hover {
+	color : #efefef;	
 }
 
 .supprimer:hover {
@@ -291,7 +327,6 @@ nav li, nav ul {
 /* Classes de document */
 
 .doc-content {
-	background-color : #e6e6e6;	
 	padding : 10vh;
 	min-height : 80vh;
 }
@@ -314,9 +349,23 @@ nav li, nav ul {
 
 .compte-section {
 	padding : 2em;
-	border-radius : 1em;
-	border : 1px solid #001f33;	
-	margin : 1em 0 ;
+	text-align : center;
+	background-color : white;
+}
+
+.compte-section button {
+	margin : auto;
+}
+
+.compte-section .errorlist {
+	padding : 0;
+}
+
+.compte-section h2 {
+	margin : 0;
+	padding : 0;
+	color : white;
+	text-align : justify;
 }
 
 .compte-section span {
@@ -324,15 +373,26 @@ nav li, nav ul {
 	margin : -2em -2em 1em -2em;
 	padding : 2em 2em 1em 2em;
 	background-color : #09f;
-	border-radius : 1em 1em 0 0;
 }
 
-.compte-section h2 {
-	margin : 0;
-	padding : 0;
-	color : white;
+.compte-section table {
+	text-align : justify;
+	width : 100%;
+}
+.compte-section table td {
+	width : 50%;
 }
 
 .dangerous-section span {
 	background-color : #f44;
+}
+
+
+
+
+.icone_clignotante {
+	color : #09f;
+	animation-name : clignote;
+	animation-duration : 1.5s;
+	animation-iteration-count : infinite;
 }
