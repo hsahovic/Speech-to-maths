@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.http import Http Http404
+from django.http import Http404
 from django.shortcuts import render, redirect, HttpResponse
 
 from . import forms, models
