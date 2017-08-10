@@ -1,0 +1,195 @@
+html, body {
+    margin: 0;
+    min-width: 1024px;
+	min-height : 100vh;
+}
+
+.jumbo-section:hover {
+    padding-bottom: 8em;
+}
+
+nav {
+    min-width: 1024px;
+    width: 100%;
+    position: fixed;
+    padding: 1em;
+    z-index: 1;
+}
+
+button {
+    padding: .6em;
+    border-radius: .3em;
+    border: none;
+    cursor: pointer;
+}
+
+article {
+    padding: 2em;
+}
+
+article form ul {
+    display: inline;
+}
+
+.main-nav li {
+    margin: 0 .8em;
+}
+
+.main-nav li,
+.main-nav ul {
+    display: inline;
+    padding: 0;
+}
+
+article form ul {
+    display: inline;
+}
+
+form table {
+    width: 100%;
+}
+
+form li {
+    display: inline;
+}
+
+input {
+    display: inline;
+    margin: 0 .5em;
+    padding: .3em;
+    border-radius: .3em;
+    border: none;
+}
+
+.jumbo-section {
+    padding: 1em;
+}
+
+.to-the-right {
+    position: absolute;
+    right: 0;
+    margin-right: 2em;
+    padding-right: inherit;
+}
+
+.centered-content {
+    width: 100%;
+    max-width: 1024px;
+    margin: auto;
+}
+
+.nav_filler {
+    padding: 1em;
+}
+
+.full-height {
+    min-height: 100vh;
+}
+
+.main-nav .reversed-colors-nav {
+    padding: 1em;
+    margin: -1em;
+    margin-right: 0em;
+}
+
+.top-bar,
+.top-bar-filler {
+    padding: 1em;
+}
+
+.top-bar {
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    min-width: 1024px;
+}
+
+.top-bar a {
+    padding: 1.5em 0 1.5em 1.5em;
+    margin: -1.5em 0 -1.5em -1.5em;
+}
+
+.top-bar h3,
+.top-bar-filler h3 {
+    margin: 0 1em 0 0;
+    display: inline-block;
+}
+
+.top-bar i {
+    margin: 0 .2em;
+}
+
+.top-bar input {
+    min-width: 512px;
+    padding: .6em;
+}
+
+.top-bar form {
+    display: inline-block;
+}
+
+.docs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.docs-table td,
+.docs-table th {
+    width: 25%;
+    padding: .5em 2em;
+    text-align: left;
+}
+
+.docs-table td:first-child,
+.docs-table th:first-child {
+    width: 50%;
+}
+
+.doc-content {
+    padding: 10vh;
+    min-height: 80vh;
+}
+
+.doc-content textarea {
+    height: 76vh;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    resize: vertical;
+}
+
+.text-container {
+    padding: 2vh;
+    border-radius: 1em;
+}
+
+.form-section {
+    padding: 2em;
+}
+
+.form-section button {
+    margin: auto;
+}
+
+.form-section .errorlist {
+    padding: 0;
+}
+
+.form-section h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.form-section-title {
+    display: block;
+    margin: -2em -2em 1em -2em;
+    padding: 2em 2em 1em 2em;
+}
+
+.form-section table {
+    width: 100%;
+}
+
+.form-section table td {
+    width: 50%;
+}

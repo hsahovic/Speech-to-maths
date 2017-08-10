@@ -1,0 +1,11 @@
+{% extends "base_with_background_image.html" %}
+
+{% block title %} Speech to Maths {% endblock %}
+{% block content %} 
+<section class = "jumbo-section">
+    <div class = "centered-content">
+    {% block error %}{% endblock %}
+    <h3> Pourquoi ne pas regagner <a class = "keep-color-link" href = "{% url "index" %}"> notre page d'accueil </a> ? </h3>
+    </div>
+</section>	
+{% endblock %}

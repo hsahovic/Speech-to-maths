@@ -5,42 +5,47 @@
 {% block head %} {% endblock %}
 {% block nav %} {% endblock %}
 {% block content %} 
-
-	<div class = "top-bar">
-		<a href = "{% url "docs" %}"><!---->
-			<h3> 
-				<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
-				Mes documents 
-			</h3>
-		</a>
-		<input type = "text" name = "titre" value = "{{ doc.titre }}" form = "enregistrement">
-		<span class = "a-droite">
-		
-			<button  id = "stop_rec" style = "display : none">
-				<i class="fa fa-volume-up icone_clignotante" aria-hidden="true"></i> &nbsp;
-				Envoyer son
-			</button>
-			&nbsp;
-			<form method = "POST" id = "enregistrement">
-				{% csrf_token %}
-				<button type = "submit" name = "Enregistrer" form = "enregistrement"> 
-					<i class="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
-					Enregistrer
-				</button> 
-			</form>
-		</span>
-	</div>	
+<div class = "top-bar">
+	<a href = "{% url "docs" %}"><!---->
+		<h3> 
+			<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
+			Mes documents 
+		</h3>
+	</a>
+	<input type = "text" name = "titre" value = "{{ doc.titre }}" form = "enregistrement">
+	<span class = "to-the-right">
 	
-	<div class = "doc-content">
-		<div class = "text-container">
-			<textarea name = "contenu" form = "enregistrement" autofocus>{{ doc.contenu }}</textarea>
-		</div>
+		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+	
+		<button id = "start_rec" onclick = "start_recording();">
+			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
+			Commencer la dictée
+		</button>
+	
+		<button  id = "stop_rec" style = "display : none">
+			<i class="fa fa-volume-up blinking-icon" aria-hidden="true"></i> &nbsp;
+			Arrêter la dictée
+		</button>
+		&nbsp;
+		<form method = "POST" id = "enregistrement">
+			{% csrf_token %}
+			<button type = "submit" name = "Enregistrer" form = "enregistrement"> 
+				<i class="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
+				Enregistrer
+			</button> 
+		</form>
+	</span>
+</div>	
+
+<div class = "doc-content">
+	<div class = "text-container">
+		<textarea name = "contenu" form = "enregistrement" autofocus>{{ doc.contenu }}</textarea>
 	</div>
-	
-	<script> 
-		var voice_analysis_link = "{% url 'voice_analysis' %}"
-	</script>
-	<script src = "{% static 'js/jquery-3.2.1.min.js' %}"> </script>
-	<script src = "{% static 'js/document.js' %}"> </script>
+</div>
 
+<script> 
+	var voice_analysis_link = "{% url 'voice_analysis' %}"
+</script>
+<script src = "{% static 'js/jquery-3.2.1.min.js' %}"> </script>
+<script src = "{% static 'js/document.js' %}"> </script>
 {% endblock %}

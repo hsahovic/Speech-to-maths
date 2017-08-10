@@ -2,16 +2,17 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-
 	<head>
 		<title> {% block title %} {% endblock %}</title>
-		<link rel="stylesheet" href={% static "css/style.css" %}>
-		<!-- <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> -->
-		<!-- <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"> -->
+		<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"> 
+
+		<link href="{% static "css/animations_and_misc.css" %}" rel="stylesheet">
+		<link href="{% static "css/fonts_and_colors.css" %}" rel="stylesheet">
+		<link href="{% static "css/layout.css" %}" rel="stylesheet">
+		
 		<link rel="stylesheet" href={% static "font/font-awesome-4.7.0/css/font-awesome.min.css" %}>
-		
 		<link rel="apple-touch-icon" type="image/png" href={% static "img/favicon-192.png" %} sizes="192x192">
-		
 		<link rel="icon" type="image/png" href={% static "img/favicon-192.png" %} sizes="192x192">
 		<link rel="icon" type="image/png" href={% static "img/favicon-96.png" %} sizes="96x96">
 		<link rel="icon" type="image/png" href={% static "img/favicon-64.png" %} sizes="64x64">
@@ -19,16 +20,14 @@
 		<link rel="icon" type="image/png" href={% static "img/favicon-16.png" %} sizes="16x16">
 		<link rel="icon" type="image/png" href={% static "img/favicon-32.png" %} sizes="32x32">
 		<meta charset="UTF-8">
-		
-		{% block head %} {% endblock %}
+
+		{% block head %}{% endblock %}
 		
 	</head>
-	
 	<body>
 	
 		{% block nav %}
-		
-		<nav>
+		<nav class = "main-nav">
 			<ul>
 				<a href = "{% url "index" %}"><!----><li> Speech to Maths</li></a> 
 				<a href = "{% url "index" %}#techno"><li> Notre technologie</li></a>
@@ -37,7 +36,7 @@
 			</ul>
 			
 			{% if user.is_authenticated %}
-			<span class = "a-droite"> 
+			<span class = "to-the-right"> 
 				<ul>
 					<li> 
 						<a href = "{% url "compte" %}"><!---->
@@ -60,9 +59,9 @@
 			</span>
 			
 			{% else %}
-			<span class = "a-droite"> 
+			<span class = "to-the-right"> 
 				<ul> 
-					<li class = "special-nav"> 
+					<li class = "reversed-colors-nav"> 
 						<a href = "{% url "inscription" %}"><!---->
 							<i class="fa fa-user-plus" aria-hidden="true"></i> &nbsp;
 							Inscription 
@@ -78,15 +77,11 @@
 			</span>
 			
 			{% endif %}
-			
 		</nav>
-		
 		<div class = "nav_filler"> &nbsp; </div>
-		
 		{% endblock %}
 			
-		{% block content %} {% endblock %}
+		{% block content %}{% endblock %}
 		
 	</body>
-
 </html>

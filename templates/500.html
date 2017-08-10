@@ -1,0 +1,10 @@
+{% extends "error.html" %}
+{% load static %}
+
+{% block title %} Erreur 500 - Erreur serveur {% endblock %}
+{% block img_link %}{% static "img/night-computer-hdd-hard-drive.jpg" %}{% endblock %}
+
+{% block error %}
+<h1>  Aïe. </h1> 
+<h2> Il semblerait que nos serveurs aient rencontré une erreur. </h2>
+{% endblock %}

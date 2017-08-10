@@ -1,0 +1,10 @@
+{% extends "error.html" %}
+{% load static %}
+
+{% block title %} Erreur 404 - Page introuvable {% endblock %}
+{% block img_link %}{% static "img/personn-in-washing-machine.jpg" %}{% endblock %}
+
+{% block error %}
+<h1> Arg.</h1>
+<h2> La page demandée semble ne pas exister... </h2>
+{% endblock %}

@@ -1,0 +1,152 @@
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #09f;
+}
+
+article {
+    background-color: rgba(0, 153, 255, .9);
+    color: white;
+}
+
+article a:hover {
+    color: inherit;
+    text-decoration: underline;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    color: #001f33;
+    background-color: #e6e6e6;
+}
+
+button,
+h1,
+.main-nav {
+    font-family: 'Varela Round', sans-serif;
+}
+
+button,
+.main-nav {
+    background-color: white;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+.jumbo-section {
+    background-color: rgba(0, 153, 255, .9);
+    color: white;
+}
+
+.jumbo-section-aleternate-colors:nth-child(2n+1) {
+    background-color: rgba(255, 255, 255, .9);
+	color : inherit;
+}
+
+ 
+
+.dangerous-input {
+    background-color: #f44;
+    color: white;
+}
+
+.form-on-white input,
+.form-on-white button {
+    background-color: #e6e6e6;
+}
+
+.reversed-colors-nav {
+    background-color: #09f;
+    color: white;
+}
+
+.reversed-colors-nav:hover {
+    background-color: inherit;
+    color: inherit;
+}
+
+.top-bar {
+    background-color: #09f;
+    color: white;
+    border-bottom: 2px solid white;
+}
+
+.top-bar a:hover {
+    background-color: white;
+}
+
+.docs-table {
+    background-color: white;
+}
+
+.docs-table td,
+.docs-table th {
+    border-bottom: #e6e6e6 1px solid;
+}
+
+.docs-table tr:hover {
+    background-color: #cdcdcd;
+}
+
+.selected,
+.docs-table .selected:hover {
+    background-color: #09f;
+    color: white;
+}
+
+.selected a:hover {
+    color: #efefef;
+}
+
+.supprimer:hover {
+    color: #f44;
+    cursor: pointer;
+}
+
+.blinking-icon {
+    color: #09f;
+}
+
+.text-container {
+    background-color: white;
+}
+
+.form-section {
+    text-align: center;
+    background-color: white;
+}
+
+.form-section h2 {
+    color: white;
+    text-align: justify;
+}
+
+.form-section-title {
+    background-color: #09f;
+}
+
+.form-section table {
+    text-align: justify;
+}
+
+.dangerous-section span {
+    background-color: #f44;
+}
+
+#white_body_filler {
+	background-color : white;
+}
+
+.keep-color-link:hover {
+	color : inherit;
+	text-decoration : underline;
+}

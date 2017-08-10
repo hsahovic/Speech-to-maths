@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %} 
+<link rel="stylesheet" href={% static "css/background_image.css" %}>
+<style>
+	body {
+		background-image : url("{% block img_link %}book_notebook_and_pencil.jpeg{% endblock %}");
+	}
+</style>
+{% endblock %}

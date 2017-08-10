@@ -1,0 +1,123 @@
+ @keyframes arrive_from_left {
+	from {
+		transform : translateX(-5em);
+		opacity : 0;
+	}	
+	to {
+		transform : translateX(0);
+		opacity : 1;
+	}
+	
+}
+
+@keyframes arrive_from_right {
+	from {
+		transform : translateX(5em);
+		opacity : 0;
+	}	
+	to {
+		transform : translateX(0);
+		opacity : 1;
+	}
+} 
+
+@keyframes blinking {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes fade_in {
+	from {
+		opacity : 0;
+	}	
+	to {
+		opacity : 1;
+	}
+	
+}
+
+@keyframes shivering {
+    0%, 50%, 100% {
+        transform: rotate(0);
+    }
+    25% {
+        transform: rotate(3deg);
+    }
+    75% {
+        transform: rotate(-3deg);
+    }
+}
+
+.dangerous-input:hover {
+    animation-name: shivering;
+    animation-duration: .2s;
+    animation-iteration-count: infinite;
+}
+
+.blinking-icon {
+    animation-name: blinking;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+}
+
+button {
+    cursor: pointer;
+}
+
+.jumbo-section {
+    transition: .5s;
+}
+
+.reversed-colors-nav {
+    transition: background-color .1s, color .1s;
+}
+
+.docs-table th {
+    cursor: pointer;
+}
+
+.supprimer:hover {
+    cursor: pointer;
+}
+
+.dangerous-input:hover {
+    box-shadow: 0 0 .3em #f44;
+}
+
+.form-on-white input:hover,
+.form-on-white button:hover {
+    box-shadow: 0 0 .1em #001f33;
+}
+
+button:hover,
+input:focus,
+input:hover {
+    box-shadow: 0 0 .3em #001f33;
+}
+
+.title-section h1 {
+     animation-name: arrive_from_left;   
+    /* animation-name: fade_in; */
+    animation-duration: .75s;
+    animation-fill-mode : both;
+
+}
+
+.title-section h2 {
+     animation-name: arrive_from_right; 
+    /* animation-name: fade_in; */
+    animation-delay: .25s;
+    animation-duration: .75s;
+    animation-fill-mode : both;
+}
+
+.title-section h3 {
+    animation-name: fade_in;
+    animation-delay: .5s;
+    animation-duration: .75s;
+    animation-fill-mode : both;
+}

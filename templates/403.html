@@ -1,0 +1,10 @@
+{% extends "error.html" %}
+{% load static %}
+
+{% block title %} Erreur 403 - Accès refusé {% endblock %}
+{% block img_link %}{% static "img/door-green-closed-lock.jpg" %}{% endblock %}
+
+{% block error %}
+<h1> Oops... </h1>
+<h2> Il semblerait que vous n'avez pas l'autorisation pour accéder à cette page. </h2>
+{% endblock %}

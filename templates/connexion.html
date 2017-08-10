@@ -1,17 +1,18 @@
 ﻿{% extends "inscription.html" %}
+{% load static %}
 
 {% block title %} Connexion {% endblock %}
+{% block img_link %}{% static "img/ipad_on_books.jpeg" %}{% endblock %}
 {% block form_content %} 
-		<h1> Se connecter </h1>
-		<form id = "connexion" method = "post" action = "">
-			{% csrf_token %}
-			<table>
-				{{ form }}
-			</table>
-			<br>
-			<button type = "submit" form = "connexion">
-				<i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp; 
-				Connexion 
-			</button>
-		</form>
-{% endblock %}
+<span class = "form-section-title"> <h2> Se connecter </h2> </span>
+
+<form id = "connexion" method = "post" action = "" class = "form-on-white">
+	{% csrf_token %}
+	<table> {{ form }} </table>
+	<br>
+	<button type = "submit" form = "connexion"> 			
+		<i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp;
+		Connexion
+	</button>
+</form>	
+{% endblock %} 

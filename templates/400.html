@@ -1,0 +1,10 @@
+{% extends "error.html" %}
+{% load static %}
+
+{% block title %} Erreur 400 - Requête incorrecte {% endblock %}
+{% block img_link %}{% static "img/broken-light-bulb.jpeg" %}{% endblock %}
+
+{% block error %}
+<h1> Zut. </h1>
+<h2> La requête envoyée semble incorrecte. </h2>
+{% endblock %}
