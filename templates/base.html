@@ -21,6 +21,7 @@
 		<link rel="icon" type="image/png" href={% static "img/favicon-32.png" %} sizes="32x32">
 		<meta charset="UTF-8">
 
+	
 		{% block head %}{% endblock %}
 		
 	</head>
@@ -39,18 +40,18 @@
 			<span class = "to-the-right"> 
 				<ul>
 					<li> 
-						<a href = "{% url "compte" %}"><!---->
+						<a href = "{% url "account" %}"><!---->
 							<strong> {{ user.username }} </strong> 
 						</a> 
 					</li>
 					<li> 
-						<a href = "{% url "docs" %}"><!---->
+						<a href = "{% url "documents" %}"><!---->
 							<i class="fa fa-list" aria-hidden="true"> </i> &nbsp; 
-							Mes documents 
+							Documents 
 						</a> 
 					</li>
 					<li> 
-						<a href = "{% url "deconnexion" %}"><!---->
+						<a href = "{% url "log_out" %}"><!---->
 							<i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; 
 							Déconnexion 
 						</a> 
@@ -62,13 +63,13 @@
 			<span class = "to-the-right"> 
 				<ul> 
 					<li class = "reversed-colors-nav"> 
-						<a href = "{% url "inscription" %}"><!---->
+						<a href = "{% url "sign_up" %}"><!---->
 							<i class="fa fa-user-plus" aria-hidden="true"></i> &nbsp;
 							Inscription 
 						</a> 
 					</li> 
 					<li> 
-						<a href = "{% url "connexion" %}"><!---->
+						<a href = "{% url "sign_in" %}"><!---->
 							<i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp; 
 							Connexion 
 						</a> 

@@ -7,8 +7,8 @@ import os
 def voice_analysis (request) :
     try :
         with open("s2m%sfile_analysis%sfile.ogg" % (os.sep, os.sep), "wb+") as f :
-            for chunck in request.FILES['file'].chunks() :
-               f.write(chunck)
+            for chunk in request.FILES['file'].chunks() :
+               f.write(chunk)
     except : 
         pass
     return (HttpResponse("Le silence éternel de ces espaces infinis m'effraie."))

@@ -124,6 +124,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-LOGIN_REDIRECT_URL = "docs"
+LOGIN_REDIRECT_URL = "documents"
 
-LOGIN_URL = "connexion"
+LOGIN_URL = "sign_in"
