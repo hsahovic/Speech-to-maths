@@ -117,3 +117,24 @@ def sign_up(request):
         login(request, user)
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
+
+
+def ajax_documents_search(request):
+    user= get_user(request)
+    docs = models.Document.objects.filter(auteur=user, is_in_trash=False)
+    searchResult=str("")
+    try:
+        s=request.POST['searchValue']
+        for doc in docs:
+            i=doc.find(s)
+            if i != -1 :
+                searchResult=searchResult+ str(doc.id())+','+str(i)+';'
+    except: pass
+    return (HttpResponse(searchResult))
+
+
+
+
+
+
+

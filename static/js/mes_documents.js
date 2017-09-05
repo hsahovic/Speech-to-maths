@@ -47,7 +47,7 @@ function classer(classement) {
 	return 0;
 }
 
-function search () {
+function search_ori() {
 	var lignes = document.getElementsByClassName("_document");
 	var search_value = document.getElementsByTagName("input")[0].value.toLowerCase();	
 	for (var i = 0; i < lignes.length ; i++) {
@@ -58,6 +58,41 @@ function search () {
 			lignes[i].style.display = "none";
 		}
 	}
+}
+
+function search() {
+	// Search for content inside document
+	var search_value =  document.getElementsByTagName("input")[0].value.toLowerCase();
+	var lines =  document.getElementsByClassName("_document");
+	var formData = new FormData;
+	var request = new XMLHttpRequest();
+	var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+	formData.append("searchValue", search_value);
+	request.open("POST", "search");
+	request.setRequestHeader("X-CSRFToken", csrftoken)
+	request.send(formData);
+	request.onreadystatechange = function() {
+		  if (request.readyState == 4 && request.status == 200) {
+
+/* need to learn how to get responseText correctly*/
+		var search_result=request.responseText;
+		console.log(search_result);
+		var resultIndices=search_result.split(';');
+		for (var i = 0; i < lines.length ; i++) {
+			lines[i].style.display="none";
+		}
+
+		for (var i = 0; i < resultIndices.length ; i++) {
+			console.log(resultIndices[i]);
+			var j = resultIndices[i].split(',')[0];
+			lines[j.parseInt].style.display="table-row";
+
+
+			}	
+		}
+	}
+
+
 }
 
 function select (n) {
