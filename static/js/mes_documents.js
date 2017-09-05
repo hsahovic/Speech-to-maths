@@ -47,19 +47,6 @@ function classer(classement) {
 	return 0;
 }
 
-function search_ori() {
-	var lignes = document.getElementsByClassName("_document");
-	var search_value = document.getElementsByTagName("input")[0].value.toLowerCase();	
-	for (var i = 0; i < lignes.length ; i++) {
-		if(lignes[i].textContent.toLowerCase().indexOf(search_value) >= 0) {
-			lignes[i].style.display = "table-row";
-		}
-		else {
-			lignes[i].style.display = "none";
-		}
-	}
-}
-
 function search() {
 	// Search for content inside document
 	var search_value =  document.getElementsByTagName("input")[0].value.toLowerCase();
@@ -71,28 +58,25 @@ function search() {
 	request.open("POST", "search");
 	request.setRequestHeader("X-CSRFToken", csrftoken)
 	request.send(formData);
-	request.onreadystatechange = function() {
-		  if (request.readyState == 4 && request.status == 200) {
-
-/* need to learn how to get responseText correctly*/
-		var search_result=request.responseText;
-		console.log(search_result);
-		var resultIndices=search_result.split(';');
-		for (var i = 0; i < lines.length ; i++) {
-			lines[i].style.display="none";
+	for (var i = 0; i < lines.length ; i++) {
+		if(lines[i].textContent.toLowerCase().indexOf(search_value) >= 0) {
+			lines[i].style.display = "table-row";
 		}
-
-		for (var i = 0; i < resultIndices.length ; i++) {
-			console.log(resultIndices[i]);
-			var j = resultIndices[i].split(',')[0];
-			lines[j.parseInt].style.display="table-row";
-
-
-			}	
+		else {
+				lines[i].style.display = "none";
 		}
 	}
-
-
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var search_result=request.responseText;
+			var resultIndices=search_result.split(';');
+			if (resultIndices[0] != "") {
+			for (var i = 0; i < resultIndices.length ; i++) {
+				document.getElementById(resultIndices[i]).style.display="table-row";
+				}
+			}
+		}
+	}
 }
 
 function select (n) {

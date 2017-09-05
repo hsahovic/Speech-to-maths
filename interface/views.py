@@ -120,21 +120,11 @@ def sign_up(request):
 
 
 def ajax_documents_search(request):
-    user= get_user(request)
+    user = get_user(request)
     docs = models.Document.objects.filter(auteur=user, is_in_trash=False)
-    searchResult=str("")
-    try:
-        s=request.POST['searchValue']
-        for doc in docs:
-            i=doc.find(s)
-            if i != -1 :
-                searchResult=searchResult+ str(doc.id())+','+str(i)+';'
-    except: pass
-    return (HttpResponse(searchResult))
+    search_result = ""
+    s=request.POST['searchValue']
 
-
-
-
-
-
-
+    docs_to_keep = [str(doc.id) for doc in docs if doc.contenu.find(s) != -1]
+    
+    return (HttpResponse(";".join(docs_to_keep)))
