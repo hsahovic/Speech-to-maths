@@ -562,5 +562,4 @@ class Number(Formula):
                 return None
 
         return [number_expand], [number_reduce], [], []
-
     

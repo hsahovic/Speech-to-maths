@@ -20,7 +20,9 @@ function start_recording () {
 			mediaRecorder.start();
 			
 			mediaRecorder.onstop = function(evt) {
-				var blob = new Blob(chunks, {'type' : 'audio/ogg; codecs=opus'});
+				// var blob = new Blob(chunks, {'type' : 'audio/wave'});
+				var blob = new Blob(chunks, {'type' : 'audio/x-wav'});
+				// var blob = new Blob(chunks, {'type' : 'audio/ogg; codecs=opus'});
 				var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 				var formData = new FormData;
 				var request = new XMLHttpRequest();
