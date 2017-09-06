@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^new_document$', views.add_doc, name='add_doc'),
     url(r'^document/(\d+)$', views.document, name='document'),
     url(r'^documents$', views.documents, name='documents'),
+    
+    url(r'^search$', views.ajax_documents_search, name='search'),
 
     url(r'^account$', views.account, name='account'),
     

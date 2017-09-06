@@ -117,3 +117,14 @@ def sign_up(request):
         login(request, user)
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
+
+
+def ajax_documents_search(request):
+    user = get_user(request)
+    docs = models.Document.objects.filter(auteur=user, is_in_trash=False)
+    search_result = ""
+    s=request.POST['searchValue']
+
+    docs_to_keep = [str(doc.id) for doc in docs if doc.contenu.find(s) != -1]
+    
+    return (HttpResponse(";".join(docs_to_keep)))
