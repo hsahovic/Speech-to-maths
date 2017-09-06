@@ -43,9 +43,17 @@
 	</div>
 </div>
 
+<div class = "doc-content">
+	<h3> 
+		PDF 
+	</h3>
+	<iframe src="{{ doc.latex.url }}" width="1200" height="600" align="middle"></iframe>
+</div>
+
 <script> 
 	var voice_analysis_link = "{% url 'voice_analysis' %}"
 </script>
 <script src = "{% static 'js/jquery-3.2.1.min.js' %}"> </script>
 <script src = "{% static 'js/document.js' %}"> </script>
 {% endblock %}
+

@@ -19,7 +19,6 @@ class NumberParser:
                'seize' : 16,
                }
     
-    # Verifier l'utilité de la distinction others / other_numbers
     OTHER_NUMBERS = {'zero' : 0,
               'un' : 1,
               'onze' : 11,

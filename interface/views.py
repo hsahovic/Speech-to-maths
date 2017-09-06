@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect, HttpResponse
+from django.core.files import File
 
 from . import forms, models
 
@@ -67,6 +68,7 @@ def add_doc(request):
             break
     doc.titre = "Sans titre %d" % n
     doc.contenu = ""
+    doc.latex = File(open('./static/img/projet map - copie.pdf', 'rb'))
     doc.is_in_trash = False
     doc.save()
     return redirect("document", doc.id)
@@ -84,6 +86,7 @@ def document(request, n):
             doc.save()
         except Exception:
             pass
+        doc.as_pdf()
         return render(request, 'document.html', locals())
     raise Http404
 
@@ -117,14 +120,3 @@ def sign_up(request):
         login(request, user)
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
-
-
-def ajax_documents_search(request):
-    user = get_user(request)
-    docs = models.Document.objects.filter(auteur=user, is_in_trash=False)
-    search_result = ""
-    s=request.POST['searchValue']
-
-    docs_to_keep = [str(doc.id) for doc in docs if doc.contenu.find(s) != -1]
-    
-    return (HttpResponse(";".join(docs_to_keep)))

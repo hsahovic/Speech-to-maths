@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="index.html")),
-    url(r'^index$', TemplateView.as_view(template_name="index.html"), name='index'),
+    url(r'^index/$', TemplateView.as_view(template_name="index.html"), name='index'),
 
     url(r'^log-out$', auth_views.logout, {
         'next_page': 'index'}, name='log_out'),
@@ -17,8 +17,6 @@ urlpatterns = [
     url(r'^new_document$', views.add_doc, name='add_doc'),
     url(r'^document/(\d+)$', views.document, name='document'),
     url(r'^documents$', views.documents, name='documents'),
-    
-    url(r'^search$', views.ajax_documents_search, name='search'),
 
     url(r'^account$', views.account, name='account'),
     

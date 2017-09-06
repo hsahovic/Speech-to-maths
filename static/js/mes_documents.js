@@ -47,34 +47,15 @@ function classer(classement) {
 	return 0;
 }
 
-function search() {
-	// Search for content inside document
-	var search_value =  document.getElementsByTagName("input")[0].value.toLowerCase();
-	var lines =  document.getElementsByClassName("_document");
-	var formData = new FormData;
-	var request = new XMLHttpRequest();
-	var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-	formData.append("searchValue", search_value);
-	request.open("POST", "search");
-	request.setRequestHeader("X-CSRFToken", csrftoken)
-	request.send(formData);
-	for (var i = 0; i < lines.length ; i++) {
-		if(lines[i].textContent.toLowerCase().indexOf(search_value) >= 0) {
-			lines[i].style.display = "table-row";
+function search () {
+	var lignes = document.getElementsByClassName("_document");
+	var search_value = document.getElementsByTagName("input")[0].value.toLowerCase();	
+	for (var i = 0; i < lignes.length ; i++) {
+		if(lignes[i].textContent.toLowerCase().indexOf(search_value) >= 0) {
+			lignes[i].style.display = "table-row";
 		}
 		else {
-				lines[i].style.display = "none";
-		}
-	}
-	request.onreadystatechange = function() {
-		if (request.readyState == 4 && request.status == 200) {
-			var search_result=request.responseText;
-			var resultIndices=search_result.split(';');
-			if (resultIndices[0] != "") {
-			for (var i = 0; i < resultIndices.length ; i++) {
-				document.getElementById(resultIndices[i]).style.display="table-row";
-				}
-			}
+			lignes[i].style.display = "none";
 		}
 	}
 }
