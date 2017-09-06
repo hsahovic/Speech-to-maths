@@ -11,7 +11,7 @@
 		Documents 
 	</h3>
 	<i class="fa fa-search" aria-hidden="true"></i>
-	<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(search, 0)">
+	<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(searchDocuments, 0)">
 	<span class = "to-the-right">
 		<form id = "_delete" style = "visibility: hidden;" method = "POST"><!---->
 			{% csrf_token %}
@@ -40,9 +40,9 @@
 
 {% if docs %}
 	<tr>
-		<th onclick = "classer(0)"> Titre &nbsp;</th> 
-		<th onclick = "classer(1)"> <i class="fa fa-user" aria-hidden="true"></i> &nbsp;  Auteur &nbsp; </th> 				
-		<th onclick = "classer(2)"> <i class="fa fa-calendar-o" aria-hidden="true"></i> &nbsp; Dernière modification &nbsp; </th>
+		<th onclick = "orderLines(0)"> Titre &nbsp;</th> 
+		<th onclick = "orderLines(1)"> <i class="fa fa-user" aria-hidden="true"></i> &nbsp;  Auteur &nbsp; </th> 				
+		<th onclick = "orderLines(2)"> <i class="fa fa-calendar-o" aria-hidden="true"></i> &nbsp; Dernière modification &nbsp; </th>
 	</tr>
 {% endif %}
 
@@ -73,6 +73,9 @@
 
 </table>
 
-<script src = "{% static 'js/mes_documents.js' %}"> </script>
-<script> search();</script>
+<script> 
+	var documents_search_link = "{% url 'documents_search' %}"
+</script>
+<script src = "{% static 'js/documents.js' %}"> </script>
+
 {% endblock %}

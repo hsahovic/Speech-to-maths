@@ -4,9 +4,9 @@ html, body {
 	min-height : 100vh;
 }
 
-.jumbo-section:hover {
+/* .jumbo-section:hover {
     padding-bottom: 8em;
-}
+} */
 
 nav {
     min-width: 1024px;

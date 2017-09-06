@@ -34,7 +34,7 @@ class NumberParser:
                'billard' : 15,
                'trillion' : 18,
                'trilliard' : 21, 
-               'quatrillon' : 24, 
+               'quadrillon' : 24, 
                'quadrillard' : 27,
                'quintillion' : 30,
                'quintillard' : 33, 

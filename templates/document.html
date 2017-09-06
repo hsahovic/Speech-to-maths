@@ -17,7 +17,7 @@
 	
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 	
-		<button id = "start_rec" onclick = "start_recording();">
+		<button id = "start_rec" onclick = "manageAudioStuff();">
 			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 			Commencer la dictée
 		</button>
@@ -46,6 +46,5 @@
 <script> 
 	var voice_analysis_link = "{% url 'voice_analysis' %}"
 </script>
-<script src = "{% static 'js/jquery-3.2.1.min.js' %}"> </script>
 <script src = "{% static 'js/document.js' %}"> </script>
 {% endblock %}

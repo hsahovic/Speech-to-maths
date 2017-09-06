@@ -17,8 +17,6 @@ urlpatterns = [
     url(r'^new_document$', views.add_doc, name='add_doc'),
     url(r'^document/(\d+)$', views.document, name='document'),
     url(r'^documents$', views.documents, name='documents'),
-    
-    url(r'^search$', views.ajax_documents_search, name='search'),
 
     url(r'^account$', views.account, name='account'),
     
@@ -26,4 +24,6 @@ urlpatterns = [
     url(r'^403$', TemplateView.as_view(template_name="403.html"), name = "error_403"),
     url(r'^404$', TemplateView.as_view(template_name="404.html"), name = "error_404"),
     url(r'^500$', TemplateView.as_view(template_name="500.html"), name = "error_500"),
+
+    url(r'^ajax/documents-search$', views.documents_search, name='documents_search'),
 ]

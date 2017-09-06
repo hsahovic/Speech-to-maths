@@ -3,7 +3,7 @@ class Token:
     def __init__(self, tag, formula=None):
 
         if type(tag) != str:
-            raise TypeError('Token tag must be a string, not %r.' % name)
+            raise TypeError('Token tag must be a string, not %r.' % tag)
         elif formula and not type(formula) == list:
             raise TypeError('Token formula must be a list, not %r.' % formula)
         else:
