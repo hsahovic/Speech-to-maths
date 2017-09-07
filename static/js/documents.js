@@ -95,7 +95,6 @@ function searchDocuments() {
 function select(n) {
 	// On récupère l'élément sur lequel l'utilisateur a cliqué
 	var div = document.getElementById(n);
-	var div_is_selected = (div.className.indexOf(" selected") != -1)
 	document.getSelection().removeAllRanges();
 
 	if (!ctrl_down) {
@@ -105,7 +104,7 @@ function select(n) {
 	}
 
 	// Si l'élément n'est pas selectionné, on le selectionne
-	if (div_is_selected) div.className = div.className.replace(" selected", '');
+	if (div.className.indexOf(" selected") != -1) div.className = div.className.replace(" selected", '');
 	else div.className += " selected";
 
 	// Si on a des elements selectionnés, on affiche le bouton de suppression
