@@ -19,7 +19,7 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^ajax/voice_analysis$', views.voice_analysis, name = "voice_analysis"),
+    url(r'^admin/?$', admin.site.urls),
+    url(r'^ajax/voice_analysis/?$', views.voice_analysis, name = "voice_analysis"),
     url(r'', include('interface.urls')),
 ]

@@ -2,7 +2,7 @@ function orderLines(typeOfOrdering) {
 	// Cette fonction permet de classer les lignes de la table contenant les informations de nos documents, selon un critère : 0 correspond au titre, 1 à l'auteur, 2 à la date
 	var lines = [].slice.call(document.getElementsByClassName("_document"));
 	var table = document.getElementsByTagName("table")[0];
-	var table_head = table.getElementsByTagName("th");
+	var tableHead = table.getElementsByTagName("th");
 	var icons = 0;
 
 	// On classe les lignes selon l'ordre d'une fonction définie par une fonction définie à la volée
@@ -39,11 +39,11 @@ function orderLines(typeOfOrdering) {
 	if (currentTypeOfOrdering == typeOfOrdering) {
 		lines.reverse();
 		currentTypeOfOrdering = -1;
-		table_head[typeOfOrdering].innerHTML += "<i class='fa fa-arrow-up _decoration' aria-hidden='true'></i>";
+		tableHead[typeOfOrdering].innerHTML += "<i class='fa fa-arrow-up _decoration' aria-hidden='true'></i>";
 	}
 	else {
 		currentTypeOfOrdering = typeOfOrdering;
-		table_head[typeOfOrdering].innerHTML += "<i class='fa fa-arrow-down _decoration' aria-hidden='true'></i>";
+		tableHead[typeOfOrdering].innerHTML += "<i class='fa fa-arrow-down _decoration' aria-hidden='true'></i>";
 	}
 	for (var i = 0; i < lines.length; i++) {
 		table.appendChild(lines[i]);
@@ -55,7 +55,7 @@ function orderLines(typeOfOrdering) {
 function searchDocuments() {
 	// Cette fonction permet de gérer les recherches sur la page documents
 	// On récupère le terme recherché
-	var search_value = document.getElementsByTagName("input")[0].value.toLowerCase();
+	var searchValue = document.getElementsByTagName("input")[0].value.toLowerCase();
 
 	var lines = document.getElementsByClassName("_document");
 
@@ -63,14 +63,15 @@ function searchDocuments() {
 	var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 	var formData = new FormData;
 	var request = new XMLHttpRequest();
-	request.open("POST", documents_search_link);
+	request.open("POST", documentsSearchLink);
 	request.setRequestHeader("X-CSRFToken", csrftoken)
-	formData.append("searchValue", search_value);
+	formData.append("searchValue", searchValue);
+	document.getElementById("communication_indicator").style.display = 'inline-block';
 	request.send(formData);
 
 	// On effectue une recherche sur les contenus des lignes
 	for (var i = 0; i < lines.length; i++) {
-		if (lines[i].textContent.toLowerCase().indexOf(search_value) >= 0) {
+		if (lines[i].textContent.toLowerCase().indexOf(searchValue) >= 0) {
 			lines[i].style.display = "table-row";
 		}
 		else {
@@ -81,8 +82,9 @@ function searchDocuments() {
 	// Une fois la recherche effectuée, et une fois notre requête receptionnée en bonne et due forme, on affiche les fichiers dont le contenu contient le terme de recherche
 	request.onreadystatechange = function () {
 		if (request.readyState == 4 && request.status == 200) {
-			var search_result = request.responseText;
-			var resultIndices = search_result.split(';');
+			document.getElementById("communication_indicator").style.display = 'none';
+			var searchResult = request.responseText;
+			var resultIndices = searchResult.split(';');
 			if (resultIndices[0] != "") {
 				for (var i = 0; i < resultIndices.length; i++) {
 					document.getElementById(resultIndices[i]).style.display = "table-row";
@@ -93,23 +95,45 @@ function searchDocuments() {
 }
 
 function select(n) {
+	// Cette fonction permet de gérer la selection de lignes sur documents
+	// Elle permet d'effectuer les opérations usuelles liées aux touches Shift et Maj
 	// On récupère l'élément sur lequel l'utilisateur a cliqué
 	var div = document.getElementById(n);
 	document.getSelection().removeAllRanges();
 
-	if (!ctrl_down) {
+	if (!ctrlDown) {
 		var divs = document.getElementsByClassName('selected');
-		// Je ne comprends pas pourquoi la ligne suivante fonctionne.
-		for (i = 0; i < divs.length;) divs[0].className = divs[0].className.replace(" selected", '');
+		for (i = 0; i < divs.length;) {
+			console.log(divs, n);
+			if (divs[i].id != n) divs[i].className = divs[i].className.replace(" selected", '');
+			else i++;
+		}
 	}
 
+	if (shiftDown && lastSelection != -1) {
+		var divs = document.getElementsByClassName('_document');
+		var inSelection = false;
+		var lastDiv = document.getElementById(lastSelection);
+		for (i = 0; i < divs.length; i++) {
+			if (divs[i].id == n) inSelection = !inSelection;
+			if (divs[i].id == lastSelection) inSelection = !inSelection;
+			if (inSelection) {
+				if (divs[i].className.indexOf("selected") == -1) divs[i].className += " selected";
+			}
+		}
+		if (lastDiv.className.indexOf("selected") == -1) lastDiv.className += " selected";
+	}
+	else lastSelection = n;
+
 	// Si l'élément n'est pas selectionné, on le selectionne
-	if (div.className.indexOf(" selected") != -1) div.className = div.className.replace(" selected", '');
+	if (div.className.indexOf(" selected") != -1) {
+		if (!shiftDown) div.className = div.className.replace(" selected", '');
+	}
 	else div.className += " selected";
 
 	// Si on a des elements selectionnés, on affiche le bouton de suppression
 	if (document.getElementsByClassName('selected').length != 0) {
-		document.getElementById('_delete').style.visibility = "visible";
+		document.getElementById('_delete').style.display = "inline-block";
 		document.getElementById('_delete-value').value = "";
 		var divs = document.getElementsByClassName('selected');
 		for (i = 0; i < divs.length; i++) {
@@ -117,22 +141,24 @@ function select(n) {
 			if (i != divs.length - 1) document.getElementById('_delete-value').value += ';';
 		}
 	}
-	else document.getElementById('_delete').style.visibility = "hidden";
+	else document.getElementById('_delete').style.display = "none";
+
 }
 
 currentTypeOfOrdering = -1;
-ctrl_down = false;
-shift_down = false;
+ctrlDown = false;
+shiftDown = false;
+lastSelection = -1;
 
 searchDocuments();
 
 // On suit l'activité des touches Shift & Ctrl pour les selections
 document.onkeydown = function (event) {
-	if (event.ctrlKey) ctrl_down = true;
-	if (event.shiftKey) shift_down = true;
+	if (event.ctrlKey) ctrlDown = true;
+	if (event.shiftKey) shiftDown = true;
 };
 
 document.onkeyup = function (event) {
-	if (!event.ctrlKey) ctrl_down = false;
-	if (!event.shiftKey) shift_down = false;
+	if (!event.ctrlKey) ctrlDown = false;
+	if (!event.shiftKey) shiftDown = false;
 };

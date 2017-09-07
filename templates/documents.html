@@ -13,7 +13,8 @@
 	<i class="fa fa-search" aria-hidden="true"></i>
 	<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(searchDocuments, 0)">
 	<span class = "to-the-right">
-		<form id = "_delete" style = "visibility: hidden;" method = "POST"><!---->
+		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+		<form id = "_delete" style = "display : none;" method = "POST"><!---->
 			{% csrf_token %}
 			<button type="submit"> 
 				<i class="fa fa-trash" aria-hidden="true"></i> &nbsp;
@@ -74,7 +75,7 @@
 </table>
 
 <script> 
-	var documents_search_link = "{% url 'documents_search' %}"
+	var documentsSearchLink = "{% url 'documents_search' %}"
 </script>
 <script src = "{% static 'js/documents.js' %}"> </script>
 

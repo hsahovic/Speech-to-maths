@@ -5,7 +5,6 @@ function manageAudioStuff() {
 	// On vérifie qu'on a accès à un flux audio, et le cas échéant on le capte
 	if (navigator.mediaDevices) {
 		navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-			console.log('in');
 			var audioCtx = new AudioContext();
 			var chunks = [];
 			var dest = audioCtx.createMediaStreamDestination();
@@ -36,7 +35,7 @@ function manageAudioStuff() {
 				var blob = new Blob(chunks, { 'type': 'audio/x-wav' });
 				var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 				formData.append("file", blob);
-				request.open("POST", voice_analysis_link);
+				request.open("POST", voiceAnalysisLink);
 				request.setRequestHeader("X-CSRFToken", csrftoken);
 
 				// On affiche le fait que l'on communique avec le serveur et on lance la requête
