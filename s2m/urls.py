@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 
 from . import views
 
 urlpatterns = [
-    url(r'^admin/?$', admin.site.urls),
+    url(r'^admin', admin.site.urls),
     url(r'^ajax/voice_analysis/?$', views.voice_analysis, name = "voice_analysis"),
     url(r'', include('interface.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

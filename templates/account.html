@@ -1,5 +1,6 @@
 {% extends "base_with_background_image.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %} Mes documents {% endblock %}
 {% block img_link %}{% static "img/woman_looking_at_the_stars.jpg" %}{% endblock %}
@@ -25,7 +26,7 @@ Infomations diverses </h2> </span>
 			</tr>			
 			<tr> 
 				<td> <strong> Date de création du compte </strong> </td>
-				<td> {{ user.date_joined|date:'d F Y' }} </td>
+				<td> {{ user.date_joined|naturalday|capfirst }} </td>
 			</tr>
 		</table>
 	</section>

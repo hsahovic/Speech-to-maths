@@ -48,15 +48,13 @@ function orderLines(typeOfOrdering) {
 	for (var i = 0; i < lines.length; i++) {
 		table.appendChild(lines[i]);
 	}
-	console.log(table.innerHTML);
 	return 0;
 }
 
 function searchDocuments() {
 	// Cette fonction permet de gérer les recherches sur la page documents
 	// On récupère le terme recherché
-	var searchValue = document.getElementsByTagName("input")[0].value.toLowerCase();
-
+	var searchValue = document.getElementsByTagName("input")[0].value.toLowerCase()
 	var lines = document.getElementsByClassName("_document");
 
 	// On envoie une requête au serveur interrogeant le contenu des documents
@@ -65,8 +63,12 @@ function searchDocuments() {
 	var request = new XMLHttpRequest();
 	request.open("POST", documentsSearchLink);
 	request.setRequestHeader("X-CSRFToken", csrftoken)
-	formData.append("searchValue", searchValue);
-	document.getElementById("communication_indicator").style.display = 'inline-block';
+
+	var data = { "searchValue": searchValue };
+	data = JSON.stringify(data);
+	formData.append("data", data);
+
+	communicationIndicatorManager.addRequest();
 	request.send(formData);
 
 	// On effectue une recherche sur les contenus des lignes
@@ -79,15 +81,30 @@ function searchDocuments() {
 		}
 	}
 
+	var spans = document.getElementsByClassName("_search_content");
+	for (i = 0; i<spans.length; i++) {
+		spans[i].innerHTML = "";
+	}
+
 	// Une fois la recherche effectuée, et une fois notre requête receptionnée en bonne et due forme, on affiche les fichiers dont le contenu contient le terme de recherche
 	request.onreadystatechange = function () {
 		if (request.readyState == 4 && request.status == 200) {
-			document.getElementById("communication_indicator").style.display = 'none';
-			var searchResult = request.responseText;
-			var resultIndices = searchResult.split(';');
-			if (resultIndices[0] != "") {
-				for (var i = 0; i < resultIndices.length; i++) {
-					document.getElementById(resultIndices[i]).style.display = "table-row";
+			communicationIndicatorManager.endRequest();
+			var response = JSON.parse(request.responseText);
+			if (response.length) {
+				for (var i = 0; i < response.length; i++) {
+					var line = document.getElementById(response[i].docID);
+					line.style.display = "table-row";
+					if (searchValue != "") {
+						var start = ""
+						var end = ""
+						if (response[i].containsStart) start = "... ";
+						if (response[i].containsEnd) end = " ...";
+						line.childNodes[1].innerHTML += `<span class = "_search_content additional-data"><br><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+						&nbsp;
+						${start}${response[i].preContent}<strong>${response[i].content}</strong>${response[i].postContent}${end} </span>`;
+					}
+
 				}
 			}
 		}
@@ -104,7 +121,6 @@ function select(n) {
 	if (!ctrlDown) {
 		var divs = document.getElementsByClassName('selected');
 		for (i = 0; i < divs.length;) {
-			console.log(divs, n);
 			if (divs[i].id != n) divs[i].className = divs[i].className.replace(" selected", '');
 			else i++;
 		}
@@ -145,10 +161,10 @@ function select(n) {
 
 }
 
-currentTypeOfOrdering = -1;
-ctrlDown = false;
-shiftDown = false;
-lastSelection = -1;
+var currentTypeOfOrdering = -1;
+var ctrlDown = false;
+var shiftDown = false;
+var lastSelection = -1;
 
 searchDocuments();
 

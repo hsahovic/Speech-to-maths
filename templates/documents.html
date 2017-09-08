@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %} Documents {% endblock %}
 {% block head %} 
@@ -14,7 +15,7 @@
 	<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(searchDocuments, 0)">
 	<span class = "to-the-right">
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
-		<form id = "_delete" style = "display : none;" method = "POST"><!---->
+		<form id = "_delete" style = "display : none;" method = "POST">
 			{% csrf_token %}
 			<button type="submit"> 
 				<i class="fa fa-trash" aria-hidden="true"></i> &nbsp;
@@ -22,9 +23,9 @@
 				<input type = "hidden" value = "" id = "_delete-value" name = 'delete-value'>
 			</button> 
 		</form>	&nbsp;
-		<form action = "{% url "add_doc" %}"><!---->
+		<form action = "{% url "add_doc" %}">
 			<button type="submit"> 
-				<i class="fa fa-file" aria-hidden="true"></i> &nbsp;
+				<i class="fa fa-plus-square-o" aria-hidden="true"></i> &nbsp;
 				Nouveau document 
 			</button> 
 		</form>
@@ -42,7 +43,7 @@
 {% if docs %}
 	<tr>
 		<th onclick = "orderLines(0)"> Titre &nbsp;</th> 
-		<th onclick = "orderLines(1)"> <i class="fa fa-user" aria-hidden="true"></i> &nbsp;  Auteur &nbsp; </th> 				
+		<th onclick = "orderLines(1)"> <i class="fa fa-user-o" aria-hidden="true"></i> &nbsp;  Auteur &nbsp; </th> 				
 		<th onclick = "orderLines(2)"> <i class="fa fa-calendar-o" aria-hidden="true"></i> &nbsp; Dernière modification &nbsp; </th>
 	</tr>
 {% endif %}
@@ -52,15 +53,16 @@
 		<td> 
 			<a href = "{% url "document" doc.id %}"> 
 				<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
-				{{ doc.titre }} 
+				{{ doc.title }} 
 			</a> 
 		</td>
 		<td> 
-			{{ doc.auteur }}
+			{{ doc.author }}
 		</td>
 		<td> 
-			<time> {{ doc.date_derniere_modification }} </time>
-			<input type = "hidden" value = "{{ doc.date_derniere_modification|date:'Y m d'}}">
+			<time> {{ doc.last_modification_date|naturalday|capfirst }} </time>
+			<input type = "hidden" value = "{{ doc.last_modification_date|date:'Y m d'}}">
+		</td>
 	</tr>
 
 {% empty %}
@@ -75,8 +77,9 @@
 </table>
 
 <script> 
-	var documentsSearchLink = "{% url 'documents_search' %}"
+	var documentsSearchLink = "{% url 'documents_search' %}";
 </script>
+<script src = "{% static 'js/communication_indicator_manager.js' %}"> </script>
 <script src = "{% static 'js/documents.js' %}"> </script>
 
 {% endblock %}

@@ -39,14 +39,14 @@ function manageAudioStuff() {
 				request.setRequestHeader("X-CSRFToken", csrftoken);
 
 				// On affiche le fait que l'on communique avec le serveur et on lance la requête
-				document.getElementById("communication_indicator").style.display = 'inline-block';
+				communicationIndicatorManager.addRequest();
 				request.send(formData);
 
 				// On gère la réception de réponse
 				request.onreadystatechange = function () {
 					if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
 						document.getElementById("stop_rec").style.display = 'none';
-						document.getElementById("communication_indicator").style.display = 'none';
+						communicationIndicatorManager.endRequest();
 						document.getElementById("start_rec").style.display = "inline-block";
 						stream.stop();
 					}
@@ -55,3 +55,39 @@ function manageAudioStuff() {
 		});
 	}
 }
+
+function manageContentChange(ajaxDelay) {
+	// Gère la modification du contenu ; 
+	// Permet de donner une valeur par défaut à ajaxDelay
+
+	if (ajaxDelay == undefined) {
+		ajaxDelay = .5;
+	}
+	if (changeHappened); // Si le changement est déjà pris en compte, on ne fait rien
+	else { // Sinon, on indique qu'il est pris en compte et on programme une requête de maj pour le serveur
+		changeHappened = true;
+
+		var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+		var formData = new FormData;
+		var request = new XMLHttpRequest();
+
+		request.open("POST", documentSaveLink);
+		request.setRequestHeader("X-CSRFToken", csrftoken)
+
+		setTimeout(function () {
+			communicationIndicatorManager.addRequest();
+			changeHappened = false;
+			var data = { "docID": docID, "newContent": document.getElementsByName("contenu")[0].value };
+			data = JSON.stringify(data);
+			formData.append("data", data);
+			request.send(formData);
+			request.onreadystatechange = function () {
+				if (request.readyState == 4 && request.status == 200) {
+					communicationIndicatorManager.endRequest();
+				}
+			}
+		}, 1000 * ajaxDelay);
+	}
+}
+
+var changeHappened = false;

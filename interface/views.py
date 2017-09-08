@@ -2,8 +2,11 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect, HttpResponse
+from django.core.files import File
 
 from . import forms, models
+
+import json
 
 
 def get_user(request):
@@ -13,7 +16,7 @@ def get_user(request):
 def get_document(request, n):
     try:
         doc = models.Document.objects.get(id=n)
-        if doc.auteur.username == request.user.username:
+        if doc.author.username == request.user.username:
             return doc
     except Exception:
         pass
@@ -42,7 +45,7 @@ def account(request):
         user.save()
     if suppression_form.is_valid():
         user = get_user(request)
-        docs = models.Document.objects.filter(auteur=user)
+        docs = models.Document.objects.filter(author=user)
         for doc in docs:
             doc.delete()
         user.delete()
@@ -58,15 +61,15 @@ def account(request):
 def add_doc(request):
     doc = models.Document()
     user = get_user(request)
-    doc.auteur = user
+    doc.author = user
     n = 1
     while True:
-        if models.Document.objects.filter(auteur=user, titre="Sans titre %d" % n):
+        if models.Document.objects.filter(author=user, title="Sans titre %d" % n):
             n += 1
         else:
             break
-    doc.titre = "Sans titre %d" % n
-    doc.contenu = ""
+    doc.title = "Sans titre %d" % n
+    doc.content = ""
     doc.is_in_trash = False
     doc.save()
     return redirect("document", doc.id)
@@ -75,15 +78,17 @@ def add_doc(request):
 @login_required
 def document(request, n):
     doc = get_document(request, n)
-    if doc.is_in_trash :
+    if doc.is_in_trash:
         return redirect("error_400")
     if doc:
-        try:
-            doc.titre = request.POST['titre']
-            doc.contenu = request.POST['contenu']
-            doc.save()
-        except Exception:
-            pass
+        # try:
+        #     doc.title = request.POST['titre']
+        #     doc.content = request.POST['contenu']
+        #     doc.save()
+        #     # A mieux placer ; sans doute un système asynchrone serait plus efficient
+        #     doc.generate_pdf()
+        # except Exception:
+        #     pass
         return render(request, 'document.html', locals())
     raise Http404
 
@@ -98,7 +103,7 @@ def documents(request):
             doc.save()
     except Exception:
         pass
-    docs = models.Document.objects.filter(auteur=user, is_in_trash=False)
+    docs = models.Document.objects.filter(author=user, is_in_trash=False)
     return render(request, 'documents.html', locals())
 
 
@@ -118,11 +123,39 @@ def sign_up(request):
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
 
+
 @login_required
-def documents_search(request):
+def documents_search(request, context_length=50):
     user = get_user(request)
-    docs = models.Document.objects.filter(auteur=user, is_in_trash=False)
-    search_result = ""
-    s=request.POST['searchValue']
-    docs_to_keep = [str(doc.id) for doc in docs if doc.contenu.find(s) != -1]
-    return (HttpResponse(";".join(docs_to_keep)))
+    docs = models.Document.objects.filter(author=user, is_in_trash=False)
+    data = json.loads(request.POST['data'])
+    search_value = data["searchValue"]
+    response = []
+    # On parcourt les documents, et on envoie ceux contenant les termes de la recherche
+    # Cette structure peut être étendue à une regex
+    for doc in docs:
+        position = doc.content.lower().find(search_value)
+        # Si l'on trouve le texte rechercé
+        if position != -1:
+            # On récupère ce qu'il y a avant, dans, et après le contenu
+            pre = doc.content[max(0, position - context_length):position]
+            con = doc.content[position:position + len(search_value)]
+            post = doc.content[position + len(search_value):min(
+                len(doc.content), position + len(search_value) + context_length)]
+            contains_start = position > context_length
+            contains_end = position + len(search_value) + context_length < len(doc.content)
+            # On rajoute le tout à la liste envoyée
+            response.append(
+                {"docID": doc.id, "preContent": pre, "content": con, "postContent": post, "containsStart" : contains_start, "containsEnd" : contains_end})
+    response = json.dumps(response)
+    return (HttpResponse(response))
+
+
+@login_required
+def save_document(request):
+    # sécurité
+    data = json.loads(request.POST['data'])
+    doc = get_document(request, data["docID"])
+    doc.content = data["newContent"]
+    doc.save()
+    return (HttpResponse(""))
