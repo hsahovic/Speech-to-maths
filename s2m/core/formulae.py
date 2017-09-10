@@ -1,4 +1,4 @@
-."""[PSC Speech-to-Math]             (Streichholzschaechtelchen)
+"""[PSC Speech-to-Math]             (Streichholzschaechtelchen)
                         formulae.py
 ***************************************************************
 *Fournit les structures de base pour l'encodage des arbres    *
