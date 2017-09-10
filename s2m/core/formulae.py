@@ -11,17 +11,11 @@
 *prives.                                                      *
 ************************************************************"""
 
-#BEWARE: THIS IS PYTHON 2 METACLASS SYNTAX
-
-#Niveaux de priorite a gerer proprement... comment ?
-
 from abc import ABCMeta, abstractmethod
 from number_parser import NumberParser
 from parser import Token
 
-class Formula:
-    
-    __metaclass__ = ABCMeta
+class Formula(metaclass=ABCMeta):
 
     @abstractmethod
     def _latex(self):
@@ -220,20 +214,20 @@ class BinaryOperator(Formula):
         """Genere le code LaTeX correspondant a self"""
         return self._latex()[0]
 
-    def parsing_rules():
+    def teach(parser):
 
-        def binary_operator_reduce(word):
-            OPERATORS = {'plus':'ADD',
-                         'moins':'SUB',
-                         'fois':'MUL',
-                         'sur':'DIV',
-                         'puissance':'POW',
-                         'egal':'EQU'}
-            if word in OPERATORS.keys():
-                return Token('binaryoperator-operator', [OPERATORS[word]])
-            else:
-                return None
+        #Recognizes binary operators
+        OPERATORS = {'plus':'ADD',
+                     'moins':'SUB',
+                     'fois':'MUL',
+                     'sur':'DIV',
+                     'puissance':'POW',
+                     'egal':'EQU'}
 
+        binary_operator_easy = ('binaryoperator-operator',
+                                OPERATORS,
+                                lambda x:x)
+        
         #Defines A op B -> BinaryOperator(A, op, B)
         def binary_operator_complex_expand(words):
             return BinaryOperator(words[0], words[1], words[2])
@@ -249,12 +243,11 @@ class BinaryOperator(Formula):
         squared_complex = ('squared',
                            '%f au carre',
                            squared_complex_expand)
-        
-        return [], \
-               [binary_operator_reduce], \
-               [], \
-               [binary_operator_complex, squared_complex]
 
+        parser.add_easy_reduce(*binary_operator_easy)
+        parser.add_complex_rule(*binary_operator_complex)
+        parser.add_complex_rule(*squared_complex)
+    
     
 class UnaryOperator(Formula):
 
@@ -317,7 +310,7 @@ class UnaryOperator(Formula):
 
     def symmetry_index(self):
 
-        return self.__r.syi()
+        return self.__r.symmetry_index()
 
     def _latex(self):
 
@@ -335,14 +328,14 @@ class UnaryOperator(Formula):
 
         return self._latex()[0]
 
-    def parsing_rules():
+    def teach(parser):
 
-        def unary_operator_reduce(word):
-            OPERATORS = {'moins':'NEG'}
-            if word in OPERATORS.keys():
-                return Token('unaryoperator-operator', [OPERATORS[word]])
-            else:
-                return None
+        #Recognizes unary operators
+        OPERATORS = {'moins':'NEG'}
+
+        unary_operator_easy = ('unaryoperator-operator',
+                               OPERATORS,
+                               lambda x:x)
 
         #Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
@@ -360,12 +353,11 @@ class UnaryOperator(Formula):
                        'racine de %f',
                        sqr_complex_expand)
 
-        return [], \
-               [unary_operator_reduce], \
-               [], \
-               [unary_operator_complex, sqr_complex]
+        parser.add_easy_reduce(*unary_operator_easy)
+        parser.add_complex_rule(*unary_operator_complex)
+        parser.add_complex_rule(*sqr_complex)
 
-    
+
 class BrackettedBlock(Formula):
 
     def __init__(self, b):
@@ -406,7 +398,7 @@ class BrackettedBlock(Formula):
 
         return self.__b.symmetry_index()
 
-    def parsing_rules():
+    def teach(parser):
 
         def bracketted_block_complex_expand(words):
             return BrackettedBlock(words[0])
@@ -419,8 +411,8 @@ class BrackettedBlock(Formula):
                                              'entre parentheses %f',
                                              bracketted_block_complex_expand)
 
-        return [], [], [], [bracketted_block_explicit_complex, \
-                            bracketted_block_implicit_complex]
+        parser.add_complex_rule(*bracketted_block_explicit_complex)
+        parser.add_complex_rule(*bracketted_block_implicit_complex)
 
     
 class Variable(Formula):
@@ -468,18 +460,24 @@ class Variable(Formula):
 
         return self.__v
 
-    def parsing_rules():
+    def teach(parser):
+        
+        RADIO_ROMAN = {'alpha':'a',
+                       'bravo':'b',
+                       'charlie':'c',
+                       'delta':'d',
+                       'echo':'e',
+                       'uniform':'u',
+                       'xray':'x',
+                       'yankee':'y',
+                       'zulu':'z'}
 
-        def variable_radio_roman_reduce(word):
-            RADIO_ROMAN = ['alpha', 'bravo', 'charlie', 'delta', 'echo',
-                           'uniform', 'xray', 'yankee', 'zulu']
-            if word in RADIO_ROMAN:
-                return Token('variable', [Variable(word[0])])
-            else:
-                return None
+        radio_roman_easy_reduce = ('variable-radio-roman',
+                                   RADIO_ROMAN,
+                                   lambda x: Variable(x))
 
-        return [], [variable_radio_roman_reduce], [], []
-    
+        parser.add_easy_reduce(*radio_roman_easy_reduce)
+        
     
 class Number(Formula):
 
@@ -547,7 +545,7 @@ class Number(Formula):
             raise TypeError('Concatenation of Numbers must be applied to Number classes ' \
                             + 'with string-encoded attributes.')
 
-    def parsing_rules():
+    def teach(parser):
 
         def number_reduce(word):
             if word in NumberParser.NUMBER_WORDS:
@@ -555,11 +553,12 @@ class Number(Formula):
             else:
                 return None
 
-        def number_expand(tok1, tok2, aux):
+        def number_expand(tok1, tok2):
             if tok1.tag == tok2.tag == 'number':
                 return Token('number', [tok1.formula[0].concat(tok2.formula[0])])
             else:
                 return None
 
-        return [number_expand], [number_reduce], [], []
-    
+        parser.add_reduce(number_reduce)
+        parser.add_expand(number_expand)
+
