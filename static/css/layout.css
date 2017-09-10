@@ -4,10 +4,6 @@ html, body {
 	min-height : 100vh;
 }
 
-.jumbo-section:hover {
-    padding-bottom: 8em;
-}
-
 nav {
     min-width: 1024px;
     width: 100%;
@@ -136,13 +132,14 @@ input {
 .docs-table td,
 .docs-table th {
     width: 25%;
+    vertical-align: top;
     padding: .5em 2em;
     text-align: left;
 }
 
 .docs-table td:first-child,
 .docs-table th:first-child {
-    width: 50%;
+    width: 50%;  
 }
 
 .doc-content {

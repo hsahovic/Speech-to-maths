@@ -12,12 +12,12 @@
 			Documents 
 		</h3>
 	</a>
-	<input type = "text" name = "titre" value = "{{ doc.titre }}" form = "enregistrement">
+	<input type = "text" name = "titre" value = "{{ doc.title }}" form = "enregistrement">
 	<span class = "to-the-right">
 	
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 	
-		<button id = "start_rec" onclick = "start_recording();">
+		<button id = "start_rec" onclick = "manageAudioStuff();">
 			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 			Commencer la dictée
 		</button>
@@ -27,25 +27,37 @@
 			Arrêter la dictée
 		</button>
 		&nbsp;
-		<form method = "POST" id = "enregistrement">
+		<!-- <form method = "POST" id = "enregistrement">
 			{% csrf_token %}
 			<button type = "submit" name = "Enregistrer" form = "enregistrement"> 
 				<i class="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
 				Enregistrer
 			</button> 
-		</form>
+		</form> -->
 	</span>
 </div>	
 
 <div class = "doc-content">
 	<div class = "text-container">
-		<textarea name = "contenu" form = "enregistrement" autofocus>{{ doc.contenu }}</textarea>
+		<textarea name = "contenu" autofocus oninput = "setTimeout(manageContentChange, 0)" onchange = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
+		<!-- <textarea name = "contenu" form = "enregistrement" autofocus onchange="setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea> -->
 	</div>
 </div>
 
+{% if doc.pdf %}
+<div class = "doc-content">
+	<h3> PDF </h3>
+	<iframe src="{{ doc.pdf.url }}" width="1200" height="600" align="middle"></iframe>
+</div>
+{% endif %}
+
+{% csrf_token %}
+
 <script> 
-	var voice_analysis_link = "{% url 'voice_analysis' %}"
+	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
+	var documentSaveLink = "{% url 'save_document' %}"
+	var docID = {{ doc.id }};
 </script>
-<script src = "{% static 'js/jquery-3.2.1.min.js' %}"> </script>
+<script src = "{% static 'js/communication_indicator_manager.js' %}"> </script>
 <script src = "{% static 'js/document.js' %}"> </script>
 {% endblock %}

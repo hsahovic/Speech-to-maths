@@ -1,4 +1,4 @@
-function fill_viewport () {
+function fillViewport() {
 	var el = document.getElementById('white_body_filler');
 	var total_height = window.innerHeight;
 	var el_pos = el.getBoundingClientRect();
@@ -6,5 +6,5 @@ function fill_viewport () {
 	el.style.height = (total_height - el_pos.top).toString() + 'px';
 }
 
-fill_viewport ()
-window.addEventListener("resize", fill_viewport, false);
+fillViewport()
+window.addEventListener("resize", fillViewport, false);
