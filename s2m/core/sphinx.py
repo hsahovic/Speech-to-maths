@@ -1,23 +1,41 @@
 import os
-from pocketsphinx import Pocketsphinx,AudioFile
-class Sphinx:
-    def __init__():
+from threading import Thread
+from pocketsphinx import Pocketsphinx, AudioFile
+
+class Sphinx(Thread):
+
+    def __init__(self):
+
+        Thread.__init__(self)
+        self.ready = False
+        
+    def run(self):
+        
         self.config = {
             'verbose': True,
-            'hmm': 'sphinx/fr',
-            'lm': 'sphinx/fr.lm.dmp',
-            'dict': 'sphinx/simple.dict',
-            'jsgf': 'sphinx/simple.jsgf',
+            'hmm': os.path.join('s2m', 'core', 'sphinx', 'fr'),
+            'lm': os.path.join('s2m', 'core', 'sphinx', 'fr.lm.dmp'),
+            'dict': os.path.join('s2m', 'core', 'sphinx', 'simple.dict'),
+            'jsgf': os.path.join('s2m', 'core', 'sphinx', 'simple.jsgf'),
             }
-        self.pocketsphinx=Pocketsphinx(**self.config)    
-    def to_text(filename,erase=False):
-        loc='s2m/file_analysis' + filename
-        text=""
-        self.pocketsphinx.decode(audio_file=loc, sampling_rate=8000)
-        for s in self.pocketsphinx.segments():
-            text+=s+" "
+        
+        self.pocketsphinx = Pocketsphinx(**self.config)
+
+        self.ready = True
+        
+    def to_text(self,filename,erase=False):
+
+        if not self.ready:
+            raise EnvironmentError('Initialization of sphinx not finished.') 
+        FILLER_WORDS = ['<s>', '<sil>', '</s>']
+        loc = os.path.join('s2m', 'file_analysis', filename)
+        text = ""
+        self.pocketsphinx.decode(loc)
+        text = " ".join([s for s in self.pocketsphinx.segments() if s not in FILLER_WORDS])
         if erase:
-            os.system("bash rm "+loc)
+            os.remove(loc)
         return text
 
 sphinx = Sphinx()
+
+sphinx.start()

@@ -1,4 +1,4 @@
-from parser import Token
+from s2m.core.parser import Token
 
 def reduce_1(name, d, f):
 

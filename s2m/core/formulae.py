@@ -12,8 +12,8 @@
 ************************************************************"""
 
 from abc import ABCMeta, abstractmethod
-from number_parser import NumberParser
-from parser import Token
+from s2m.core.number_parser import NumberParser
+from s2m.core.parser import Token
 
 class Formula(metaclass=ABCMeta):
 
@@ -48,7 +48,7 @@ class Formula(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def parsing_rules():
+    def teach(parser):
         pass
 
     def brackets_model(self, level):

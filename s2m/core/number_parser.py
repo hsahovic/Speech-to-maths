@@ -1,4 +1,4 @@
-from utils import natural_log, _set_words
+from s2m.core.utils import natural_log, _set_words
     
 class NumberParser: 
 

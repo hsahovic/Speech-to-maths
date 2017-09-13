@@ -25,7 +25,7 @@ class Token:
 
     def __getattr__(self, p):
 
-        from formulae import Formula
+        from s2m.core.formulae import Formula
 
         if p == 'tag':
             return self.__tag
@@ -58,7 +58,7 @@ class Parser:
 
     def add_easy_reduce(self, name, d, f):
 
-        import parser_lambdas
+        import s2m.core.parser_lambdas as parser_lambdas
         
         if name in self.__names:
             raise ValueError('Name %r is already the name of a rule.' % name)
@@ -69,7 +69,7 @@ class Parser:
 
     def add_complex_rule(self, name, s, f):
 
-        import parser_lambdas
+        import s2m.core.parser_lambdas as parser_lambdas
         
         if name in self.__names:
             raise ValueError('Name %r is already the name of a rule.' % name)

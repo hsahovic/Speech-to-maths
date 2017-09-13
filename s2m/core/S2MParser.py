@@ -1,6 +1,6 @@
-from parser import Parser
-from formulae import *
-from utils import listset
+from s2m.core.parser import Parser
+from s2m.core.formulae import *
+from s2m.core.utils import listset
 
 class S2MParser():
 
@@ -26,3 +26,5 @@ class S2MParser():
 
     def __call__(self, w):
         return self.parse(w)
+
+s2m_parser = S2MParser()
