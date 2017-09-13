@@ -3,7 +3,7 @@ from django.shortcuts import HttpResponse
 
 import os
 import speech_recognition as sr
-
+from sphinx import sphinx
 
 @login_required
 def voice_analysis(request):
