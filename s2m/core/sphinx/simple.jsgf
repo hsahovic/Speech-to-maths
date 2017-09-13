@@ -1,0 +1,32 @@
+#JSGF V1.0;
+
+grammar speech-to-math-v0;
+
+public <expression> = <number> | <variable> | <expression2> <binaryoperator> <expression> | <unaryoperator> <expression>  | ouvrez la parenthèse <expression> fermez la parenthèse;
+
+<expression2> = <expression>;
+
+<variable> = alpha | bravo | charlie | delta | uniform | xray | yankee | zulu;
+
+<binaryoperator> = plus | moins | fois | multiplié_par | sur | divisé_par | puissance;
+
+<unaryoperator> = moins | racine de;
+
+<number> = zéro | <lt999999>;
+
+<safedigit> = deux | trois | quatre | cinq | six | sept | huit | neuf;
+
+<digit> = un | <safedigit>;
+
+<safedozen> = vingt | trente | quarante | cinquante | septante | octante | nonante;
+
+<gt12lt19> = douze | treize | quatorze | quinze | seize | dix sept | dix huit | dix neuf;
+
+<gt11lt19> = onze | <gt12lt19>;
+
+<lt99> = <digit> | <gt11lt19> | <safedozen> et un | <safedozen> <safedigit> | soixante et un | soixante <safedigit> | soixante dix | soixante et onze | soixante <gt12lt19> | quatre vingt | quatre vingt un | quatre vingt <safedigit> | quatre vingt dix | quatre vingt onze | quatre vingt <gt12lt19>;
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;  
+
