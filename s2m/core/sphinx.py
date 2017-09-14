@@ -28,9 +28,7 @@ class Sphinx(Thread):
         if not self.ready:
             raise EnvironmentError('Initialization of sphinx not finished.') 
         FILLER_WORDS = ['<s>', '<sil>', '</s>']
-        loc = os.path.join('s2m', 'file_analysis', filename)
-        text = ""
-        self.pocketsphinx.decode(loc)
+        self.pocketsphinx.decode(filename)
         text = " ".join([s for s in self.pocketsphinx.segments() if s not in FILLER_WORDS])
         if erase:
             os.remove(loc)

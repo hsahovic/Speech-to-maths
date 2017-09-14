@@ -12,10 +12,15 @@ def voice_analysis(request):
     with open(filename_ogg, "wb+") as f:
         for chunk in request.FILES['file'].chunks():
             f.write(chunk)
-    ff = FFmpeg( inputs={filename_ogg: None},
-                 outputs={filename_wav: None} )
-    ff.run()
+    os.system('ffmpeg -y -i "%s" -ar 8000 "%s"' % (filename_ogg, filename_wav))
     os.remove(filename_ogg)
-    parses = s2m_parser(sphinx.to_text(filename_wav))
-    response = json.dumps({'instruction': 'WRITE', 'content': parses})
-    return (HttpResponse(response))
+    try:
+        text = sphinx.to_text(filename_wav)
+        print(text)
+        parses = s2m_parser(text)
+        print(parses)
+        response = json.dumps({'instruction': 'WRITE', 'content': parses})
+        return (HttpResponse(response))
+    except:
+        print('boum')
+        return (HttpResponse(''))
