@@ -1,21 +1,18 @@
 from s2m.core.parser import Parser
 from s2m.core.formulae import *
 from s2m.core.utils import listset
+from s2m.core.sphinx_config import SphinxConfig
 
 class S2MParser():
 
     def __init__(self):
         self.__parser = Parser()
-#        self.__parser.learn(BinaryOperator)
- #       self.__parser.learn(UnaryOperator)
-  #      self.__parser.learn(BrackettedBlock)
-   #     self.__parser.learn(Variable)
-    #    self.__parser.learn(Number)
         BinaryOperator.teach(self.__parser)
         UnaryOperator.teach(self.__parser)
         BrackettedBlock.teach(self.__parser)
         Variable.teach(self.__parser)
         Number.teach(self.__parser)
+        self.__parser.sphinx_config.update_config_files()
         
     def parse(self, w):
         #Stupid

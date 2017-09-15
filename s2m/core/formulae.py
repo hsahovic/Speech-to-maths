@@ -234,7 +234,8 @@ class BinaryOperator(Formula):
 
         binary_operator_complex = ('binaryoperator',
                                    '%f $binaryoperator-operator %f',
-                                   binary_operator_complex_expand)
+                                   binary_operator_complex_expand,
+                                   True)
 
         #Definales A carre -> BinaryOperator(A, 'POW', Number(2))
         def squared_complex_expand(words):
@@ -242,12 +243,13 @@ class BinaryOperator(Formula):
 
         squared_complex = ('squared',
                            '%f au carre',
-                           squared_complex_expand)
+                           squared_complex_expand,
+                           True)
 
         parser.add_easy_reduce(*binary_operator_easy)
         parser.add_complex_rule(*binary_operator_complex)
         parser.add_complex_rule(*squared_complex)
-    
+
     
 class UnaryOperator(Formula):
 
@@ -343,7 +345,8 @@ class UnaryOperator(Formula):
 
         unary_operator_complex = ('unaryoperator',
                                   '$unaryoperator-operator %f',
-                                  unary_operator_complex_expand)
+                                  unary_operator_complex_expand,
+                                  True)
 
         #Defines racine de A -> UnaryOperator('SQR', A)
         def sqr_complex_expand(words):
@@ -351,7 +354,8 @@ class UnaryOperator(Formula):
 
         sqr_complex = ('sqr-unaryoperator',
                        'racine de %f',
-                       sqr_complex_expand)
+                       sqr_complex_expand,
+                       True)
 
         parser.add_easy_reduce(*unary_operator_easy)
         parser.add_complex_rule(*unary_operator_complex)
@@ -405,11 +409,13 @@ class BrackettedBlock(Formula):
 
         bracketted_block_explicit_complex = ('brackettedblock-explicit',
                                              'ouvrez la parenthese %f fermez la parenthese',
-                                             bracketted_block_complex_expand)
+                                             bracketted_block_complex_expand,
+                                             True)
 
         bracketted_block_implicit_complex = ('brackettedblock-implicit',
                                              'entre parentheses %f',
-                                             bracketted_block_complex_expand)
+                                             bracketted_block_complex_expand,
+                                             True)
 
         parser.add_complex_rule(*bracketted_block_explicit_complex)
         parser.add_complex_rule(*bracketted_block_implicit_complex)
@@ -474,7 +480,8 @@ class Variable(Formula):
 
         radio_roman_easy_reduce = ('variable-radio-roman',
                                    RADIO_ROMAN,
-                                   lambda x: Variable(x))
+                                   lambda x: Variable(x),
+                                   True)
 
         parser.add_easy_reduce(*radio_roman_easy_reduce)
         

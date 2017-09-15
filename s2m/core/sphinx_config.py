@@ -7,7 +7,7 @@
 *une grammaire *.jsgf dans le dossier "sphinx"              *
 **********************************************************"""
 
-import codecs
+import codecs, os
 
 class SphinxConfig:
 
@@ -26,20 +26,20 @@ class SphinxConfig:
         self.d = {"expression"}
         
         
-    def add_simple_rule(self, name, list, is_expression=False):
+    def add_simple_rule(self, name, l, is_expression=False):
         """Traite et stocke DES nouvelles règles simples (càd mots unique, n'utilisant pas déjà
         d'autres expressions ou variables existantes)
         Si is_expression==True, considérée aussi comme une description possible d'une <expression>
         """
         if is_expression:
-            self.expressions = self.expressions | set(list)
-            self.d = self.d | set(list)
+            self.expressions = self.expressions | set(l)
+            self.d = self.d | set(l)
         else:
             #On reste vigilant à l'absence possible d'initialisation
             if name in self.rules:
-                self.rules[name] = self.rules[name] | set(list)
+                self.rules[name] = self.rules[name] | set(l)
             else :
-                self.rules[name] = set(list)
+                self.rules[name] = set(l)
                 self.d.add(name)
         
     def add_complex_rule(self, name, descriptor, is_expression=False):
@@ -73,7 +73,8 @@ class SphinxConfig:
         !!! Ecrase le contenue à chaque MAJ !!!
         """
         #Ecriture du fichier s2m.jsgf (grammaire)
-        with open("s2m.jsgf", "w") as jsgf:
+        grammar = os.path.join("s2m", "core", "sphinx", "s2m.jsgf")
+        with open(grammar, "w") as jsgf:
             jsgf.write("#JSGF V%s;" % self.v)
             jsgf.write("\n\ngrammar %s;" % self.name)
             if self.expressions: #Comportement à préciser dans le cas où expressions est vide

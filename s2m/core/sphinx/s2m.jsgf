@@ -1,0 +1,9 @@
+#JSGF V0;
+
+grammar speech-to-math-v0;
+
+public <expression> = ouvrez la parenthese <expression> fermez la parenthese | entre parentheses <expression> | bravo | delta | <expression> au carre | yankee | zulu | xray | <unaryoperator-operator> <expression> | alpha | echo | <expression> <binaryoperator-operator> <expression> | uniform | racine de <expression> | charlie;
+
+<unaryoperator-operator> = moins;
+
+<binaryoperator-operator> = moins | egal | plus | sur | puissance | fois;

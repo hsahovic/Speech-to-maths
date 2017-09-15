@@ -12,6 +12,9 @@
 *pas etre appelee ou instanciee directement.                *
 **********************************************************"""
 
+from s2m.core.sphinx_config import SphinxConfig
+from s2m.core.version import *
+
 class Token:
 
     def __init__(self, tag, formula=None):
@@ -47,6 +50,16 @@ class Parser:
         self.__reduces = []
         self.__aux = {}
         self.__names = []
+        self.__sphinx_config = SphinxConfig(S2M_GRAMMAR_NAME,
+                                            S2M_GRAMMAR_VERSION,
+                                            S2M_VERSION)
+
+    def __getattr__(self, p):
+
+        if p == 'sphinx_config':
+            return self.__sphinx_config
+        else:
+            raise AttributeError
         
     def add_expand(self, f):
 
@@ -56,7 +69,7 @@ class Parser:
 
         self.__reduces.append(f)
 
-    def add_easy_reduce(self, name, d, f):
+    def add_easy_reduce(self, name, d, f, is_expression=False):
 
         import s2m.core.parser_lambdas as parser_lambdas
         
@@ -66,8 +79,9 @@ class Parser:
             self.__names.append(name)
 
         self.add_reduce(parser_lambdas.reduce_1(name, d, f))
+        self.__sphinx_config.add_simple_rule(name, d.keys(), is_expression)
 
-    def add_complex_rule(self, name, s, f):
+    def add_complex_rule(self, name, s, f, is_expression=True):
 
         import s2m.core.parser_lambdas as parser_lambdas
         
@@ -147,7 +161,9 @@ class Parser:
                 self.add_expand(parser_lambdas.l_t(name, len(words)-1, words[-1][1:], f))
             else:
                 self.add_expand(parser_lambdas.l_w(name, len(words)-1, f))
-        
+
+        self.__sphinx_config.add_complex_rule(name, s, is_expression)
+                
     def cky(self, s):
 
         words = s.split(' ')
