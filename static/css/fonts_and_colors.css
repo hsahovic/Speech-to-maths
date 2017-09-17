@@ -154,3 +154,16 @@ h2 {
 .additional-data {
     color : #09f;
 }
+
+.text-editor-button {
+    background-color: white;
+}
+
+.text-editor-button:hover {
+    box-shadow: none;
+    background-color: #e6e6e6;
+}
+
+.tool-bar {
+    background-color: white;
+}

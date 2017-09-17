@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponse
 
-import os, json
+import os
+import json
 from s2m.core.S2MParser import s2m_parser
 from s2m.core.sphinx import sphinx
+
 
 @login_required
 def voice_analysis(request):
@@ -19,8 +21,9 @@ def voice_analysis(request):
         print(text)
         parses = s2m_parser(text)
         print(parses)
-        response = json.dumps({'instruction': 'WRITE', 'content': parses})
+        response = json.dumps({'instruction': 'write', 'content': parses})
         return (HttpResponse(response))
     except:
-        print('boum')
-        return (HttpResponse(''))
+        # Windows tests
+        return (HttpResponse(json.dumps({'instruction': 'write', 'content': [" Text de test", "T'es de test"]})))
+        # return (HttpResponse(json.dumps({'instruction' : None})))

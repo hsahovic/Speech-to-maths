@@ -28,4 +28,9 @@ urlpatterns = [
     url(r'^ajax/documents-search/?$',
         views.documents_search, name='documents_search'),
     url(r'^ajax/save-document/?$', views.save_document, name='save_document'),
+
+
+    url(r'^ajax/change-email/?$', views.change_email, name='change_email'),
+    url(r'^ajax/change-password/?$', views.change_password, name='change_password'),
+    url(r'^ajax/delete-account/?$', views.delete_account, name='delete_account'),
 ]

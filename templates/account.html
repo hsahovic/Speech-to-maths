@@ -11,14 +11,16 @@
 		<i class="fa fa-user" aria-hidden="true"></i> &nbsp;
 		{{ user.username }}
 	</h3>
+	<span class = "to-the-right">	
+		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+	</span>
 </div>
 
 <div class = "top-bar-filler"> <h3> &nbsp; </h3> </div>
 
 <div class = "centered-content">
-	<section class = "form-section"  id = "inf_div"> 
-		<span class = "form-section-title"> <h2> <i class="fa fa-info-circle" aria-hidden="true"></i> &nbsp;
-Infomations diverses </h2> </span>
+	<section class = "form-section"> 
+		<span class = "form-section-title"> <h2> <i class="fa fa-info-circle" aria-hidden="true"></i> &nbsp; Infomations diverses </h2> </span>
 		<table>
 			<tr> 
 				<td> <strong> Nom d'utilisateur </strong> </td>
@@ -31,42 +33,59 @@ Infomations diverses </h2> </span>
 		</table>
 	</section>
 	
-	<section class = "form-section"  id = "mod_ema">
+	<section class = "form-section">
 		<span class = "form-section-title"> <h2> <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp; Modifier adresse email </h2> </span>
-		<form method = "POST" id = "changer_email" class = "form-on-white">
+		<form method = "POST" id = "change_email" class = "form-on-white">
 			{% csrf_token %}
 			<table> {{ email_form }} </table>
 			<br>
-			<button type = "submit" name = "Changer adresse email" form = "changer_email"> 
+			<button type="button" name = "Changer adresse email" form = "change_email" onclick="accountAjax('change_email');"> 
 				Enregistrer nouvel email
 			</button> 
 		</form>
 	</section>		
 	
-	<section class = "form-section" id = "mod_mdp">
-		<span class = "form-section-title"> <h2> <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-&nbsp; Modifier mot de passe </h2> </span>
-		<form method = "POST" id = "changer_mdp"  class = "form-on-white">
+	<section class = "form-section">
+		<span class = "form-section-title"> <h2> <i class="fa fa-unlock-alt" aria-hidden="true"></i> &nbsp; Modifier mot de passe </h2> </span>
+		<form method = "POST" id = "change_password"  class = "form-on-white">
 			{% csrf_token %}
 			<table> {{ password_form }} </table>
 			<br>
-			<button type = "submit" name = "Changer mot de passe" form = "changer_mdp"> 
+			<button type="button" name = "Changer mot de passe" form = "change_password" onclick="accountAjax('change_password');"> 
 				Changer de mot de passe
 			</button> 
 		</form>
 	</section>	
 	
-	<section class = "form-section dangerous-section" id = "sup_com">
-		<span class = "form-section-title"> <h2> <i class="fa fa-trash" aria-hidden="true"></i>
-&nbsp; Supprimer mon compte </h2> </span>
-		<form method = "POST" id = "suppresion_compte">
+	<section class = "form-section dangerous-section">
+		<span class = "form-section-title"> <h2> <i class="fa fa-trash" aria-hidden="true"></i> &nbsp; Supprimer mon compte </h2> </span>
+		<form method = "POST" id = "delete_account">
 			{% csrf_token %}
 			<table class = "form-on-white">	{{ suppression_form }} </table>
 			<br>
-			<button type = "submit" name = "Suppresion compte" form = "suppresion_compte" class = "dangerous-input"> 
+			<button type="button" name = "Suppresion compte" form = "delete_account" class = "dangerous-input" onclick="accountAjax('delete_account');"> 
 				Supprimer mon compte
 			</button> 
 		</form>
 	</section>
+
+	<div id = 'white_body_filler'> &nbsp; </div>
 </div>
+
+<script> 
+	var links = {
+		"change_email" : "{% url 'change_email' %}",
+		"change_password" : "{% url 'change_password' %}",
+		"delete_account" : "{% url 'delete_account' %}",
+	};
+	var successMessage = {
+		"change_email" : "Adresse e-mail changée avece succès.",
+		"change_password" : "Mot de passe changé avec succès",
+		"delete_account" : "Compte & documents supprimés avec succès.",
+	};
+</script>
+<script src = "{% static 'js/fill_viewport.js' %}"></script>
+<script src = "{% static 'js/communication_indicator_manager.js' %}"> </script>
+<script src = "{% static 'js/jquery-3.2.1.min.js' %}"> </script>
+<script src = "{% static 'js/account.js' %}"> </script>
 {% endblock %}

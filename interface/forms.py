@@ -56,7 +56,7 @@ class ChangeEmailForm (forms.Form):
         return validate_email(self)
 
 
-class SuppressionCompte (forms.Form):
+class DeleteAccountForm (forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput, label="Mot de passe")
 

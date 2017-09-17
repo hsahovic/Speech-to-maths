@@ -17,7 +17,7 @@
 	
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 	
-		<button id = "start_rec" onclick = "manageAudioStuff();">
+		<button id = "start_rec" onclick = "manageRecording();">
 			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 			Commencer la dictée
 		</button>
@@ -27,20 +27,44 @@
 			Arrêter la dictée
 		</button>
 		&nbsp;
-		<!-- <form method = "POST" id = "enregistrement">
-			{% csrf_token %}
-			<button type = "submit" name = "Enregistrer" form = "enregistrement"> 
-				<i class="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
-				Enregistrer
-			</button> 
-		</form> -->
+
 	</span>
 </div>	
 
+<div class = "top-bar-filler"> 
+	<button type="submit"> 
+			<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
+	</button>
+</div>
+
+<div
+ class = "tool-bar"> 
+	<div class = "text-editor-button-group">
+		<button class = "text-editor-button" title = "Aller en arrière"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aller en avant"><i class="fa fa-repeat" aria-hidden="true"></i></button>
+	</div><!--
+ --><div class = "text-editor-button-group">
+		<button class = "text-editor-button" title = "Aligner à gauche"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aligner au centre"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aligner à droite"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Justifier le texte"><i class="fa fa-align-justify" aria-hidden="true"></i></button>
+   </div><!--
+ --><div class = "text-editor-button-group">
+		<button class = "text-editor-button" title = "Exposant"><i class="fa fa-superscript" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Indice"><i class="fa fa-subscript" aria-hidden="true"></i></button>
+	</div><!--
+ --><div class = "text-editor-button-group">
+		<button class = "text-editor-button" title = "Liste (puces)"><i class="fa fa-list-ul" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Liste (ordonnée)"><i class="fa fa-list-ol" aria-hidden="true"></i></button>
+   </div><!--
+ --><div class = "text-editor-button-group">
+		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fa fa-table" aria-hidden="true"></i></button>
+	</div>	
+</div>
+
 <div class = "doc-content">
 	<div class = "text-container">
-		<textarea name = "contenu" autofocus oninput = "setTimeout(manageContentChange, 0)" onchange = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
-		<!-- <textarea name = "contenu" form = "enregistrement" autofocus onchange="setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea> -->
+		<textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)" onchange = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
 	</div>
 </div>
 

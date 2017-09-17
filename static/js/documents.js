@@ -82,7 +82,7 @@ function searchDocuments() {
 	}
 
 	var spans = document.getElementsByClassName("_search_content");
-	for (i = 0; i<spans.length; i++) {
+	for (i = 0; i < spans.length; i++) {
 		spans[i].innerHTML = "";
 	}
 
@@ -100,11 +100,10 @@ function searchDocuments() {
 						var end = ""
 						if (response[i].containsStart) start = "... ";
 						if (response[i].containsEnd) end = " ...";
+						// La ligner suivante permet de rajouter le contenu contextualisé
 						line.childNodes[1].innerHTML += `<span class = "_search_content additional-data"><br><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-						&nbsp;
-						${start}${response[i].preContent}<strong>${response[i].content}</strong>${response[i].postContent}${end} </span>`;
+						&nbsp;${start}${response[i].preContent}<strong>${response[i].content}</strong>${response[i].postContent}${end} </span>`;
 					}
-
 				}
 			}
 		}

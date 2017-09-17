@@ -91,6 +91,7 @@ input {
 .top-bar,
 .top-bar-filler {
     padding: 1em;
+    border-bottom: 1px white;
 }
 
 .top-bar {
@@ -189,4 +190,26 @@ input {
 
 .form-section table td {
     width: 50%;
+}
+
+.text-editor-button {
+    border-radius: 0;
+    border : 0;
+    margin: 0;
+}
+
+.text-editor-button-group {
+    display: inline-block;
+    border-right : 2px solid #e6e6e6;
+}
+
+.tool-bar {
+    position: fixed;
+    width : 100%;
+    border-bottom : 2px solid #e6e6e6;
+}
+
+.tool-bar .text-editor-button-group:first-child {
+    margin-left : 1em;
+    border-left : 2px solid #e6e6e6;
 }
