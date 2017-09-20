@@ -75,19 +75,18 @@ class SphinxConfig:
     # Comparaison d'un mot utilisé dans la grammaire avec une ligne lue dans le fr_dict. Renvoie un booléen.
     def wrd_compared_to_line(word, line):
         # Il faut que le début de la ligne soit le mot, suivi d'un ESPACE ou d'une PARENTHESE
-        return line.startswith(word) and (line[len(word) +1] == "(" or line[len(word) +1 ] == " ")
+        return line.startswith(word) and (line[len(word) + 1] == "(" or line[len(word) + 1] == " ")
 
-    #Retourne une chaine de caractère comprenant le mot, suivi de sa phonétique. Permet d'enlever les indices d'occurences multiples.
-    def wrd_with_pronounciation(word,line):
-        #!! On suppose word dans présent la ligne.
-        #Le retour chariot est inclus. 
-        line_nxt=line.strip(word)
-        wrd_with_pro=word
-        if line_nxt[0]=="(":
-            line_nxt=line_nxt.partition(")")[2]
-        wrd_with_pro+=line_nxt
+    # Retourne une chaine de caractère comprenant le mot, suivi de sa phonétique. Permet d'enlever les indices d'occurences multiples.
+    def wrd_with_pronounciation(word, line):
+        #!! On suppose word présent dans la ligne.
+        # Le retour chariot est inclus.
+        line_nxt = line.strip(word)
+        wrd_with_pro = word
+        if line_nxt[0] == "(":
+            line_nxt = line_nxt.partition(")")[2]
+        wrd_with_pro += line_nxt
         return wrd_with_pro
-
 
     def update_config_files(self):
         """Ecriture des fichiers .dict et .jsgf
@@ -110,6 +109,7 @@ class SphinxConfig:
         # Les mots commençant par "é" ou "è" sont bien triés en fin de liste, idem dans fr.dict.
         wrds = list(self.d).sort()
         # Les mots commençant par "é" ou "è" sont bien triés en fin de liste, idem dans fr.dict.
+        # On supose que les mots sont tous présents dans fr.dict.
         dictionnary_s2m = os.path.join("s2m", "core", "sphinx", "s2m.dict")
         dictionnary_fr = os.path.join("s2m", "core", "sphinx", "fr.dict")
         with open(dictionnary_s2m, "w") as dict_s2m:
@@ -118,5 +118,5 @@ class SphinxConfig:
                 while (i < n):
                 line = dict_fr.readline()
                 if wrd_compared_to_line(wrds[i], line):
-                    dict_s2m.write(wrd_with_pronounciation(wrds[i],line))
+                    dict_s2m.write(wrd_with_pronounciation(wrds[i], line))
                     i += 1
