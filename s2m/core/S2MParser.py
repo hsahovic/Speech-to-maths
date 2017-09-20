@@ -1,5 +1,10 @@
 from s2m.core.parser import Parser
 from s2m.core.formulae import *
+from s2m.core.binop import *
+from s2m.core.unop import *
+from s2m.core.bracketted_block import *
+from s2m.core.variable import *
+from s2m.core.number import *
 from s2m.core.utils import listset
 from s2m.core.sphinx_config import SphinxConfig
 

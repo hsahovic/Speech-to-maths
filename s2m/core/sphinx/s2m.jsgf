@@ -2,8 +2,8 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = racine de <expression> | entre parentheses <expression> | <expression> <binaryoperator-operator> <expression> | bravo | zulu | delta | echo | uniform | xray | yankee | <expression> au carre | ouvrez la parenthese <expression> fermez la parenthese | <unaryoperator-operator> <expression> | alpha | charlie;
-
-<binaryoperator-operator> = moins | puissance | egal | plus | fois | sur;
+public <expression> = racine de <expression> | zulu | entre parentheses <expression> | charlie | <expression> au carre | xray | ouvrez la parenthese <expression> fermez la parenthese | delta | bravo | echo | uniform | <unaryoperator-operator> <expression> | yankee | alpha | <expression> <binaryoperator-operator> <expression>;
 
 <unaryoperator-operator> = moins;
+
+<binaryoperator-operator> = fois | egal | sur | moins | plus | puissance;
