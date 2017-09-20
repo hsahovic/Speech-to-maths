@@ -46,12 +46,12 @@ class BrackettedBlock(Formula):
             return BrackettedBlock(words[0])
 
         bracketted_block_explicit_complex = ('brackettedblock-explicit',
-                                             'ouvrez la parenthese %f fermez la parenthese',
+                                             'ouvrez la parenthèse %f fermez la parenthèse',
                                              bracketted_block_complex_expand,
                                              True)
 
         bracketted_block_implicit_complex = ('brackettedblock-implicit',
-                                             'entre parentheses %f',
+                                             'entre parenthèse %f',
                                              bracketted_block_complex_expand,
                                              True)
 

@@ -1,5 +1,6 @@
 from s2m.core.formulae import *
 from s2m.core.variable import *
+import os
 
 class Number(Formula):
 
@@ -85,4 +86,6 @@ class Number(Formula):
 
         parser.add_reduce(number_reduce)
         parser.add_expand(number_expand)
-
+        
+        number_jsgf = os.path.join('s2m', 'core', 'sphinx', 'number.jsgf')
+        parser.sphinx_config.import_file(number_jsgf)

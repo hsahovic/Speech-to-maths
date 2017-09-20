@@ -157,7 +157,7 @@ class BinaryOperator(Formula):
                      'fois':'MUL',
                      'sur':'DIV',
                      'puissance':'POW',
-                     'egal':'EQU'}
+                     'égal':'EQU'}
 
         binary_operator_easy = ('binaryoperator-operator',
                                 OPERATORS,
@@ -177,7 +177,7 @@ class BinaryOperator(Formula):
             return BinaryOperator(words[0], 'POW', Number(2))
 
         squared_complex = ('squared',
-                           '%f au carre',
+                           '%f au carré',
                            squared_complex_expand,
                            True)
 

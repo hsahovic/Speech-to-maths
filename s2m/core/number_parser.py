@@ -46,8 +46,8 @@ class NumberParser:
                'octilliard' : 51,
                'nonillion' : 54, 
                'nonilliard' : 57, 
-               'decillion' : 60, 
-               'decilliard' : 63,
+               'décillion' : 60, 
+               'décilliard' : 63,
                }
     
     SAFE_DOZENS = {'vingt' : 20, 

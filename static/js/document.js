@@ -81,7 +81,7 @@ function manageRecording() {
 						document.getElementById("stop_rec").style.display = 'none';
 						communicationIndicatorManager.endRequest();
 						var response = JSON.parse(request.responseText);
-						if (response.instruction == "write") {
+					        if (response.instruction == "write" && response.content.length > 0) {
 							insertAtCursor(document.getElementsByName('content')[0], response.content[0]);
 							manageContentChange();
 						}

@@ -14,8 +14,8 @@ class Sphinx(Thread):
             'verbose': True,
             'hmm': os.path.join('s2m', 'core', 'sphinx', 'fr'),
             'lm': os.path.join('s2m', 'core', 'sphinx', 'fr.lm.dmp'),
-            'dict': os.path.join('s2m', 'core', 'sphinx', 'simple.dict'),
-            'jsgf': os.path.join('s2m', 'core', 'sphinx', 'simple.jsgf'),
+            'dict': os.path.join('s2m', 'core', 'sphinx', 's2m.dict'),
+            'jsgf': os.path.join('s2m', 'core', 'sphinx', 's2m.jsgf'),
         }
         self.pocketsphinx = Pocketsphinx(**self.config)
         self.ready = True
