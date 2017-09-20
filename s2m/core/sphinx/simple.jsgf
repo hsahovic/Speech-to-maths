@@ -28,5 +28,13 @@ public <expression> = <number> | <variable> | <expression2> <binaryoperator> <ex
 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
 
-<lt999999> = [ [<lt999>] mille ] <lt999>;  
+<lt999999> = [ [<lt999>] mille ] <lt999>; 
+
+<powers> = million | milliard | billion | trillion | trilliard | quadrillion | quadrilliard | quintillion | quintilliard | sextillion | sextilliard | septillion | septilliard | octillion | octilliard | nonillion | nonilliard | decillion | decilliard;
+
+<gt999999> = <lt999> <powers> [<gt999999>] ;
+
+<numbers> = <gt999999> [<lt999999>] | <lt999999>;
+
+
 
