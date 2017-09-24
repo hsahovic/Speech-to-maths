@@ -24,6 +24,8 @@ class Variable(Formula):
 
     def distance(self, f):
 
+        from s2m.core.number import Number
+        
         if f.__class__ == Variable:
             return 0.
         elif f.__class__ == Number:

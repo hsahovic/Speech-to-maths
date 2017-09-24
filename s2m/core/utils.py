@@ -1,4 +1,5 @@
 from numpy import log10
+import re
 
 def natural_log(x) :
     return int(log10(x))
@@ -28,3 +29,6 @@ def listset(l):
                 i += 1
         return l
             
+def nobrackets(s):
+    bracketted_regex = re.compile(r'\([\w-]+\)', re.UNICODE)
+    return bracketted_regex.sub('', s)

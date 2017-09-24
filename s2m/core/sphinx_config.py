@@ -158,7 +158,7 @@ class SphinxConfig:
                     else:
                         continue
                     if word == wrds[i]:
-                        dict_s2m.write(self.wrd_with_pronunciation(wrds[i], line))
+                        dict_s2m.write(line)
                         f = True
                     elif word > wrds[i]:
                         if f:
@@ -166,7 +166,7 @@ class SphinxConfig:
                                 break
                             i += 1
                             if word == wrds[i]:
-                                dict_s2m.write(self.wrd_with_pronunciation(wrds[i], line))
+                                dict_s2m.write(line)
                             else:
                                 f = False
                         else:

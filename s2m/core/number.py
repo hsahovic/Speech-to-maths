@@ -33,6 +33,9 @@ class Number(Formula):
         return 0, 0
 
     def distance(self, f):
+
+        from s2m.core.variable import Variable
+        
         numbers = 0.1
         variables = 0.5
         others = 1.
