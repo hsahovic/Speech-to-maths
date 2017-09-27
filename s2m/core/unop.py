@@ -1,9 +1,14 @@
 from s2m.core.formulae import Formula
+from s2m.core.utils import reverse_dict
 
 class UnaryOperator(Formula):
 
     __OPERATORS = {'NEG': {'latex':'-%s', 'priority': 4, 'nobrackets': False},
                    'SQR': {'latex':'\sqrt{%s}', 'priority': 5, 'nobrackets': True}}
+
+    __OPERATORS_PARSED = {'moins':'NEG'}
+
+    __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
     def __init__(self, o, r):
 
@@ -78,6 +83,13 @@ class UnaryOperator(Formula):
     def latex(self):
 
         return self._latex()[0]
+
+    def transcription(self):
+
+        if self.__o == 'SQR':
+            return 'racine de %s' % self.__r.transcription()
+        else:
+            return self.__OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
     def teach(parser):
 

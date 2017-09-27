@@ -1,5 +1,7 @@
 from s2m.core.formulae import Formula
 from s2m.core.variable import Variable
+from s2m.core.number_parser import NumberParser
+from s2m.core.parser import Token
 import os
 
 class Number(Formula):
@@ -72,7 +74,12 @@ class Number(Formula):
         else:
             raise TypeError('Concatenation of Numbers must be applied to Number classes ' \
                             + 'with string-encoded attributes.')
+        
+    def transcription(self):
 
+        np = NumberParser()
+        return np.transcribe(self.val)
+    
     def teach(parser):
 
         def number_reduce(word):
