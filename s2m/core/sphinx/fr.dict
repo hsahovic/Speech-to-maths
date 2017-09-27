@@ -11168,6 +11168,8 @@ billets bb ii yy ai
 billets(2) bb ii yy ai zz
 billetterie bb ii yy ai tt ee rr ii
 billie bb ii ll ii
+billion bb ii ll ii on
+billion(2) bb ii ll yy on
 billon bb ii yy on
 billot bb ii yy au
 billy bb ii ll ii
@@ -29665,6 +29667,10 @@ décidément(2) dd ai ss ii dd ai mm an tt
 décidémment dd ei ss ii dd ei mm an
 décidés dd ai ss ii dd ei
 décidés(2) dd ai ss ii dd ei zz
+décilliard dd ai ss ii ll ii aa rr
+décilliard(2) dd ai ss ii ll yy aa rr
+décillion dd ai ss ii ll ii on
+décillion(2) dd ai ss ii ll yy on
 décime dd ai ss ii mm
 décime(2) dd ai ss ii mm ee
 décimer dd ai ss ii mm ei
@@ -64924,6 +64930,10 @@ nonciature nn on ss yy aa tt uu rr
 nonciature(2) nn on ss yy aa tt uu rr ee
 nonda nn on dd aa
 nonguillonof nn on gg ii yy oo nn oo ff
+nonilliard nn oo nn ii ll ii aa rr
+nonilliard(2) nn oo nn ii ll yy aa rr
+nonillion nn oo nn ii ll ii on
+nonillion(2) nn oo nn ii ll yy on
 nonne nn oo nn
 nonne(2) nn oo nn ee
 nonnes nn oo nn
@@ -66161,11 +66171,16 @@ ocres oo kk rr
 ocres(2) oo kk rr ee
 ocres(3) oo kk rr ee zz
 ocres(4) oo kk rr zz
+octante oo kk tt an tt
 octave oo kk tt aa vv
 octave(2) oo kk tt aa vv ee
 octavio au kk tt aa vv yy au
 octets oo kk tt ai
 octets(2) oo kk tt ai zz
+octilliard oo kk tt ii ll ii aa rr
+octilliard(2) oo kk tt ii ll yy aa rr
+octillion oo kk tt ii ll ii on
+octillion(2) oo kk tt ii ll yy on
 octobre oo kk tt oo bb rr
 octobre(2) oo kk tt oo bb rr ee
 octogénaire oo kk tt oo jj ai nn ai rr
@@ -72115,6 +72130,7 @@ pluripartisme pp ll uu rr ii pp aa rr tt ii ss mm
 pluripartisme(2) pp ll uu rr ii pp aa rr tt ii ss mm ee
 plus pp ll uu
 plus(2) pp ll uu zz
+plus(3) pp ll uu ss
 plus-value pp ll uu vv aa ll uu
 plus-values pp ll uu vv aa ll uu
 plus-values(2) pp ll uu vv aa ll uu zz
@@ -77218,6 +77234,14 @@ quadrille kk aa dd rr ii yy
 quadrille(2) kk aa dd rr ii yy ee
 quadriller kk aa dd rr ii yy ei
 quadriller(2) kk aa dd rr ii yy ei rr
+quadrilliard kk ww aa dd rr ii ll ii aa rr
+quadrilliard(2) kk aa dd rr ii ll ii aa rr
+quadrilliard(3) kk ww aa dd rr ii ll yy aa rr
+quadrilliard(4) kk aa dd rr ii ll yy aa rr
+quadrillion kk ww aa dd rr ii ll ii on
+quadrillion(2) kk aa dd rr ii ll ii on
+quadrillion(3) kk ww aa dd rr ii ll yy on
+quadrillion(4) kk aa dd rr ii ll yy on
 quadrillé kk aa dd rr ii yy ei
 quadrillée kk aa dd rr ii yy ei
 quadripartite kk ww aa dd rr ii pp aa rr tt ii tt
@@ -77536,6 +77560,10 @@ quine kk ii nn
 quine(2) kk ii nn ee
 quinet kk ii nn ai
 quinn kk in nn
+quintilliard kk in tt ii ll ii aa rr
+quintilliard(2) kk in tt ii ll yy aa rr
+quintillion kk in tt ii ll ii on
+quintillion(2) kk in tt ii ll yy on
 quinquagénaire kk in kk aa jj ai nn ai rr
 quinquagénaire(2) kk in kk aa jj ai nn ai rr ee
 quinquagénaires kk in kk aa jj ai nn ai rr
@@ -87625,6 +87653,7 @@ sep ss ai pp
 sephora ss ee ff oo rr aa
 sepp ss ai pp pp
 sept ss ai tt
+septante ss ai pp tt an tt
 september ss ai pp tt an bb ei
 septembre ss ai pp tt an bb rr
 septembre(2) ss ai pp tt an bb rr ee
@@ -87640,6 +87669,10 @@ septicémies ss ai pp tt ii ss ai mm ii
 septicémies(2) ss ai pp tt ii ss ai mm ii zz
 septicémies(3) ss ai pp tt ii ss ei mm ii
 septicémies(4) ss ai pp tt ii ss ei mm ii zz
+septilliard ss ai pp tt ii ll ii aa rr
+septilliard(2) ss ai pp tt ii ll yy aa rr
+septillion ss ai pp tt ii ll ii on
+septillion(2) ss ai pp tt ii ll yy on
 septique ss ai pp tt ii kk
 septique(2) ss ai pp tt ii kk ee
 septième ss ai tt yy ai mm
@@ -87894,6 +87927,10 @@ sexisme(2) ss ai kk ss ii ss mm ee
 sexiste ss ai kk ss ii ss tt
 sexistes ss ai kk ss ii ss tt
 sextant ss ai kk ss tt an
+sextilliard ss ai kk ss tt ii ll ii aa rr
+sextilliard(2) ss ai kk ss tt ii ll yy aa rr
+sextillion ss ai kk ss tt ii ll ii on
+sextillion(2) ss ai kk ss tt ii ll yy on
 sextuple ss ai kk ss tt uu pp ll
 sextuple(2) ss ai kk ss tt uu pp ll ee
 sexualisation ss ai kk ss uu aa ll ii zz aa ss yy on
@@ -96598,6 +96635,10 @@ trieste(2) tt rr ii yy ai ss tt ee
 trigano tt rr ii gg aa nn au
 trilingue tt rr ii ll in gg
 trilingue(2) tt rr ii ll in gg ee
+trilliard tt rr ii ll ii aa rr
+trilliard(2) tt rr ii ll yy aa rr
+trillion tt rr ii ll ii on
+trillion(2) tt rr ii ll yy on
 trilogie tt rr ii ll oo jj ii
 trimaran tt rr ii mm aa rr an
 trimble tt rr in bb ll
@@ -97859,6 +97900,8 @@ unifié uu nn ii ff yy ei
 unifiée uu nn ii ff yy ei
 unifiés uu nn ii ff yy ei
 unifiés(2) uu nn ii ff yy ei zz
+uniform uu nn ii ff oo rr mm
+uniform(2) yy ou nn ii ff oo rr mm
 uniforme uu nn ii ff oo rr mm
 uniforme(2) uu nn ii ff oo rr mm ee
 uniformes uu nn ii ff oo rr mm
@@ -101428,6 +101471,10 @@ xian kk ss ii aa nn
 xiao kk ss ii aa au
 xinjiang kk ss ii nn jj yy an gg
 xirimbimbi kk ss ii rr ii mm bb ii mm bb ii
+xray ii kk ss rr ai
+xray(2) ii kk ss rr ai yy
+xray(3) ai kk ss rr ai
+xray(4) ai kk ss rr ai yy
 xsara kk ss ss aa rr aa
 xstrata kk ss ss tt rr aa tt aa
 xu kk ss uu
@@ -101861,6 +101908,7 @@ zoé(2) zz oo ei
 zubeldia zz uu bb ei ll dd ii aa
 zuccarelli zz uu kk aa rr ai ll ii
 zucco zz uu kk au
+zulu zz ou ll ou
 zuma zz uu mm aa
 zup zz uu pp
 zurich zz uu rr ii kk

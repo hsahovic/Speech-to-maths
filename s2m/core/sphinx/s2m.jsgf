@@ -2,8 +2,32 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = racine de <expression> | entre parentheses <expression> | <expression> <binaryoperator-operator> <expression> | bravo | zulu | delta | echo | uniform | xray | yankee | <expression> au carre | ouvrez la parenthese <expression> fermez la parenthese | <unaryoperator-operator> <expression> | alpha | charlie;
+public <expression> = entre parenthèse <expression> | <expression> <binaryoperator-operator> <expression> | xray | zulu | uniform | echo | <expression> au carré | charlie | <unaryoperator-operator> <expression> | racine de <expression> | alpha | bravo | delta | <number> | yankee | ouvrez la parenthèse <expression> fermez la parenthèse;
 
-<binaryoperator-operator> = moins | puissance | egal | plus | fois | sur;
+<binaryoperator-operator> = égal | moins | plus | fois | sur | puissance;
 
 <unaryoperator-operator> = moins;
+
+<numbers> = <gt999999> [<lt999999>] | <lt999999>;
+
+<number> = zéro | <lt999999>;
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<gt999999> = <lt999> <powers> [<gt999999>];
+
+<lt99> = soixante <gt12lt19> | soixante et un | <digit> | quatre vingt dix | quatre vingt <safedigit> | soixante <safedigit> | soixante dix | <gt11lt19> | soixante et onze | quatre vingt | <safedozen> et un | quatre vingt onze | quatre vingt <gt12lt19> | <safedozen> <safedigit> | quatre vingt un;
+
+<digit> = <safedigit> | un;
+
+<safedigit> = huit | neuf | deux | quatre | six | cinq | sept | trois;
+
+<powers> = quintillion | septilliard | décilliard | billion | trilliard | septillion | milliard | quintilliard | quadrilliard | octilliard | sextillion | octillion | trillion | nonillion | quadrillion | million | décillion | nonilliard | sextilliard;
+
+<safedozen> = trente | cinquante | vingt | septante | nonante | octante | quarante;
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<gt11lt19> = onze | <gt12lt19>;
+
+<gt12lt19> = quatorze | dix huit | dix sept | douze | treize | dix neuf | quinze | seize;

@@ -20,7 +20,7 @@ class NumberParser:
                }
     
     # Verifier l'utilité de la distinction others / other_numbers
-    OTHER_NUMBERS = {'zero' : 0,
+    OTHER_NUMBERS = {'zéro' : 0,
               'un' : 1,
               'onze' : 11,
               }
@@ -46,8 +46,8 @@ class NumberParser:
                'octilliard' : 51,
                'nonillion' : 54, 
                'nonilliard' : 57, 
-               'decillion' : 60, 
-               'decilliard' : 63,
+               'décillion' : 60, 
+               'décilliard' : 63,
                }
     
     SAFE_DOZENS = {'vingt' : 20, 
@@ -121,7 +121,7 @@ class NumberParser:
         if not (strict and self.words):
             return value
         else:
-            return None
+            return ValueError('[strict=True] String %r does not represent any valid number.' % ' '.join(words))
                 
     def _end_of_parsed_integer(self): 
         return (not self.words) or self.words[0] in self.COMMA
@@ -138,22 +138,26 @@ class NumberParser:
                 value = self._integer_parser_lt20() 
                 if value:
                     return value + 60
+            else:
                 return 60
-        elif len (self.words) > 2 and self.words[0] == 'quatre' and self.words[1] == 'vingt': 
-            if self.words[2] in self.DIGITS: 
-                value = 80 + self.DIGITS[self.words[2]]
-                self.words = self.words[3:]
+        elif len(self.words) > 1 and self.words[0] == 'quatre' and self.words[1] == 'vingt':
+            self.words = self.words[2:]
+            if self._end_of_parsed_integer():
+                return 80
+            elif self.words[0] in self.DIGITS: 
+                value = 80 + self.DIGITS[self.words[0]]
+                self.words = self.words[1:]
                 return value
-            elif self.words[2] in ['un', 'onze']: 
-                value = 80 + self.OTHER_NUMBERS[self.words[2]]
-                self.words = self.words[3:]
+            elif self.words[0] in ['un', 'onze']: 
+                value = 80 + self.OTHER_NUMBERS[self.words[0]]
+                self.words = self.words[1:]
                 return value
-            elif self.words[2] in self.NUMBERS: 
-                value = 80 + self.NUMBERS[self.words[2]]
-                self.words = self.words[3:]
+            elif self.words[0] in self.NUMBERS: 
+                value = 80 + self.NUMBERS[self.words[0]]
+                self.words = self.words[1:]
                 return value
-            elif self.words[2] == 'dix': 
-                self.words = self.words[3:]
+            elif self.words[0] == 'dix': 
+                self.words = self.words[1:]
                 if len (self.words) != 0 and self.words[0] in self.DIGITS: 
                     value = 90 + self.DIGITS[self.words[0]]
                     del self.words[0]

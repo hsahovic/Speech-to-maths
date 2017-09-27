@@ -2,15 +2,7 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = <number> | <variable> | <expression2> <binaryoperator> <expression> | <unaryoperator> <expression>  | ouvrez la parenthèse <expression> fermez la parenthèse;
-
-<expression2> = <expression>;
-
-<variable> = alpha | bravo | charlie | delta | uniform | xray | yankee | zulu;
-
-<binaryoperator> = plus | moins | fois | multiplié_par | sur | divisé_par | puissance;
-
-<unaryoperator> = moins | racine de;
+public <expression> = <number>;
 
 <number> = zéro | <lt999999>;
 
@@ -28,5 +20,13 @@ public <expression> = <number> | <variable> | <expression2> <binaryoperator> <ex
 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
 
-<lt999999> = [ [<lt999>] mille ] <lt999>;  
+<lt999999> = [ [<lt999>] mille ] <lt999>; 
+
+<powers> = million | milliard | billion | trillion | trilliard | quadrillion | quadrilliard | quintillion | quintilliard | sextillion | sextilliard | septillion | septilliard | octillion | octilliard | nonillion | nonilliard | décillion | décilliard;
+
+<gt999999> = <lt999> <powers> [<gt999999>] ;
+
+<numbers> = <gt999999> [<lt999999>] | <lt999999>;
+
+
 
