@@ -1,4 +1,5 @@
 from s2m.core.formulae import Formula
+from s2m.core.number import Number
 
 class BinaryOperator(Formula):
 
