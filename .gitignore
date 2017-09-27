@@ -48,3 +48,5 @@ Temporary Items
 db.sqlite3
 *.pyc
 s2m/file_analysis/file.ogg
+*.pyc
+*.pyc

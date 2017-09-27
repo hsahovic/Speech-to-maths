@@ -184,3 +184,8 @@ def sign_up(request):
         login(request, user)
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
+
+# A SUPPRIMER UNE FOIS COMMITE ET CHEZ TOUT LE MONDE
+for doc in models.Document.objects.all() :
+    doc.adress = uuid.uuid4()
+    doc.save()

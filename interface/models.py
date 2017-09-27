@@ -13,7 +13,7 @@ class Utilisateur (User):
 
 
 class Document (models.Model):
-    adress = models.TextField(primary_key=False)
+    adress = models.TextField(default = uuid.uuid4())
     author = models.ForeignKey('Utilisateur')
     content = models.TextField(default = "")
     creation_date = models.DateField(auto_now_add=True)

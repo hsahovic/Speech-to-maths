@@ -2,32 +2,32 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = entre parenthèse <expression> | <expression> <binaryoperator-operator> <expression> | xray | zulu | uniform | echo | <expression> au carré | charlie | <unaryoperator-operator> <expression> | racine de <expression> | alpha | bravo | delta | <number> | yankee | ouvrez la parenthèse <expression> fermez la parenthèse;
+public <expression> = yankee | alpha | <number> | uniform | echo | charlie | <unaryoperator-operator> <expression> | bravo | ouvrez la parenth�se <expression> fermez la parenth�se | zulu | entre parenth�se <expression> | <expression> au carr� | xray | <expression> <binaryoperator-operator> <expression> | racine de <expression> | delta;
 
-<binaryoperator-operator> = égal | moins | plus | fois | sur | puissance;
+<binaryoperator-operator> = puissance | �gal | plus | moins | fois | sur;
 
 <unaryoperator-operator> = moins;
 
-<numbers> = <gt999999> [<lt999999>] | <lt999999>;
-
-<number> = zéro | <lt999999>;
+<numbers> = <lt999999> | <gt999999> [<lt999999>];
 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
-
-<gt999999> = <lt999> <powers> [<gt999999>];
-
-<lt99> = soixante <gt12lt19> | soixante et un | <digit> | quatre vingt dix | quatre vingt <safedigit> | soixante <safedigit> | soixante dix | <gt11lt19> | soixante et onze | quatre vingt | <safedozen> et un | quatre vingt onze | quatre vingt <gt12lt19> | <safedozen> <safedigit> | quatre vingt un;
-
-<digit> = <safedigit> | un;
-
-<safedigit> = huit | neuf | deux | quatre | six | cinq | sept | trois;
-
-<powers> = quintillion | septilliard | décilliard | billion | trilliard | septillion | milliard | quintilliard | quadrilliard | octilliard | sextillion | octillion | trillion | nonillion | quadrillion | million | décillion | nonilliard | sextilliard;
-
-<safedozen> = trente | cinquante | vingt | septante | nonante | octante | quarante;
 
 <lt999999> = [ [<lt999>] mille ] <lt999>;
 
 <gt11lt19> = onze | <gt12lt19>;
 
-<gt12lt19> = quatorze | dix huit | dix sept | douze | treize | dix neuf | quinze | seize;
+<digit> = <safedigit> | un;
+
+<gt999999> = <lt999> <powers> [<gt999999>];
+
+<safedozen> = septante | octante | vingt | quarante | nonante | cinquante | trente;
+
+<safedigit> = six | trois | quatre | huit | neuf | deux | sept | cinq;
+
+<powers> = septillion | septilliard | billion | quintillion | nonilliard | décillion | octilliard | sextilliard | quadrilliard | décilliard | quadrillion | milliard | quintilliard | million | nonillion | octillion | trilliard | trillion | sextillion;
+
+<lt99> = quatre vingt <gt12lt19> | soixante <safedigit> | soixante dix | soixante et un | soixante et onze | quatre vingt <safedigit> | <gt11lt19> | <safedozen> et un | soixante <gt12lt19> | quatre vingt | quatre vingt dix | <digit> | quatre vingt onze | quatre vingt un | <safedozen> <safedigit>;
+
+<number> = <lt999999> | zéro;
+
+<gt12lt19> = treize | dix huit | quatorze | dix sept | seize | douze | quinze | dix neuf;

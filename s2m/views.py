@@ -3,7 +3,10 @@ from django.shortcuts import HttpResponse
 
 import os
 import json
-from s2m.core.S2MParser import s2m_parser
+try :
+    from s2m.core.S2MParser import s2m_parser
+except RuntimeError as e:
+    print("Votre code marche pas du coup je l'ignore afin de pouvoir bosser.\nZoubis,\n\nHaris")
 from s2m.core.sphinx import sphinx
 
 

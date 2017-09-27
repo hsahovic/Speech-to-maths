@@ -1,11 +1,13 @@
 from s2m.core.formulae import Formula
 
+
 class BrackettedBlock(Formula):
 
     def __init__(self, b):
 
         if not issubclass(b.__class__, Formula):
-            raise TypeError('Operand of bracketted block must be a well-formed formula')
+            raise TypeError(
+                'Operand of bracketted block must be a well-formed formula')
         else:
             self.__b = b
 
@@ -21,7 +23,7 @@ class BrackettedBlock(Formula):
     def _latex(self):
 
         b_tex, b_level = self.__b._latex()
-        return self.brackets_model(b_level+1) % b_tex, b_level+1
+        return self.brackets_model(b_level + 1) % b_tex, b_level + 1
 
     def latex(self):
 
@@ -46,15 +48,14 @@ class BrackettedBlock(Formula):
             return BrackettedBlock(words[0])
 
         bracketted_block_explicit_complex = ('brackettedblock-explicit',
-                                             'ouvrez la parenthèse %f fermez la parenthèse',
+                                             'ouvrez la parenthÃ¨se %f fermez la parenthÃ¨se',
                                              bracketted_block_complex_expand,
                                              True)
 
         bracketted_block_implicit_complex = ('brackettedblock-implicit',
-                                             'entre parenthèse %f',
+                                             'entre parenthÃ¨se %f',
                                              bracketted_block_complex_expand,
                                              True)
 
         parser.add_complex_rule(*bracketted_block_explicit_complex)
         parser.add_complex_rule(*bracketted_block_implicit_complex)
-
