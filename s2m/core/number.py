@@ -1,5 +1,5 @@
-from s2m.core.formulae import *
-from s2m.core.variable import *
+from s2m.core.formulae import Formula
+from s2m.core.variable import Variable
 import os
 
 class Number(Formula):
@@ -12,7 +12,7 @@ class Number(Formula):
             self.__n = n
         else:
             raise TypeError('Number must be a float, an int or a string, not %r' % n)
-        
+
     def __getattr__(self, p):
 
         if p == 'n':
@@ -35,7 +35,7 @@ class Number(Formula):
     def distance(self, f):
 
         from s2m.core.variable import Variable
-        
+
         numbers = 0.1
         variables = 0.5
         others = 1.
@@ -58,7 +58,7 @@ class Number(Formula):
     def _latex(self):
 
         return repr(self.val), 0
-        
+
     def latex(self):
 
         return repr(self.val)
@@ -89,6 +89,6 @@ class Number(Formula):
 
         parser.add_reduce(number_reduce)
         parser.add_expand(number_expand)
-        
+
         number_jsgf = os.path.join('s2m', 'core', 'sphinx', 'number.jsgf')
         parser.sphinx_config.import_file(number_jsgf)

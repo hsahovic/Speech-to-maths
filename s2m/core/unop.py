@@ -1,4 +1,4 @@
-from s2m.core.formulae import *
+from s2m.core.formulae import Formula
 
 class UnaryOperator(Formula):
 
@@ -10,7 +10,7 @@ class UnaryOperator(Formula):
         if o not in self.operators:
             raise ValueError('Unknown unary operator code : %r' % o)
         elif not issubclass(r.__class__, Formula):
-            raise TypeError('Operand of unary operator must be a well-formed formula') 
+            raise TypeError('Operand of unary operator must be a well-formed formula')
         else:
             self.__o, self.__r = o, r
 

@@ -1,4 +1,4 @@
-from s2m.core.formulae import *
+from s2m.core.formulae import Formula
 
 class BinaryOperator(Formula):
 
@@ -46,7 +46,7 @@ class BinaryOperator(Formula):
     def count_brackets(self):
         """Donne le nombre de blocs parentheses et le nombre de blocs non
            parentheses dans le code LaTeX genere"""
-        
+
         y, n = 0, 0
 
         if self.__l.priority < self.priority \
@@ -58,7 +58,7 @@ class BinaryOperator(Formula):
         l_brackets = self.__l.count_brackets()
         y += l_brackets[0]
         n += l_brackets[1]
-            
+
         if self.__r.priority < self.priority \
            and not self.nobrackets:
             n += 1
@@ -73,7 +73,7 @@ class BinaryOperator(Formula):
 
     def distance(self, f):
         """Definit une (pseudo-)distance entre self et une autre formule f"""
-        
+
         if f.__class__ == BinaryOperator:
             if f.o == self.__o:
                 return 0.4 * (self.__l.distance(f.l) + self.__r.distance(f.r))
@@ -123,7 +123,7 @@ class BinaryOperator(Formula):
                 sum_dist = (sum(chart[i]) + sum(chart[k][i] for k in range(0, i))) / (l - 1)
                 s += min(co_child_sym, sum_dist)
             return 1 - s / l
-                
+
     def _latex(self):
 
         if self.__l.priority < self.priority \
@@ -144,7 +144,7 @@ class BinaryOperator(Formula):
             r_tex, r_level = self.__r._latex()
 
         return self.latex_model % (l_tex, r_tex), max(l_level, r_level)
-        
+
     def latex(self):
         """Genere le code LaTeX correspondant a self"""
         return self._latex()[0]
@@ -162,10 +162,10 @@ class BinaryOperator(Formula):
         binary_operator_easy = ('binaryoperator-operator',
                                 OPERATORS,
                                 lambda x:x)
-        
+
         #Defines A op B -> BinaryOperator(A, op, B)
-        def binary_operator_complex_expand(words):
-            return BinaryOperator(words[0], words[1], words[2])
+        def binary_operator_complex_expand(formulae):
+            return BinaryOperator(formulae[0], formulae[1], formulae[2])
 
         binary_operator_complex = ('binaryoperator',
                                    '%f $binaryoperator-operator %f',
@@ -173,8 +173,8 @@ class BinaryOperator(Formula):
                                    True)
 
         #Defines A carre -> BinaryOperator(A, 'POW', Number(2))
-        def squared_complex_expand(words):
-            return BinaryOperator(words[0], 'POW', Number(2))
+        def squared_complex_expand(formulae):
+            return BinaryOperator(formulae[0], 'POW', Number(2))
 
         squared_complex = ('squared',
                            '%f au carré',

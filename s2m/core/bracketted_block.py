@@ -1,4 +1,4 @@
-from s2m.core.formulae import *
+from s2m.core.formulae import Formula
 
 class BrackettedBlock(Formula):
 
@@ -10,7 +10,7 @@ class BrackettedBlock(Formula):
             self.__b = b
 
     def __getattr__(self, p):
-        
+
         if p == 'b':
             return self.__b
         elif p == 'priority':
@@ -22,11 +22,11 @@ class BrackettedBlock(Formula):
 
         b_tex, b_level = self.__b._latex()
         return self.brackets_model(b_level+1) % b_tex, b_level+1
-        
+
     def latex(self):
 
         return self._latex()[0]
-        
+
     def count_brackets(self):
 
         y, n = self.__b.count_brackets()
@@ -46,12 +46,12 @@ class BrackettedBlock(Formula):
             return BrackettedBlock(words[0])
 
         bracketted_block_explicit_complex = ('brackettedblock-explicit',
-                                             'ouvrez la parenthÃ¨se %f fermez la parenthÃ¨se',
+                                             'ouvrez la parenthèse %f fermez la parenthèse',
                                              bracketted_block_complex_expand,
                                              True)
 
         bracketted_block_implicit_complex = ('brackettedblock-implicit',
-                                             'entre parenthÃ¨se %f',
+                                             'entre parenthèse %f',
                                              bracketted_block_complex_expand,
                                              True)
 

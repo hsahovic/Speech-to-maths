@@ -20,7 +20,7 @@ class Formula(metaclass=ABCMeta):
     @abstractmethod
     def _latex(self):
         pass
-               
+
     @abstractmethod
     def latex(self):
         pass

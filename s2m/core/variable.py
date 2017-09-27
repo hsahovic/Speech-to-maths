@@ -1,4 +1,4 @@
-from s2m.core.formulae import *
+from s2m.core.formulae import Formula
 
 class Variable(Formula):
 
@@ -10,7 +10,7 @@ class Variable(Formula):
             self.__v = v
 
     def __getattr__(self, p):
-        
+
         if p == 'v':
             return self.__v
         elif p == 'priority':
@@ -25,7 +25,7 @@ class Variable(Formula):
     def distance(self, f):
 
         from s2m.core.number import Number
-        
+
         if f.__class__ == Variable:
             return 0.
         elif f.__class__ == Number:
@@ -42,13 +42,13 @@ class Variable(Formula):
     def _latex(self):
 
         return self.__v, 0
-        
+
     def latex(self):
 
         return self.__v
 
     def teach(parser):
-        
+
         RADIO_ROMAN = {'alpha':'a',
                        'bravo':'b',
                        'charlie':'c',
@@ -65,5 +65,4 @@ class Variable(Formula):
                                    True)
 
         parser.add_easy_reduce(*radio_roman_easy_reduce)
-        
-    
+
