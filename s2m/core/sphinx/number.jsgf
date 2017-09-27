@@ -26,7 +26,15 @@ public <expression> = <number>;
 
 <gt999999> = <lt999> <powers> [<gt999999>] ;
 
-<numbers> = <gt999999> [<lt999999>] | <lt999999>;
+<numbers> = <integers> [<decimal>];
+
+<decimal> = <comma> <suite>;
+
+<suite> = <integers> [<suite>];n
+
+<comma> = virgule | point;
+
+<integers> =  <gt999999> [<lt999999>] | <lt999999>;
 
 
 
