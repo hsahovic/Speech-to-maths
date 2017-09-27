@@ -47,7 +47,7 @@ h2 {
     color: white;
 }
 
-.jumbo-section-aleternate-colors:nth-child(2n+1) {
+.jumbo-section-alternate-colors:nth-child(2n+1) {
     background-color: rgba(255, 255, 255, .9);
 	color : inherit;
 }
@@ -166,4 +166,25 @@ h2 {
 
 .tool-bar {
     background-color: white;
+}
+
+
+.disabled {
+    background-color : #e6e6e6;
+    color : #cdcdcd;
+}
+
+.title-section {
+    /* background-color: rgba(0, 153, 255, 0); */
+    /* background-color: rgba(255,255,255,.9); */
+    /* color: white; */
+    /* color: #001f33; */
+}
+
+.title-section span{
+    /* padding : 0 .5em; */
+    /* color: #001f33; */
+    /* text-shadow: 2px 2px white,-2px -2px white; */
+    /* text-shadow: 0px 0px .1em #001f33; */
+    /* background-color: rgba(255,255,255,.9); */
 }

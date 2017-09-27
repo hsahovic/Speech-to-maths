@@ -49,9 +49,9 @@
 {% endif %}
 
 {% for doc in docs %}
-	<tr class = "_document" id = "{{ doc.id }}" onclick = "select({{ doc.id }});" ondblclick='window.open("{% url "document" doc.id %}", "_self")'>
+	<tr class = "_document" id = "{{ doc.id }}" onclick = "select({{ doc.id }});" ondblclick='window.open("{% url "document" doc.adress|stringformat:"s" %}", "_self")'>
 		<td> 
-			<a href = "{% url "document" doc.id %}"> 
+			<a href = "{% url 'document' doc.adress %}"> 
 				<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
 				{{ doc.title }} 
 			</a> 
@@ -79,7 +79,7 @@
 <script> 
 	var documentsSearchLink = "{% url 'documents_search' %}";
 </script>
-<script src = "{% static 'js/communication_indicator_manager.js' %}"> </script>
+<script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script src = "{% static 'js/documents.js' %}"> </script>
 
 {% endblock %}
