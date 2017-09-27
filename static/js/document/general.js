@@ -19,7 +19,8 @@ function manageContentChange(ajaxDelay) {
 		setTimeout(function () {
 			communicationIndicatorManager.addRequest();
 			changeHappened = false;
-			var data = { "docID": docID, "newContent": document.getElementsByName("content")[0].value };
+            var data = { "docID": docID, "newContent": document.getElementsByName("content")[0].value };
+            contentStateManager.newState(data.newContent);
 			data = JSON.stringify(data);
 			formData.append("data", data);
 			request.send(formData);
@@ -27,10 +28,37 @@ function manageContentChange(ajaxDelay) {
 				if (request.readyState == 4 && request.status == 200) {
 					communicationIndicatorManager.endRequest();
 				}
-			}
+            }
+            manageQueueButtonsStyle();
 		}, 1000 * ajaxDelay);
 	}
 }
+
+
+function manageQueueButtonsStyle () {
+    // Gestion de l'apparence des boutons en avant / en arrière
+    if (contentStateManager.isOnLastState()) {
+        if (document.getElementById("moveForward").className.search(" disabled") == -1) {
+            document.getElementById("moveForward").className += " disabled";
+            document.getElementById("moveForward").disabled = true; 
+        }
+    }
+    else {
+        document.getElementById("moveForward").className = document.getElementById("moveForward").className.replace(" disabled", "");
+        document.getElementById("moveForward").disabled = false; 
+    }
+    if (contentStateManager.isOnFirstState()) {
+        if (document.getElementById("moveBackward").className.search(" disabled") == -1) {
+            document.getElementById("moveBackward").className += " disabled";
+            document.getElementById("moveBackward").disabled = true; 
+        }
+    }
+    else {
+        document.getElementById("moveBackward").className = document.getElementById("moveBackward").className.replace(" disabled", "");   
+        document.getElementById("moveBackward").disabled = false; 
+    }
+}
+
 
 function manageRecording() {
 	// Cette fonction permet de démarrer un enregistrement audio et de l'envoyer à l'issue sur le serveur
@@ -81,7 +109,7 @@ function manageRecording() {
 						document.getElementById("stop_rec").style.display = 'none';
 						communicationIndicatorManager.endRequest();
 						var response = JSON.parse(request.responseText);
-					        if (response.instruction == "write" && response.content.length > 0) {
+						if (response.instruction == "write") {
 							insertAtCursor(document.getElementsByName('content')[0], response.content[0]);
 							manageContentChange();
 						}
@@ -94,25 +122,50 @@ function manageRecording() {
 	}
 }
 
-function insertAtCursor(field, value) {
-	// IE
-	if (document.selection) {
-		field.focus();
-		sel = document.selection.createRange();
-		sel.text = value;
-	}
-	//MOZILLA and others
-	else if (field.selectionStart) {
-		var startPos = field.selectionStart;
-		var endPos = field.selectionEnd;
-		field.value = field.value.substring(0, startPos)
-			+ value
-			+ field.value.substring(endPos, field.value.length);
-		field.selectionStart = startPos + value.length;
-		field.selectionEnd = startPos + value.length;
-	} else {
-		field.value += value;
-	}
-}
+// On gère les raccourcis clavier
+window.addEventListener("keydown", function (event) {
+    if (event.defaultPrevented) {
+      return; // Should do nothing if the key event was already consumed.
+    }
+    if (event.ctrlKey) {
+        switch (event.key) {
+        case "z":
+            contentStateManager.moveBackward();
+            manageQueueButtonsStyle();
+            break;
+        case "y":
+            contentStateManager.moveForward();
+            manageQueueButtonsStyle();
+            break;
+        case "l":
+            addEnvironnement('flushleft');
+            break;
+        case "e":
+            addEnvironnement('center');
+            break;
+        case "r":
+            addEnvironnement('right');
+            break;
+        case "j":
+            addEnvironnement('work in progress');
+            break;
+        case "Up":
+        case "ArrowUp":
+            sciptElement('exponent');
+            break;
+        case "ArrowDown" :
+        case "Down":
+            sciptElement('subscript');
+            break;
+        default:
+            return;
+        }
+    }
+  
+    // Consume the event for suppressing "double action".
+    // event.preventDefault();
+  }, true);
 
 var changeHappened = false;
+var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
+manageQueueButtonsStyle();

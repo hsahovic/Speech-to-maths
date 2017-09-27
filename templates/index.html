@@ -7,14 +7,14 @@
 <div class = "full-height">
 	<section class = "jumbo-section title-section">
 		<div class = "centered-content">
-		<h1> Faire des maths un jeu d'enfant</h1>
-		<h2> Speech to Maths permet de dicter des documents LaTeX. <br> Tout simplement. </h2>
-		<h3> <a class = "keep-color-link" href = "#techno"> Découvrez Speech to Maths </a> </h3>
+		<h1> <span> Faire des maths un jeu d'enfant </span> </h1>
+		<h2> <span> Speech to Maths permet de dicter des documents LaTeX. <br> Tout simplement. </span> </h2>
+		<h3> <span> <a class = "keep-color-link" href = "#techno"> Découvrez Speech to Maths </a> </span> </h3>
 		</div>
 	</section>	
 </div>
 
-<section class = "jumbo-section jumbo-section-aleternate-colors">
+<section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
 	<h1 id = "techno"> Truc sur notre techno </h1>
 	<h2> Sous-truc sur notre techno ! </h2>
@@ -22,7 +22,7 @@
 	</div>	
 </section>
 
-<section class = "jumbo-section jumbo-section-aleternate-colors">
+<section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
 	<h1 id = "equipe"> Truc sur notre équipe </h1>
 	<h2> Sous-truc sur notre équipe ! </h2>
@@ -30,11 +30,25 @@
 	</div>
 </section>
 
-<section class = "jumbo-section jumbo-section-aleternate-colors">
+<section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
 	<h1 id = "lx"> Truc sur l'X et autres </h1>
 	<h2> Sous-truc sur l'X etc. ! </h2>
 	<p> {% lorem %} </p>
 	</div>
 </section>
+
+<!-- <script>
+
+	function manageTopBarColor() {
+		if (window.scrollY == 0)
+			document.getElementsByClassName("main-nav")[0].style.backgroundColor = "rgba(0,0,0,0)";
+		else
+			document.getElementsByClassName("main-nav")[0].style.backgroundColor = "white";
+	} 
+
+	window.addEventListener('scroll', manageTopBarColor);
+	manageTopBarColor();
+
+</script> -->
 {% endblock %}

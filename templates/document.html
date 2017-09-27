@@ -40,22 +40,22 @@
 <div
  class = "tool-bar"> 
 	<div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Aller en arrière"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aller en avant"><i class="fa fa-repeat" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Aligner à gauche"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aligner au centre"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aligner à droite"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Justifier le texte"><i class="fa fa-align-justify" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Justifier le texte (Ctrl + J)" onclick="addEnvironnement('work in progress');"><i class="fa fa-align-justify" aria-hidden="true"></i></button>
    </div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Exposant"><i class="fa fa-superscript" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Indice"><i class="fa fa-subscript" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Exposant (Ctrl + ↑)" onclick="sciptElement('exponent');"><i class="fa fa-superscript" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Indice (Ctrl + ↓)" onclick="sciptElement('subscript');"><i class="fa fa-subscript" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Liste (puces)"><i class="fa fa-list-ul" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Liste (ordonnée)"><i class="fa fa-list-ol" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Liste (puces)" onclick="listButton('unordered');"><i class="fa fa-list-ul" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Liste (ordonnée)" onclick="listButton('ordered');"><i class="fa fa-list-ol" aria-hidden="true"></i></button>
    </div><!--
  --><div class = "text-editor-button-group">
 		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fa fa-table" aria-hidden="true"></i></button>
@@ -64,7 +64,8 @@
 
 <div class = "doc-content">
 	<div class = "text-container">
-		<textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)" onchange = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
+		<!-- <textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)" onchange = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea> -->
+		<textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
 	</div>
 </div>
 
@@ -82,6 +83,8 @@
 	var documentSaveLink = "{% url 'save_document' %}"
 	var docID = {{ doc.id }};
 </script>
-<script src = "{% static 'js/communication_indicator_manager.js' %}"> </script>
-<script src = "{% static 'js/document.js' %}"> </script>
+<script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
+<script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
+<script src = "{% static 'js/document/contentModification.js' %}"> </script>
+<script src = "{% static 'js/document/general.js' %}"> </script>
 {% endblock %}

@@ -6,19 +6,26 @@ from django.shortcuts import render, redirect, HttpResponse, reverse
 from . import forms, models
 
 import json
+import uuid
 
 
 def get_user(request):
     return models.Utilisateur.objects.get(username=request.user.username)
 
 
-def get_document(request, n):
+def get_document(request, n=False, adress=False):
+    """Utility function allowing to get a document in a request (while also checking the user) by id or adress"""
     try:
-        doc = models.Document.objects.get(id=n)
-        if doc.author.username == request.user.username:
-            return doc
-    except Exception:
-        pass
+        if n:
+            doc = models.Document.objects.get(id=n)
+            if doc.author.username == request.user.username:
+                return doc
+        elif adress:
+            doc = models.Document.objects.get(adress=adress)
+            if doc.author.username == request.user.username:
+                return doc
+    except Exception as exception:
+        print("Exception :", exception)
     return None
 
 
@@ -44,10 +51,12 @@ def add_doc(request):
         else:
             break
     doc.title = "Sans titre %d" % n
-    doc.content = ""
-    doc.is_in_trash = False
+    uid = uuid.uuid4()
+    while models.Document.objects.filter(adress=uid):
+        uid = uuid.uuid4()
+    doc.adress = uid
     doc.save()
-    return redirect("document", doc.id)
+    return redirect("document", doc.adress)
 
 
 @login_required
@@ -91,7 +100,7 @@ def delete_account(request):
             for doc in docs:
                 doc.delete()
             user.delete()
-            return HttpResponse(json.dumps({"action": "redirect", "newAdress" : reverse(sign_up)}))
+            return HttpResponse(json.dumps({"action": "redirect", "newAdress": reverse(sign_up)}))
     else:
         suppression_form = forms.DeleteAccountForm(request.user, None)
     return HttpResponse(json.dumps({"action": "updateForm", "html": str(suppression_form)}))
@@ -128,20 +137,20 @@ def documents_search(request, context_length=50):
 
 @login_required
 def save_document(request):
-    # sécurité
+    # sécurité ?
     data = json.loads(request.POST['data'])
-    doc = get_document(request, data["docID"])
+    doc = get_document(request, n=data["docID"])
     doc.content = data["newContent"]
     doc.save()
     return HttpResponse(json.dumps({"result": True}))
 
 
 @login_required
-def document(request, n):
-    doc = get_document(request, n)
-    if doc.is_in_trash:
-        return redirect("error_400")
+def document(request, adress):
+    doc = get_document(request, adress=adress)
     if doc:
+        if doc.is_in_trash:
+            return redirect("error_400")
         return render(request, 'document.html', locals())
     raise Http404
 
@@ -151,7 +160,7 @@ def documents(request):
     user = get_user(request)
     try:
         for n in request.POST['delete-value'].split(';'):
-            doc = get_document(request, int(n))
+            doc = get_document(request, n=int(n))
             doc.is_in_trash = True
             doc.save()
     except Exception:

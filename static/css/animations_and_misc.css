@@ -1,4 +1,15 @@
- @keyframes arrive_from_left {
+ @keyframes arrive_from_down {
+	from {
+		transform : translateY(5em);
+		opacity : 0;
+	}	
+	to {
+		transform : translateY(0);
+		opacity : 1;
+	}
+} 
+
+@keyframes arrive_from_left {
 	from {
 		transform : translateX(-5em);
 		opacity : 0;
@@ -20,6 +31,7 @@
 		opacity : 1;
 	}
 } 
+
 
 @keyframes blinking {
     0%, 100% {
@@ -49,6 +61,24 @@
     }
     75% {
         transform: rotate(-3deg);
+    }
+}
+
+@keyframes to_white_background{
+    from {
+        background-color: inherit;
+    }
+    to {
+        background-color: white;
+    }
+}
+
+@keyframes to_transparent_background{
+    from {
+        background-color: inherit;
+    }
+    to {
+        background-color: rgba(255,255,255,0);
     }
 }
 
@@ -100,24 +130,27 @@ input:hover {
 }
 
 .title-section h1 {
-     animation-name: arrive_from_left;   
-    /* animation-name: fade_in; */
+    animation-name: arrive_from_down;   
     animation-duration: .75s;
     animation-fill-mode : both;
 
 }
 
 .title-section h2 {
-     animation-name: arrive_from_right; 
-    /* animation-name: fade_in; */
+    animation-name: arrive_from_down; 
     animation-delay: .25s;
     animation-duration: .75s;
     animation-fill-mode : both;
 }
 
 .title-section h3 {
-    animation-name: fade_in;
+    animation-name: arrive_from_down; 
     animation-delay: .5s;
     animation-duration: .75s;
     animation-fill-mode : both;
 }
+
+/* .main-nav { */
+    /* transition: background-color 1s; */
+/* } */
+

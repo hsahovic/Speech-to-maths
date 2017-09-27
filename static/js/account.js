@@ -19,6 +19,7 @@ function accountAjax (formID) {
                     break;
                 case "redirect" :
                     window.location.replace(json.newAdress);
+                    break;
             }               
         }
     });

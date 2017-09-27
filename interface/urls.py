@@ -15,8 +15,8 @@ urlpatterns = [
     url(r'^sign-up/?$', views.sign_up, name='sign_up'),
 
     url(r'^new_document/?$', views.add_doc, name='add_doc'),
-    url(r'^document/(\d+)/?$', views.document, name='document'),
     url(r'^documents/?$', views.documents, name='documents'),
+    url(r"""^document/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})/?$""", views.document, name='document'),
 
     url(r'^account/?$', views.account, name='account'),
 
