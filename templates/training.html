@@ -1,0 +1,66 @@
+{% extends "base_with_background_image.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} Entraîner le modèle {% endblock %}
+{% block img_link %}{% static "img/classroom.jpeg" %}{% endblock %}
+{% block content %} 
+<div class = "top-bar">	
+	<h3> 
+		<i class="fa fa-graduation-cap" aria-hidden="true"></i> &nbsp;
+		Entraîner le modèle &nbsp;
+	</h3>
+	<span class = "to-the-right">	
+		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+	</span>
+</div>
+
+<div class = "top-bar-filler"> <h3> &nbsp; </h3> </div>
+
+<div class = "centered-content">
+
+	<section class = "form-section">
+		<span class = "form-section-title"> <h2> <i class="fa fa-cog" aria-hidden="true"></i> &nbsp; Entraînement </h2> </span>
+		Pour entraîner le modèle, il suffit de dicter la formule proposée.
+		<br>
+		<br>
+		$${{formule}}$$
+		<br>
+		<br>
+
+		<div class = "form-on-white"> 
+			<button id = "start_rec" onclick = "manageRecording(link,console.log);">
+				<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
+				Commencer la dictée
+			</button>
+		
+			<button id = "stop_rec" style = "display : none">
+				<i class="fa fa-volume-up blinking-icon" aria-hidden="true"></i> &nbsp;
+				Arrêter la dictée
+			</button>
+			&nbsp;
+		</div>
+
+	</section>
+	
+	<div id = 'white_body_filler'> &nbsp; </div>
+	</div>
+
+	{% csrf_token %}
+
+<script src = "{% static 'js/fillViewport.js' %}"></script>
+<script src = "{% static 'js/communicationIndicatorManager.js' %}"></script>
+<script src = "{% static 'js/manageRecording.js' %}"></script>
+<script> link = "{% url 'voice_training' %}";</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
+MathJax.Hub.Config({
+  jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js", "a11y/accessibility-menu.js"],
+  TeX: {
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]
+  }
+});
+</script>
+
+{% endblock %}

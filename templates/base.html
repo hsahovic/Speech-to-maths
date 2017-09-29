@@ -29,7 +29,7 @@
 		{% block nav %}
 		<nav class = "main-nav">
 			<ul>
-				<a href = "{% url "index" %}"><!----><li> Speech to Maths</li></a> 
+				<a href = "{% url "index" %}"><li> Speech to Maths</li></a> 
 				<a href = "{% url "index" %}#techno"><li> Notre technologie</li></a>
 				<a href = "{% url "index" %}#equipe"><li> Qui sommes-nous ?</li></a>
 				<a href="mailto:contact@s2m.io?subject=Question"> Contact </a> 
@@ -39,18 +39,18 @@
 			<span class = "to-the-right"> 
 				<ul>
 					<li> 
-						<a href = "{% url "account" %}"><!---->
+						<a href = "{% url "account" %}">
 							<strong> {{ user.username }} </strong> 
 						</a> 
 					</li>
 					<li> 
-						<a href = "{% url "documents" %}"><!---->
+						<a href = "{% url "documents" %}">
 							<i class="fa fa-list" aria-hidden="true"> </i> &nbsp; 
 							Documents 
 						</a> 
 					</li>
 					<li> 
-						<a href = "{% url "log_out" %}"><!---->
+						<a href = "{% url "log_out" %}">
 							<i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; 
 							Déconnexion 
 						</a> 
@@ -62,13 +62,13 @@
 			<span class = "to-the-right"> 
 				<ul> 
 					<li class = "reversed-colors-nav"> 
-						<a href = "{% url "sign_up" %}"><!---->
+						<a href = "{% url "sign_up" %}">
 							<i class="fa fa-user-plus" aria-hidden="true"></i> &nbsp;
 							Inscription 
 						</a> 
 					</li> 
 					<li> 
-						<a href = "{% url "sign_in" %}"><!---->
+						<a href = "{% url "sign_in" %}">
 							<i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp; 
 							Connexion 
 						</a> 
