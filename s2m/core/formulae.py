@@ -48,6 +48,10 @@ class Formula(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def transcription(self):
+        pass
+
+    @abstractmethod
     def teach(parser):
         pass
 

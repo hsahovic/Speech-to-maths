@@ -1,7 +1,20 @@
 from s2m.core.formulae import Formula
+from s2m.core.utils import reverse_dict
 
 class Variable(Formula):
 
+    __RADIO_ROMAN_PARSED = {'alpha':'a',
+                            'bravo':'b',
+                            'charlie':'c',
+                            'delta':'d',
+                            'echo':'e',
+                            'uniform':'u',
+                            'xray':'x',
+                            'yankee':'y',
+                            'zulu':'z'}
+    
+    __RADIO_ROMAN_REVERSE = reverse_dict(__RADIO_ROMAN_PARSED)
+    
     def __init__(self, v):
 
         if type(v) is not str:
@@ -47,22 +60,19 @@ class Variable(Formula):
 
         return self.__v
 
+    def transcription(self):
+
+        if self.__v in self.__RADIO_ROMAN_REVERSE:
+            return self.__RADIO_ROMAN_REVERSE[self.__v]
+        else:
+            raise ValueError('Transcription for variable name %r is not defined.'
+                             % self.__v)
+                
     def teach(parser):
 
-        RADIO_ROMAN = {'alpha':'a',
-                       'bravo':'b',
-                       'charlie':'c',
-                       'delta':'d',
-                       'echo':'e',
-                       'uniform':'u',
-                       'xray':'x',
-                       'yankee':'y',
-                       'zulu':'z'}
-
         radio_roman_easy_reduce = ('variable-radio-roman',
-                                   RADIO_ROMAN,
+                                   Variable.__RADIO_ROMAN_PARSED,
                                    lambda x: Variable(x),
                                    True)
 
         parser.add_easy_reduce(*radio_roman_easy_reduce)
-

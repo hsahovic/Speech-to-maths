@@ -1,4 +1,5 @@
-from numpy import log10
+from numpy import log10, ceil
+from decimal import Decimal
 import re
 
 def natural_log(x) :
@@ -32,3 +33,16 @@ def listset(l):
 def nobrackets(s):
     bracketted_regex = re.compile(r'\([\w-]+\)', re.UNICODE)
     return bracketted_regex.sub('', s)
+
+def reverse_dict(d):
+    e = {}
+    for k,y in d.items():
+        e[y] = k
+    return e
+
+def dec(x):
+    return Decimal(str(x))
+
+def args_from_dict(d):
+    return reduce(lambda x,y: '%s -%s %s' % (x, y[0], y[1]),
+                  d.items())

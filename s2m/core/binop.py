@@ -1,5 +1,6 @@
 from s2m.core.formulae import Formula
 from s2m.core.number import Number
+from s2m.core.utils import reverse_dict
 
 class BinaryOperator(Formula):
 
@@ -9,6 +10,15 @@ class BinaryOperator(Formula):
                    'DIV': {'latex': '\\frac{%s}{%s}', 'priority': 2, 'associative': False, 'weak': False, 'nobrackets': True},
                    'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False},
                    'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True}}
+
+    __OPERATORS_PARSED = {'plus':'ADD',
+                          'moins':'SUB',
+                          'fois':'MUL',
+                          'sur':'DIV',
+                          'puissance':'POW',
+                          'égal':'EQU'}
+
+    __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
     def __init__(self, l, o, r):
 
@@ -150,18 +160,21 @@ class BinaryOperator(Formula):
         """Genere le code LaTeX correspondant a self"""
         return self._latex()[0]
 
+    def transcription(self):
+
+        if self.__o == 'POW' \
+           and self.__r.__class__ == Number \
+           and self.__r.val == 2:
+            return self.__l.transcription() + ' au carré'
+        else:
+            return '%s %s %s' % (self.__l.transcription(),
+                                 self.__OPERATORS_REVERSE[self.__o],
+                                 self.__r.transcription())
+
     def teach(parser):
 
-        #Recognizes binary operators
-        OPERATORS = {'plus':'ADD',
-                     'moins':'SUB',
-                     'fois':'MUL',
-                     'sur':'DIV',
-                     'puissance':'POW',
-                     'égal':'EQU'}
-
         binary_operator_easy = ('binaryoperator-operator',
-                                OPERATORS,
+                                BinaryOperator.__OPERATORS_PARSED,
                                 lambda x:x)
 
         #Defines A op B -> BinaryOperator(A, op, B)
