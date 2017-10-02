@@ -53,7 +53,7 @@ class SphinxConfig:
         rule = []
         for wrd in lst:
             if wrd == "%f":
-                rule.append("<expression>")
+                rule.append("<expressionalias>")
             elif wrd[0] == "$":
                 rule.append("<%s>" % wrd[1:])
             else:
@@ -100,6 +100,12 @@ class SphinxConfig:
                     name, desc = m.group(1), m.group(2)
                     disj = disjunction_regex.split(desc)
                     if name == 'expression':
+                        # Reste à remplacer les expression par expressionalias
+                        i=0
+                        for wrd in disj:
+                            if wrd=="<expression>":
+                                disj[i]="<expressionalias>"
+                            i+=1
                         self.expressions |= set(disj)
                     elif name in self.rules:
                         self.rules[name] |= set(disj)
