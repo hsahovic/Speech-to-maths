@@ -46,8 +46,8 @@ function manageRecording(link, manageResponse) {
 					if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
 						document.getElementById("stop_rec").style.display = 'none';
 						communicationIndicatorManager.endRequest();
-						var response = JSON.parse(request.responseText);
-						manageResponse(response);
+					        var response = JSON.parse(request.responseText);
+					        manageResponse(response);
 						document.getElementById("start_rec").style.display = "inline-block";
 						stream.stop();
 					}

@@ -82,7 +82,8 @@ class NumberParser:
                    + OTHERS \
                    + list(POWERS.keys()) \
                    + list(SAFE_DOZENS.keys()) \
-                   + COMMA
+                   + COMMA \
+                   + ['et']
     
     def __getattr__(self, p):
         if p == 'words':

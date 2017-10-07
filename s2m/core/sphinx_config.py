@@ -23,7 +23,7 @@ class SphinxConfig:
         self.v = str(v_jsgf)
         self.name = "speech-to-math-v" + str(v)
         self.expressions = set()
-        self.rules = {}
+        self.rules = {"expressionalias": {"<expression>"}}
         self.d = set()
 
     def add_simple_rule(self, name, l, is_expression=False):
@@ -138,8 +138,7 @@ class SphinxConfig:
             jsgf.write("#JSGF V%s;" % self.v)
             jsgf.write("\n\ngrammar %s;" % self.name)
             if self.expressions:  # Comportement à préciser dans le cas où expressions est vide
-                expressions_str = "public <expression> = %s;" % " | ".join(
-                    self.expressions)
+                expressions_str = "public <expression> = %s;" % " | ".join(self.expressions)
                 jsgf.write("\n\n" + expressions_str)
             for name in self.rules.keys():
                 rule_str = "<%s> = %s;" % (name, " | ".join(self.rules[name]))

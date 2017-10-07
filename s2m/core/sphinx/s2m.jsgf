@@ -2,32 +2,34 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = yankee | alpha | <number> | uniform | echo | charlie | <unaryoperator-operator> <expression> | bravo | ouvrez la parenth�se <expression> fermez la parenth�se | zulu | entre parenth�se <expression> | <expression> au carr� | xray | <expression> <binaryoperator-operator> <expression> | racine de <expression> | delta;
-
-<binaryoperator-operator> = puissance | �gal | plus | moins | fois | sur;
-
-<unaryoperator-operator> = moins;
-
-<numbers> = <lt999999> | <gt999999> [<lt999999>];
-
-<lt999> = [ [<safedigit>] cent ] <lt99>;
-
-<lt999999> = [ [<lt999>] mille ] <lt999>;
+public <expression> = <expressionalias> <binaryoperator-operator> <expressionalias> | <expressionalias> au carré | bravo | uniform | delta | charlie | xray | entre parenthèse <expressionalias> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | echo | racine de <expressionalias> | yankee | <number> | <unaryoperator-operator> <expressionalias> | zulu | alpha;
 
 <gt11lt19> = onze | <gt12lt19>;
 
-<digit> = <safedigit> | un;
+<powers> = quintillion | septillion | milliard | sextillion | quadrillion | billion | trillion | octilliard | quintilliard | décillion | trilliard | décilliard | septilliard | sextilliard | quadrilliard | octillion | million | nonilliard | nonillion;
+
+<binaryoperator-operator> = plus | moins | égal | sur | puissance | fois;
+
+<safedozen> = septante | nonante | octante | quarante | cinquante | trente | vingt;
+
+<gt12lt19> = dix neuf | dix sept | quatorze | douze | treize | seize | dix huit | quinze;
+
+<digit> = un | <safedigit>;
+
+<number> = zéro | <lt999999>;
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<lt99> = soixante dix | soixante et onze | soixante <gt12lt19> | <gt11lt19> | quatre vingt dix | <digit> | soixante <safedigit> | quatre vingt <safedigit> | quatre vingt onze | quatre vingt <gt12lt19> | quatre vingt | <safedozen> <safedigit> | <safedozen> et un | soixante et un | quatre vingt un;
+
+<unaryoperator-operator> = moins;
+
+<expressionalias> = <expression>;
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<safedigit> = quatre | huit | sept | trois | neuf | deux | cinq | six;
 
 <gt999999> = <lt999> <powers> [<gt999999>];
 
-<safedozen> = septante | octante | vingt | quarante | nonante | cinquante | trente;
-
-<safedigit> = six | trois | quatre | huit | neuf | deux | sept | cinq;
-
-<powers> = septillion | septilliard | billion | quintillion | nonilliard | décillion | octilliard | sextilliard | quadrilliard | décilliard | quadrillion | milliard | quintilliard | million | nonillion | octillion | trilliard | trillion | sextillion;
-
-<lt99> = quatre vingt <gt12lt19> | soixante <safedigit> | soixante dix | soixante et un | soixante et onze | quatre vingt <safedigit> | <gt11lt19> | <safedozen> et un | soixante <gt12lt19> | quatre vingt | quatre vingt dix | <digit> | quatre vingt onze | quatre vingt un | <safedozen> <safedigit>;
-
-<number> = <lt999999> | zéro;
-
-<gt12lt19> = treize | dix huit | quatorze | dix sept | seize | douze | quinze | dix neuf;
+<numbers> = <lt999999> | <gt999999> [<lt999999>];

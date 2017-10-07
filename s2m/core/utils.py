@@ -1,6 +1,6 @@
 from numpy import log10, ceil
 from decimal import Decimal
-import re
+import re, os
 
 def natural_log(x) :
     return int(log10(x))
@@ -46,3 +46,14 @@ def dec(x):
 def args_from_dict(d):
     return reduce(lambda x,y: '%s -%s %s' % (x, y[0], y[1]),
                   d.items())
+
+def wav_from_ogg(filename_ogg):
+
+    filename, extension = os.path.splitext(filename_ogg)
+    if extension != '.ogg':
+        raise ValueError('An ogg file to be converted to wav must have a valid ogg extension.') 
+    filename_wav = filename + '.wav'
+    os.system('ffmpeg -y -i "%s" -ar 8000 "%s"'
+              % (filename_ogg, filename_wav))
+    os.remove(filename_ogg)
+    return filename_wav

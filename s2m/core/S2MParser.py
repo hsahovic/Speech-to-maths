@@ -34,7 +34,7 @@ class S2MParser():
         if formal:
             return parses
         else:
-            listset([p.latex() for p in sorted(parses, key=fitf, reverse=True)])
+            return listset([p.latex() for p in sorted(parses, key=fitf, reverse=True)])
 
     def __call__(self, w, formal=False):
         return self.parse(w, formal=formal)
