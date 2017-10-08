@@ -14,11 +14,11 @@ class Utilisateur(User):
 
 class Document(models.Model):
 
-    adress = models.TextField(default = uuid.uuid4())
+    adress = models.TextField(default=uuid.uuid4())
     author = models.ForeignKey('Utilisateur')
-    content = models.TextField(default = "")
+    content = models.TextField(default="")
     creation_date = models.DateField(auto_now_add=True)
-    is_in_trash = models.BooleanField(default = False)
+    is_in_trash = models.BooleanField(default=False)
     last_modification_date = models.DateField(auto_now=True)
     pdf = models.FileField(upload_to="latex_files/", default="")
     title = models.CharField(max_length=2048)
@@ -44,11 +44,13 @@ class Document(models.Model):
 
 
 class TrainingSample(models.Model):
-    
+
+    audio = models.FileField(upload_to="training_data")
     author = models.ForeignKey('Utilisateur')
     creation_date = models.DateField(auto_now_add=True)
-    text = models.TextField(default = '')
-    audio = models.FileField(upload_to="training_data/", default="")
+    converted_to_wav = models.BooleanField(default=False)
+    text = models.TextField()
+    used = models.BooleanField(default=False)
 
     def __str__(self):
         return self.text

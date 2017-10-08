@@ -14,6 +14,8 @@ class SphinxTraining(Thread):
 
     def run(self):
 
+        # Est ce que ça serait pas mieux de passer par la class TrainingData ? Ca nous permettrait de suivre le training progressivement
+
         #Échantillons
         training_dir = os.path.join(settings.MEDIA_ROOT, "training_data")
         fileids = os.path.join(training_dir, "s2m.fileids")

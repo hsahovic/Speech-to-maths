@@ -1,4 +1,4 @@
-function manageRecording(link, manageResponse) {
+function manageRecording(link, manageResponse, additionalData) {
 	// Cette fonction permet de démarrer un enregistrement audio et de l'envoyer à l'issue sur le serveur
 	// Gère l'affichage du bouton de démarrage audio
 	// On vérifie qu'on a accès à un flux audio, et le cas échéant on le capte
@@ -28,12 +28,14 @@ function manageRecording(link, manageResponse) {
 			mediaRecorder.start();
 			// On gère l'event manager de la fin de flux
 			mediaRecorder.onstop = function (evt) {
+				document.getElementById("stop_rec").style.display = 'none';
 				// On prépare une requête contenant le fichier audio dans un blob audio
 				var request = new XMLHttpRequest();
 				var formData = new FormData;
 				var blob = new Blob(chunks, { 'type': 'audio/ogg' });
 				var cSRFToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 				formData.append("file", blob);
+				formData.append("additionalData", additionalData);
 				request.open("POST", link);
 				request.setRequestHeader("X-CSRFToken", cSRFToken);
 
@@ -44,7 +46,6 @@ function manageRecording(link, manageResponse) {
 				// On gère la réception de réponse
 				request.onreadystatechange = function () {
 					if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-						document.getElementById("stop_rec").style.display = 'none';
 						communicationIndicatorManager.endRequest();
 					        var response = JSON.parse(request.responseText);
 					        manageResponse(response);
