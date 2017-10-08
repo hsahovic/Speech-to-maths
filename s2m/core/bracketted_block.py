@@ -40,18 +40,23 @@ class BrackettedBlock(Formula):
 
         return self.__b.symmetry_index()
 
+    def transcription(self):
+
+        return 'ouvrez la parenth√®se %s fermez la parenth√®se' \
+               % self.__b.transcription()
+
     def teach(parser):
 
         def bracketted_block_complex_expand(words):
             return BrackettedBlock(words[0])
 
         bracketted_block_explicit_complex = ('brackettedblock-explicit',
-                                             'ouvrez la parenthËse %f fermez la parenthËse',
+                                             'ouvrez la parenth√®se %f fermez la parenth√®se',
                                              bracketted_block_complex_expand,
                                              True)
 
         bracketted_block_implicit_complex = ('brackettedblock-implicit',
-                                             'entre parenthËse %f',
+                                             'entre parenth√®se %f',
                                              bracketted_block_complex_expand,
                                              True)
 

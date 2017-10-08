@@ -20,6 +20,8 @@ urlpatterns = [
 
     url(r'^account/?$', views.account, name='account'),
 
+    url(r'^training/?$', views.training, name='training'),
+
     url(r'^400/?$', TemplateView.as_view(template_name="400.html"), name="error_400"),
     url(r'^403/?$', TemplateView.as_view(template_name="403.html"), name="error_403"),
     url(r'^404/?$', TemplateView.as_view(template_name="404.html"), name="error_404"),
@@ -28,7 +30,6 @@ urlpatterns = [
     url(r'^ajax/documents-search/?$',
         views.documents_search, name='documents_search'),
     url(r'^ajax/save-document/?$', views.save_document, name='save_document'),
-
 
     url(r'^ajax/change-email/?$', views.change_email, name='change_email'),
     url(r'^ajax/change-password/?$', views.change_password, name='change_password'),

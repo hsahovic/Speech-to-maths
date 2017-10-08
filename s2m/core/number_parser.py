@@ -1,4 +1,4 @@
-from s2m.core.utils import natural_log, _set_words
+from s2m.core.utils import natural_log, _set_words, reverse_dict, dec
     
 class NumberParser: 
 
@@ -11,6 +11,8 @@ class NumberParser:
             'huit' : 8, 
             'neuf' : 9,
             }
+
+    DIGITS_REVERSE = reverse_dict(DIGITS)
     
     NUMBERS = {'douze' : 12, 
                'treize' : 13, 
@@ -18,12 +20,14 @@ class NumberParser:
                'quinze' : 15, 
                'seize' : 16,
                }
+
+    NUMBERS_REVERSE = reverse_dict(NUMBERS)
     
     # Verifier l'utilité de la distinction others / other_numbers
     OTHER_NUMBERS = {'zéro' : 0,
-              'un' : 1,
-              'onze' : 11,
-              }
+                     'un' : 1,
+                     'onze' : 11,
+                     }
     
     OTHERS = ['dix', 'onze', 'soixante', 'cent', 'mille']
     
@@ -49,6 +53,8 @@ class NumberParser:
                'décillion' : 60, 
                'décilliard' : 63,
                }
+
+    POWERS_REVERSE = reverse_dict(POWERS)
     
     SAFE_DOZENS = {'vingt' : 20, 
                    'trente' : 30, 
@@ -59,6 +65,15 @@ class NumberParser:
                    'nonante' : 90,
                   }
 
+    DOZENS_REVERSE = {20 : 'vingt',
+                      30 : 'trente',
+                      40 : 'quarante',
+                      50 : 'cinquante',
+                      60 : 'soixante',
+                      70 : 'soixante',
+                      80 : 'quatre vingt',
+                      90 : 'quatre vingt'}
+    
     COMMA = ['virgule', 'point']
 
     NUMBER_WORDS = list(DIGITS.keys()) \
@@ -67,7 +82,8 @@ class NumberParser:
                    + OTHERS \
                    + list(POWERS.keys()) \
                    + list(SAFE_DOZENS.keys()) \
-                   + COMMA
+                   + COMMA \
+                   + ['et']
     
     def __getattr__(self, p):
         if p == 'words':
@@ -179,7 +195,10 @@ class NumberParser:
                     value += self.DIGITS[self.words[0]]
                     del self.words[0]
             return value
-        elif self.words[0] == 'soixante' or (len (self.words) > 1 and self.words[0] == 'quatre' and self.words[1] == 'vingt'): 
+        elif self.words[0] == 'soixante' or \
+                (len (self.words) > 1 \
+                 and self.words[0] == 'quatre' \
+                 and self.words[1] == 'vingt'): 
             return self._integer_parser_60_80() 
         return self._integer_parser_lt20() 
         
@@ -228,8 +247,86 @@ class NumberParser:
                     del self.words[0]
             return value
         return None
+
+    def _transcribe_lt99(self, n):
+        l = []
+        m = n // 10
+        n %= dec(10)
+        if m in [1, 7, 9]:
+            if m != 1:
+                l.append(self.DOZENS_REVERSE[10*m])
+            if n == 0:
+                l.append('dix')
+            elif n == 1:
+                if m == 7:
+                    l.append('et')
+                l.append('onze')
+            elif n < 7:
+                l.append(self.NUMBERS_REVERSE[10+n])
+            else:
+                l.append('dix')
+                l.append(self.DIGITS_REVERSE[n])
+        else:
+            if m > 1:
+                l.append(self.DOZENS_REVERSE[10*m])
+            if n == 1:
+                if m not in [0, 8]:
+                    l.append('et')
+                l.append('un')
+            else:
+                l.append(self.DIGITS_REVERSE[n])
+        return ' '.join(l)
+    
+    def _transcribe_lt999(self, n):
+        if n == 0:
+            return ''
+        l = []
+        m = n // dec(100)
+        if m == 1:
+            l.append('cent')
+        elif m > 1:
+            l.append(self.DIGITS_REVERSE[m])
+            l.append('cent')
+        n %= dec(100)
+        t = self._transcribe_lt99(n)
+        if t:
+            l.append(t)
+        return ' '.join(l)
         
-    def __call__(self, words, strict=False): 
+    def transcribe(self, n):
+        l = []
+        n = dec(n)
+        if n < 1:
+            l.append('zéro')
+        else:
+            i = natural_log(n)
+            j = i // 3
+            for k in range(j, 0, -1):
+                m = n // 10**(3*k)
+                p = self._transcribe_lt999(m)
+                if p:
+                    l.append(p)
+                    l.append(self.POWERS_REVERSE[3*k])
+                n %= dec(10**(3*k))
+            m = int(n)
+            if m > 0:
+                l.append(self._transcribe_lt999(m))
+                n %= dec(1)
+        if n > 0:
+            l.append('virgule')
+            while n != 0:
+                n *= dec(10)
+                m = int(n)
+                if m == 0:
+                    l.append('zéro')
+                elif m == 1:
+                    l.append('un')
+                else:
+                    l.append(self.DIGITS_REVERSE[m])
+                n %= dec(1)
+        return ' '.join(l)            
+                        
+    def __call__(self, words, strict=False):
         return self.number_parser(words, strict=strict) 
     
 #==============================================================================

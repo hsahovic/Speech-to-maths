@@ -1,22 +1,64 @@
 from s2m.core.formulae import Formula
+from s2m.core.number import Number
+from s2m.core.utils import reverse_dict
+
 
 class BinaryOperator(Formula):
 
-    __OPERATORS = {'ADD': {'latex': '%s + %s', 'priority': 1, 'associative': True, 'weak': False, 'nobrackets': False},
+    __OPERATORS = {'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   'NEQ': {'latex': '%s \neq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'GEQ': {'latex': '%s \geq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'LEQ': {'latex': '%s \leq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'EQV': {'latex': '%s \sim %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'SEQ': {'latex': '%s \simeq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'SBS': {'latex': '%s \subset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'SPS': {'latex': '%s \supset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'INT': {'latex': '\int_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   'SUM': {'latex': '\sum_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   'ADD': {'latex': '%s + %s', 'priority': 1, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SUB': {'latex': '%s - %s', 'priority': 1, 'associative': False, 'weak': True, 'nobrackets': False},
+                   'PMS': {'latex': '%s \pm %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
+                   'MPS': {'latex': '%s \mp %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
                    'MUL': {'latex': '%s \\times %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                    'DIV': {'latex': '\\frac{%s}{%s}', 'priority': 2, 'associative': False, 'weak': False, 'nobrackets': True},
-                   'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False},
-                   'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True}}
+                   'CMP': {'latex': '%s \circ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'VEC': {'latex': '%s \ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False}
+                   }
+
+    __OPERATORS_PARSED = {'plus': 'ADD',
+                          'moins': 'SUB',
+                          'fois': 'MUL',
+                          'sur': 'DIV',
+                          'puissance': 'POW',
+                          'égal': 'EQU',
+                          'différent de': 'NEQ',
+                          'supérieur à': 'GEQ',
+                          'inférieur à': 'LEQ',
+                          'plus ou moins': 'PSM',
+                          'moins ou plus': 'MPS',
+                          'rond': 'CMP',
+                          'vectoriel': 'VEC',
+                          'inclus dans': 'SBS',
+                          'contient': 'SPS',
+                          'équivaut à': 'EQV',
+                          'environ égal à': 'SEQ',
+                          'intégrale': 'INT',
+                          'somme': 'SUM'
+                          }
+
+    __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
     def __init__(self, l, o, r):
 
         if o not in self.operators:
             raise ValueError('Unknown binary operator code : %r' % o)
         elif not issubclass(l.__class__, Formula):
-            raise TypeError('LHS of binary operator must be a well-formed formula')
+            raise TypeError(
+                'LHS of binary operator must be a well-formed formula')
         elif not issubclass(r.__class__, Formula):
-            raise TypeError('RHS of binary operator must be a well-formed formula')
+            raise TypeError(
+                'RHS of binary operator must be a well-formed formula')
         else:
             self.__l, self.__o, self.__r = l, o, r
 
@@ -113,14 +155,15 @@ class BinaryOperator(Formula):
         else:
             children = self.flatten()
             l = len(children)
-            chart = [ [ 0. for _ in range(l) ]
-                      for __ in range(l) ]
+            chart = [[0. for _ in range(l)]
+                     for __ in range(l)]
             s = 0
             for i in range(l):
-                for j in range(i+1, l):
+                for j in range(i + 1, l):
                     chart[i][j] = children[i].distance(children[j])
                 co_child_sym = 1 - 0.5 * children[i].symmetry_index()
-                sum_dist = (sum(chart[i]) + sum(chart[k][i] for k in range(0, i))) / (l - 1)
+                sum_dist = (sum(chart[i]) + sum(chart[k][i]
+                                                for k in range(0, i))) / (l - 1)
                 s += min(co_child_sym, sum_dist)
             return 1 - s / l
 
@@ -134,9 +177,9 @@ class BinaryOperator(Formula):
         else:
             l_tex, l_level = self.__l._latex()
 
-        if (self.__r.priority < self.priority \
-            or (self.__r.priority == self.priority and self.weak)) \
-            and not self.nobrackets:
+        if (self.__r.priority < self.priority
+                or (self.__r.priority == self.priority and self.weak)) \
+                and not self.nobrackets:
             r_content, r_level = self.__r._latex()
             r_level += 1
             r_tex = self.brackets_model(r_level) % r_content
@@ -149,21 +192,24 @@ class BinaryOperator(Formula):
         """Genere le code LaTeX correspondant a self"""
         return self._latex()[0]
 
+    def transcription(self):
+
+        if self.__o == 'POW' \
+           and self.__r.__class__ == Number \
+           and self.__r.val == 2:
+            return self.__l.transcription() + ' au carré'
+        else:
+            return '%s %s %s' % (self.__l.transcription(),
+                                 self.__OPERATORS_REVERSE[self.__o],
+                                 self.__r.transcription())
+
     def teach(parser):
 
-        #Recognizes binary operators
-        OPERATORS = {'plus':'ADD',
-                     'moins':'SUB',
-                     'fois':'MUL',
-                     'sur':'DIV',
-                     'puissance':'POW',
-                     'égal':'EQU'}
-
         binary_operator_easy = ('binaryoperator-operator',
-                                OPERATORS,
-                                lambda x:x)
+                                BinaryOperator.__OPERATORS_PARSED,
+                                lambda x: x)
 
-        #Defines A op B -> BinaryOperator(A, op, B)
+        # Defines A op B -> BinaryOperator(A, op, B)
         def binary_operator_complex_expand(formulae):
             return BinaryOperator(formulae[0], formulae[1], formulae[2])
 
@@ -172,7 +218,7 @@ class BinaryOperator(Formula):
                                    binary_operator_complex_expand,
                                    True)
 
-        #Defines A carre -> BinaryOperator(A, 'POW', Number(2))
+        # Defines A carre -> BinaryOperator(A, 'POW', Number(2))
         def squared_complex_expand(formulae):
             return BinaryOperator(formulae[0], 'POW', Number(2))
 
@@ -184,4 +230,3 @@ class BinaryOperator(Formula):
         parser.add_easy_reduce(*binary_operator_easy)
         parser.add_complex_rule(*binary_operator_complex)
         parser.add_complex_rule(*squared_complex)
-

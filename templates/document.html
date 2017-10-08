@@ -6,7 +6,7 @@
 {% block nav %} {% endblock %}
 {% block content %} 
 <div class = "top-bar">
-	<a href = "{% url "documents" %}"><!---->
+	<a href = "{% url "documents" %}">
 		<h3> 
 			<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
 			Documents 
@@ -17,7 +17,7 @@
 	
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 	
-		<button id = "start_rec" onclick = "manageRecording();">
+		<button id = "start_rec" onclick = "manageRecording(voiceAnalysisLink, audioResponseManager);">
 			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 			Commencer la dictée
 		</button>
@@ -64,7 +64,6 @@
 
 <div class = "doc-content">
 	<div class = "text-container">
-		<!-- <textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)" onchange = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea> -->
 		<textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
 	</div>
 </div>
@@ -87,4 +86,5 @@
 <script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
 <script src = "{% static 'js/document/contentModification.js' %}"> </script>
 <script src = "{% static 'js/document/general.js' %}"> </script>
+<script src = "{% static 'js/manageRecording.js' %}"> </script>
 {% endblock %}

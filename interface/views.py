@@ -4,29 +4,10 @@ from django.http import Http404
 from django.shortcuts import render, redirect, HttpResponse, reverse
 
 from . import forms, models
+from .views_utils import get_document, get_user
 
 import json
 import uuid
-
-
-def get_user(request):
-    return models.Utilisateur.objects.get(username=request.user.username)
-
-
-def get_document(request, n=False, adress=False):
-    """Utility function allowing to get a document in a request (while also checking the user) by id or adress"""
-    try:
-        if n:
-            doc = models.Document.objects.get(id=n)
-            if doc.author.username == request.user.username:
-                return doc
-        elif adress:
-            doc = models.Document.objects.get(adress=adress)
-            if doc.author.username == request.user.username:
-                return doc
-    except Exception as exception:
-        print("Exception :", exception)
-    return None
 
 
 @login_required
@@ -107,6 +88,16 @@ def delete_account(request):
 
 
 @login_required
+def document(request, adress):
+    doc = get_document(request, adress=adress)
+    if doc:
+        if doc.is_in_trash:
+            return redirect("error_400")
+        return render(request, 'document.html', locals())
+    raise Http404
+
+
+@login_required
 def documents_search(request, context_length=50):
     user = get_user(request)
     docs = models.Document.objects.filter(author=user, is_in_trash=False)
@@ -136,37 +127,27 @@ def documents_search(request, context_length=50):
 
 
 @login_required
-def save_document(request):
-    # sécurité ?
-    data = json.loads(request.POST['data'])
-    doc = get_document(request, n=data["docID"])
-    doc.content = data["newContent"]
-    doc.save()
-    return HttpResponse(json.dumps({"result": True}))
-
-
-@login_required
-def document(request, adress):
-    doc = get_document(request, adress=adress)
-    if doc:
-        if doc.is_in_trash:
-            return redirect("error_400")
-        return render(request, 'document.html', locals())
-    raise Http404
-
-
-@login_required
 def documents(request):
     user = get_user(request)
     try:
         for n in request.POST['delete-value'].split(';'):
-            doc = get_document(request, n=int(n))
+            doc = get_document(request, id_=int(n))
             doc.is_in_trash = True
             doc.save()
     except Exception:
         pass
     docs = models.Document.objects.filter(author=user, is_in_trash=False)
     return render(request, 'documents.html', locals())
+
+
+@login_required
+def save_document(request):
+    # sécurité ?
+    data = json.loads(request.POST['data'])
+    doc = get_document(request, id_=data["docID"])
+    doc.content = data["newContent"]
+    doc.save()
+    return HttpResponse(json.dumps({"result": True}))
 
 
 def sign_up(request):
@@ -184,3 +165,18 @@ def sign_up(request):
         login(request, user)
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
+
+
+@login_required
+def training(request):
+    def generate_training_data () :
+        return "2 + 2", "deux plus deux"
+
+    formule, text = generate_training_data()
+    return render(request, 'training.html', locals())
+
+
+# A SUPPRIMER UNE FOIS COMMITE ET CHEZ TOUT LE MONDE
+# for doc in models.Document.objects.all():
+#     doc.adress = uuid.uuid4()
+#     doc.save()

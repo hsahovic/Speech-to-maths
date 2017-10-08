@@ -19,7 +19,7 @@ class S2MParser():
         Number.teach(self.__parser)
         self.__parser.sphinx_config.update_config_files()
 
-    def parse(self, w):
+    def parse(self, w, formal=False):
         fitf = lambda x: 0.5*x.natural_bracketting_index()+0.1*x.symmetry_index()
         #Stupid
         #Modifier le format de token pour séparer formula de data
@@ -31,9 +31,12 @@ class S2MParser():
                 parses.extend(set(self.__parser.cky(x)))
         else:
             raise TypeError
-        return listset([p.latex() for p in sorted(parses, key=fitf, reverse=True)])
+        if formal:
+            return parses
+        else:
+            return listset([p.latex() for p in sorted(parses, key=fitf, reverse=True)])
 
-    def __call__(self, w):
-        return self.parse(w)
+    def __call__(self, w, formal=False):
+        return self.parse(w, formal=formal)
 
 s2m_parser = S2MParser()

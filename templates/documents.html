@@ -7,12 +7,21 @@
 {% endblock %}
 {% block content %} 
 <div class = "top-bar">	
+
+	<a href = "{% url "training" %}">
+		<h3>
+			<i class="fa fa-graduation-cap" aria-hidden="true"> </i> &nbsp; 
+			Entraîner le modèle
+		</h3>
+	</a> 
+
 	<h3> 
 		<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
 		Documents 
 	</h3>
 	<i class="fa fa-search" aria-hidden="true"></i>
 	<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(searchDocuments, 0)">
+
 	<span class = "to-the-right">
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 		<form id = "_delete" style = "display : none;" method = "POST">
