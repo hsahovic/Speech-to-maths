@@ -1,12 +1,20 @@
 from s2m.core.formulae import Formula
 from s2m.core.utils import reverse_dict
 
+
 class UnaryOperator(Formula):
 
-    __OPERATORS = {'NEG': {'latex':'-%s', 'priority': 4, 'nobrackets': False},
-                   'SQR': {'latex':'\sqrt{%s}', 'priority': 5, 'nobrackets': True}}
+    __OPERATORS = {'NEG': {'latex': '-%s', 'priority': 4, 'nobrackets': False},
+                   'SQR': {'latex': '\sqrt{%s}', 'priority': 5, 'nobrackets': True},
+                   '3SQ': {'latex': '\sqrt{%s}{3}', 'priority': 5, 'nobrackets': True},
+                   'ABS': {'latex': '| %s |', 'priority': 5, 'nobrackets': True}
+                   }
 
-    __OPERATORS_PARSED = {'moins':'NEG'}
+    __OPERATORS_PARSED = {'moins': 'NEG',
+                          'racine carrée': 'SQR',
+                          'racine cubique': '3SQ',
+                          'valeur absolue': 'ABS',
+                          }
 
     __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
@@ -15,7 +23,8 @@ class UnaryOperator(Formula):
         if o not in self.operators:
             raise ValueError('Unknown unary operator code : %r' % o)
         elif not issubclass(r.__class__, Formula):
-            raise TypeError('Operand of unary operator must be a well-formed formula')
+            raise TypeError(
+                'Operand of unary operator must be a well-formed formula')
         else:
             self.__o, self.__r = o, r
 
@@ -93,14 +102,14 @@ class UnaryOperator(Formula):
 
     def teach(parser):
 
-        #Recognizes unary operators
-        OPERATORS = {'moins':'NEG'}
+        # Recognizes unary operators
+        OPERATORS = {'moins': 'NEG'}
 
         unary_operator_easy = ('unaryoperator-operator',
                                OPERATORS,
-                               lambda x:x)
+                               lambda x: x)
 
-        #Defines op A -> UnaryOperator(op, A)
+        # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
             return UnaryOperator(words[0], words[1])
 
@@ -109,7 +118,7 @@ class UnaryOperator(Formula):
                                   unary_operator_complex_expand,
                                   True)
 
-        #Defines racine de A -> UnaryOperator('SQR', A)
+        # Defines racine de A -> UnaryOperator('SQR', A)
         def sqr_complex_expand(words):
             return UnaryOperator('SQR', words[0])
 
