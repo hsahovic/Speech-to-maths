@@ -3,19 +3,22 @@ from django.shortcuts import HttpResponse
 from django.conf import settings
 from django.core.files import File
 
+import os
+import json
+
+#Beware! Always load s2m_parser before including everything else
+#so as to make sure config files are generated BEFORE sphinx is turned on
+try:
+    from s2m.core.S2MParser import s2m_parser
+except RuntimeError as exc:
+    print("Echec de l'import de s2m_parser dans s2m/views.py ; ignoré par défaut. La reconnaissance vocale échouera.")
+
+
 from s2m.core.sphinx import sphinx
 from s2m.core.utils import ogg_to_wav
 from interface.models import TrainingSample
 from interface.views import get_user
 from interface.views_utils import save_file_from_request
-
-import os
-import json
-
-try:
-    from s2m.core.S2MParser import s2m_parser
-except RuntimeError as exc:
-    print("Echec de l'import de s2m_parser dans s2m/views.py ; ignoré par défaut. La reconnaissance vocale échouera.")
 
 
 @login_required

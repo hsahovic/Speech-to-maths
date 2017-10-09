@@ -33,14 +33,13 @@ class SphinxConfig:
         """
         if is_expression:
             self.expressions |= set(l)
-            self.d |= set(l)
         else:
             # On reste vigilant à l'absence possible d'initialisation
             if name in self.rules:
                 self.rules[name] |= set(l)
             else:
                 self.rules[name] = set(l)
-            self.d |= set(l)
+        self.d |= set(w for k in l for w in k.split(' '))
 
     def add_complex_rule(self, name, descriptor, is_expression=False):
         """Traite et stocke UNE nouvelle règle À LA FOIS (avec un name éventuellement déjà existant)
@@ -148,15 +147,18 @@ class SphinxConfig:
         # Les mots commençant par "é" ou "è" sont bien triés en fin de liste, idem dans fr.dict.
         wrds = sorted(list(self.d))
         # Les mots commençant par "é" ou "è" sont bien triés en fin de liste, idem dans fr.dict.
-        # On supose que les mots sont tous présents dans fr.dict.
+        # On supose que fr.dict est correctement formaté.
         dictionary_s2m = dictionary_s2m or os.path.join("s2m", "core", "sphinx", "s2m.dict")
         dictionary_fr = os.path.join("s2m", "core", "sphinx", "fr.dict")
         first_word_regex = re.compile(r'^[\w-]+', re.UNICODE)
         with open(dictionary_s2m, "w") as dict_s2m:
             with open(dictionary_fr, "r") as dict_fr:
                 i, n, f = 0, len(wrds), False
-                while i < n:
-                    line = dict_fr.readline()
+                while True:
+                    try:
+                        line = dict_fr.readline()
+                    except:
+                        raise RuntimeError('Word %r cannot be found in dictionary.' % wrds[i])
                     word = first_word_regex.match(line)
                     if word:
                         word = word.group()
@@ -167,7 +169,7 @@ class SphinxConfig:
                         f = True
                     elif word > wrds[i]:
                         if f:
-                            if i == len(wrds)-1:
+                            if i == n-1:
                                 break
                             i += 1
                             if word == wrds[i]:

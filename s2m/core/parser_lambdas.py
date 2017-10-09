@@ -1,12 +1,40 @@
 from s2m.core.parser import Token
 
-def reduce_1(name, d, f):
+def reduce_1(name, word, val):
 
-    return lambda x, name=name, d=d, f=f: (Token(name, [f(d[x])]) if x in d.keys() else None)
+    return lambda x,name=name,word=word,val=val: (Token(name, [val]) if x==word else None)
 
 def reduce_2(name, i, word):
     
     return lambda x,name=name,i=i,word=word: (Token(name + '.' + str(i)) if x==word else None)
+
+def reduce_3(name, k, i, word):
+    
+    return lambda x,name=name,k=k,i=i,word=word: (Token('%s/%r.%r' % (name,k,i)) if x==word else None)
+
+def _r_1(name, k):
+
+    return lambda x,y,name=name,k=k: (Token('%s/%r.0t1' % (name,k))
+                                      if x.tag == '%s/%r.0' % (name,k) and y.tag == '%s/%r.1' % (name,k)
+                                      else None)
+
+def _r_2(name, k, val):
+
+    return lambda x,y,name=name,k=k,val=val: (Token(name, [val])
+                                              if x.tag == '%s/%r.0' % (name,k) and y.tag == '%s/%r.1' % (name,k)
+                                              else None)
+
+def _r_i(name, k, i):
+
+    return lambda x,y,name=name,k=k,i=i: (Token('%s/%r.0t%r' % (name,k,i))
+                                          if x.tag == '%s/%r.0t%r' % (name,k,i-1) and y.tag == '%s/%r.%r' % (name,k,i)
+                                          else None)
+
+def _r_l(name, k, i, val):
+
+    return lambda x,y,name=name,k=k,i=i,val=val: (Token(name, [val])
+                                                  if x.tag == '%s/%r.0t%r' % (name,k,i-1) and y.tag == '%s/%r.%r' % (name,k,i)
+                                                  else None)
 
 def _1_ff(name):
 

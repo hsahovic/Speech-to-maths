@@ -30,7 +30,7 @@ public <expression> = <number>;
 
 <decimal> = <comma> <suite>;
 
-<suite> = <integers> [<suite>];n
+<suite> = <integers> [<suite>];
 
 <comma> = virgule | point;
 
