@@ -5,15 +5,16 @@ from s2m.core.utils import reverse_dict
 class UnaryOperator(Formula):
 
     __OPERATORS = {'NEG': {'latex': '-%s', 'priority': 4, 'nobrackets': False},
-                   'SQR': {'latex': '\sqrt{%s}', 'priority': 5, 'nobrackets': True},
-                   '3SQ': {'latex': '\sqrt{%s}{3}', 'priority': 5, 'nobrackets': True},
-                   'ABS': {'latex': '| %s |', 'priority': 5, 'nobrackets': True}
+                   'SQR': {'latex': '\\sqrt{%s}', 'priority': 5, 'nobrackets': True},
+                   '3SQ': {'latex': '\\sqrt[3]{%s}', 'priority': 5, 'nobrackets': True},
+                   'ABS': {'latex': '\\left| %s \\right|', 'priority': 5, 'nobrackets': True}
                    }
 
     __OPERATORS_PARSED = {'moins': 'NEG',
-                          'racine carrée': 'SQR',
-                          'racine cubique': '3SQ',
-                          'valeur absolue': 'ABS',
+                          'racine de': 'SQR',
+                          'racine carré de': 'SQR',
+                          'racine cubique de': '3SQ',
+                          'valeur absolu de': 'ABS',
                           }
 
     __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
@@ -103,10 +104,8 @@ class UnaryOperator(Formula):
     def teach(parser):
 
         # Recognizes unary operators
-        OPERATORS = {'moins': 'NEG'}
-
         unary_operator_easy = ('unaryoperator-operator',
-                               OPERATORS,
+                               UnaryOperator.__OPERATORS_PARSED,
                                lambda x: x)
 
         # Defines op A -> UnaryOperator(op, A)
@@ -118,15 +117,5 @@ class UnaryOperator(Formula):
                                   unary_operator_complex_expand,
                                   True)
 
-        # Defines racine de A -> UnaryOperator('SQR', A)
-        def sqr_complex_expand(words):
-            return UnaryOperator('SQR', words[0])
-
-        sqr_complex = ('sqr-unaryoperator',
-                       'racine de %f',
-                       sqr_complex_expand,
-                       True)
-
         parser.add_easy_reduce(*unary_operator_easy)
         parser.add_complex_rule(*unary_operator_complex)
-        parser.add_complex_rule(*sqr_complex)

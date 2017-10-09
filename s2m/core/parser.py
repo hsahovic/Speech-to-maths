@@ -78,7 +78,30 @@ class Parser:
         else:
             self.__names.append(name)
 
-        self.add_reduce(parser_lambdas.reduce_1(name, d, f))
+        #self.add_reduce(parser_lambdas.reduce_1(name, d, f))
+
+        k = 0
+
+        for key, val in d.items():
+            words = key.split(' ')
+            if len(words) == 0:
+                raise ValueError('String to be recognized by the parser must be non-empty.')
+            elif len(words) == 1:
+                self.add_reduce(parser_lambdas.reduce_1(name, key, f(val)))
+            elif len(words) == 2:
+                self.add_reduce(parser_lambdas.reduce_3(name, k, 0, words[0]))
+                self.add_reduce(parser_lambdas.reduce_3(name, k, 1, words[1]))
+                self.add_expand(parser_lambdas._r_2(name, k, f(val)))
+                k += 1
+            else:
+                for i,word in enumerate(words):
+                    self.add_reduce(parser_lambdas.reduce_3(name, k, i, word))
+                self.add_expand(parser_lambdas._r_1(name, k))
+                for i in range(2, len(words)-1):
+                    self.add_expand(parser_lambdas._r_i(name, k, i))
+                self.add_expand(parser_lambdas._r_l(name, k, len(words)-1, f(val)))
+                k += 1
+
         self.__sphinx_config.add_simple_rule(name, d.keys(), is_expression)
 
     def add_complex_rule(self, name, s, f, is_expression=True):
@@ -196,4 +219,4 @@ class Parser:
                 line.append(cell)
             lines.append(line)
            
-        return [tok.formula[0] for tok in lines[-1][0] if len(tok.formula) == 1]
+        return [tok.formula[0] for tok in lines[-1][0] if tok.formula and len(tok.formula) == 1]

@@ -13,8 +13,8 @@ class BinaryOperator(Formula):
                    'SEQ': {'latex': '%s \simeq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SBS': {'latex': '%s \subset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SPS': {'latex': '%s \supset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'INT': {'latex': '\int_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
-                   'SUM': {'latex': '\sum_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   #'INT': {'latex': '\int_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   #'SUM': {'latex': '\sum_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
                    'ADD': {'latex': '%s + %s', 'priority': 1, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SUB': {'latex': '%s - %s', 'priority': 1, 'associative': False, 'weak': True, 'nobrackets': False},
                    'PMS': {'latex': '%s \pm %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
@@ -23,7 +23,8 @@ class BinaryOperator(Formula):
                    'DIV': {'latex': '\\frac{%s}{%s}', 'priority': 2, 'associative': False, 'weak': False, 'nobrackets': True},
                    'CMP': {'latex': '%s \circ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                    'VEC': {'latex': '%s \ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False}
+                   'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False},
+                   'EVL': {'latex': '%s \\left( %s \\right)', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True},
                    }
 
     __OPERATORS_PARSED = {'plus': 'ADD',
@@ -44,7 +45,8 @@ class BinaryOperator(Formula):
                           'équivaut à': 'EQV',
                           'environ égal à': 'SEQ',
                           'intégrale': 'INT',
-                          'somme': 'SUM'
+                          'somme': 'SUM',
+                          'de': 'EVL',
                           }
 
     __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)

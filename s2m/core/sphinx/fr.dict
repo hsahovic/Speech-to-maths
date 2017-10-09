@@ -24629,6 +24629,8 @@ cubes kk uu bb
 cubes(2) kk uu bb ee
 cubes(3) kk uu bb ee zz
 cubes(4) kk uu bb zz
+cubique kk uu bb ii kk
+cubique(2) kk uu bb ii kk ee
 cubisme kk uu bb ii ss mm
 cubiste kk uu bb ii ss tt
 cubiste(2) kk uu bb ii ss tt ee
@@ -35056,6 +35058,7 @@ epi ei pp ii
 epic ei pp ii kk
 epo eu pp ai oo
 epr eu pp ei ai rr
+epsilon ei pp ss ii ll oo nn
 epson ei pp ss on
 epstein ai pp ss tt aa ii nn
 ept eu pp ei tt ei
@@ -39970,6 +39973,7 @@ foutu ff ou tt uu
 fouzia ff ou zz yy aa
 fowler ff au ww ll ai rr
 fox ff oo kk ss
+foxtrot ff oo kk ss tt rr oo tt
 foy ff oo yy
 foyer ff ww aa yy ei
 foyers ff ww aa yy ei
@@ -53326,6 +53330,8 @@ kantor kk an tt oo rr
 kanté kk an tt ei
 kaolin kk aa oo ll in
 kaplan kk aa pp ll an
+kappa kk aa pp aa
+kappa(2) kk aa pp pp aa
 kapo kk aa pp au
 kar kk aa rr
 kara kk aa rr aa
@@ -65308,6 +65314,7 @@ novatrices(3) nn oo vv aa tt rr ii ss ee zz
 novaïa nn au vv aa yy aa
 novecento nn au vv ei ss an tt au
 novelli nn au vv ai ll ii
+november nn oo vv ei mm bb ee rr
 novembre nn oo vv an bb rr
 novembre(2) nn oo vv an bb rr ee
 novgorod nn oo vv gg oo rr oo dd
@@ -77443,6 +77450,8 @@ quayle kk ww ai ll
 que kk
 que(2) kk ee
 que_si kk ee ss ii
+quebec kk ai bb ei kk
+quebec(2) kk ww ii bb ei kk
 quechua kk ei tt ch uy aa
 queen kk ii nn
 queen(2) kk ww ii nn
@@ -82181,6 +82190,7 @@ rhin rr in
 rhinocéros rr ii nn oo ss ai rr oo ss
 rhinovirus rr ii nn oo vv ii rr uu ss
 rhissa rr ii ss aa
+rho rr oo
 rhodanien rr oo dd aa nn yy in
 rhodes rr oo dd
 rhodes(2) rr oo dd ee
@@ -93662,6 +93672,7 @@ tatoué tt aa tt ou ei
 tatoués tt aa tt ou ei
 tatoués(2) tt aa tt ou ei zz
 tatsuya tt aa tt ss uu yy aa
+tau tt au
 taubira tt au bb ii rr aa
 taudis tt oo dd ii
 taudis(2) tt oo dd ii zz
@@ -94530,6 +94541,8 @@ thessalonique tt ei ss aa ll au nn ii kk
 thessalonique(2) tt ei ss aa ll au nn ii kk ee
 thessalonique(3) tt ei ss aa ll oo nn ii kk
 thessalonique(4) tt ei ss aa ll oo nn ii kk ee
+theta tt ei tt aa
+theta(2) tt ai tt aa
 thg tt ei aa ch jj ei
 thiais tt yy ai
 thibaud tt ii bb au
@@ -98061,6 +98074,7 @@ upi uu pp ei ii
 upk uu pp ei kk aa
 uprona uu pp rr au nn aa
 ups uu pp ei ai ss
+upsilon uu pp ss ii ll oo nn
 ur uu rr
 uranium uu rr aa nn yy oo mm
 uranus uu rr aa nn uu
@@ -98814,6 +98828,8 @@ vecchio vv ei kk yy au
 vecteur vv ai kk tt oe rr
 vecteurs vv ai kk tt oe rr
 vecteurs(2) vv ai kk tt oe rr zz
+vectoriel vv ai kk tt oo rr yy ei ll
+vectoriel(2) vv ai kk tt oo rr ii ei ll
 vectra vv ai kk tt rr aa
 vedel vv ei dd ai ll
 vedettariat vv ee dd ai tt aa rr yy aa
@@ -101282,6 +101298,7 @@ wharton ww aa rr tt oo nn
 what ww aa tt
 when vv ai nn
 whirlpool ww oe rr ll ee pp ou ll
+whiskey ww ii ss kk ii
 whisky ww ii ss kk ii
 whistler ww ii ss tt ll ai rr
 whitaker ww ii tt aa kk ai rr
@@ -101467,6 +101484,7 @@ xbox kk ss bb oo kk ss
 xe kk ss ei
 xenakis kk ss ei nn aa kk ii ss
 xerox gg zz ei rr oo kk ss
+xi kk ss ii
 xian kk ss ii aa nn
 xiao kk ss ii aa au
 xinjiang kk ss ii nn jj yy an gg
