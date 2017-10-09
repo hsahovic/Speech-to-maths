@@ -14,7 +14,7 @@ class Utilisateur(User):
 
 class Document(models.Model):
 
-    adress = models.TextField(default=uuid.uuid4())
+    address = models.TextField()
     author = models.ForeignKey('Utilisateur')
     content = models.TextField(default="")
     creation_date = models.DateField(auto_now_add=True)

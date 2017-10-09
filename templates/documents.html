@@ -58,9 +58,9 @@
 {% endif %}
 
 {% for doc in docs %}
-	<tr class = "_document" id = "{{ doc.id }}" onclick = "select({{ doc.id }});" ondblclick='window.open("{% url "document" doc.adress|stringformat:"s" %}", "_self")'>
+	<tr class = "_document" id = "{{ doc.id }}" onclick = "select({{ doc.id }});" ondblclick='window.open("{% url "document" doc.address|stringformat:"s" %}", "_self")'>
 		<td> 
-			<a href = "{% url 'document' doc.adress %}"> 
+			<a href = "{% url 'document' doc.address %}"> 
 				<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
 				{{ doc.title }} 
 			</a> 

@@ -18,7 +18,7 @@ function accountAjax (formID) {
                     fillViewport();
                     break;
                 case "redirect" :
-                    window.location.replace(json.newAdress);
+                    window.location.replace(json.newAddress);
                     break;
             }               
         }

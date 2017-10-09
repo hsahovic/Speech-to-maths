@@ -77,8 +77,9 @@ def ogg_to_wav(filename_ogg, filename_wav=None, delete_ogg=True):
         filename_wav = filename + '.wav'
     os.system('ffmpeg -y -i "%s" -ar 8000 "%s"'
               % (filename_ogg, filename_wav))
-    if not os.path.exists(filename_wav) :
-        raise OSError("The conversion didn't work. Make sure ffmpeg works on your system.")
+    if not os.path.exists(filename_wav):
+        raise OSError(
+            "The conversion didn't work. Make sure ffmpeg works on your system.")
     if delete_ogg:
         os.remove(filename_ogg)
     return filename_wav

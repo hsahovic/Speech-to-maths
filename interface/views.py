@@ -33,11 +33,11 @@ def add_doc(request):
             break
     doc.title = "Sans titre %d" % n
     uid = uuid.uuid4()
-    while models.Document.objects.filter(adress=uid):
+    while models.Document.objects.filter(address=uid):
         uid = uuid.uuid4()
-    doc.adress = uid
+    doc.address = uid
     doc.save()
-    return redirect("document", doc.adress)
+    return redirect("document", doc.address)
 
 
 @login_required
@@ -81,15 +81,15 @@ def delete_account(request):
             for doc in docs:
                 doc.delete()
             user.delete()
-            return HttpResponse(json.dumps({"action": "redirect", "newAdress": reverse(sign_up)}))
+            return HttpResponse(json.dumps({"action": "redirect", "newAddress": reverse(sign_up)}))
     else:
         suppression_form = forms.DeleteAccountForm(request.user, None)
     return HttpResponse(json.dumps({"action": "updateForm", "html": str(suppression_form)}))
 
 
 @login_required
-def document(request, adress):
-    doc = get_document(request, adress=adress)
+def document(request, address):
+    doc = get_document(request, address=address)
     if doc:
         if doc.is_in_trash:
             return redirect("error_400")
@@ -178,5 +178,6 @@ def training(request):
 
 # A SUPPRIMER UNE FOIS COMMITE ET CHEZ TOUT LE MONDE
 # for doc in models.Document.objects.all():
-#     doc.adress = uuid.uuid4()
-#     doc.save()
+    # doc.address = uuid.uuid4()
+    # doc.save()
+# 

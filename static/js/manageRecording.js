@@ -18,7 +18,7 @@ function manageRecording(link, manageResponse, additionalData) {
 				mediaRecorder.stop();
 			};
 
-			// On permet la contatenation des données audio
+			// On permet la concatenation des données audio
 			mediaRecorder.ondataavailable = function (evt) {
 				chunks.push(evt.data);
 			};

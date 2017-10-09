@@ -15,7 +15,7 @@ import json
 try:
     from s2m.core.S2MParser import s2m_parser
 except RuntimeError as exc:
-    print("Votre code marche pas du coup je l'ignore afin de pouvoir bosser.\nZoubis,\n\nHaris")
+    print("Echec de l'import de s2m_parser dans s2m/views.py ; ignoré par défaut. La reconnaissance vocale échouera.")
 
 
 @login_required
@@ -23,7 +23,8 @@ def voice_analysis(request):
     try:
         filename_ogg = save_file_from_request(
             request, "ogg", post_arg="file", file_path=os.path.join(settings.MEDIA_ROOT, 'file_analysis'))
-        filename_wav = ogg_to_wav(filename_ogg)
+        raise OSError
+        filename_wav = ogg_to_wav(filename_ogg, delete_ogg=False)
         # nbest n'est pas lisible, je ne sais pas ce que c'est. Meilleur nom à utiliser.
         text, nbest = sphinx.to_text(filename_wav)
         # a supprimer une fois le dev fini sur cette sequence
@@ -51,19 +52,21 @@ def voice_analysis(request):
 @login_required
 def voice_training(request):
     filename_ogg = save_file_from_request(
-        request, "ogg", post_arg="file", file_path=os.path.join(settings.MEDIA_ROOT, 'training_data'))
-    sample = TrainingSample()
-    # ne fonctionne pas
+        request, "ogg", post_arg="file", file_path=os.path.join(settings.MEDIA_ROOT, 'waiting_training_data'))
+    conversion_bool = False
+    filename = filename_ogg
     try:
         filename_wav = ogg_to_wav(filename_ogg)
-        sample.audio = File(open(filename_wav, 'rb'))
-        sample.converted_to_wav = True
+        filename = filename_wav
+        conversion_bool = True
     except OSError:
-        sample.audio = File(open(filename_ogg, 'rb'))
-        sample.converted_to_wav = False
-    sample.author = get_user(request)
-    sample.text = request.POST['additionalData']
-    sample.save()
-    os.remove(filename_wav)
+        pass
+    with open(filename, "rb+") as f:
+        sample = TrainingSample()
+        sample.audio = File(f)
+        sample.converted_to_wav = conversion_bool
+        sample.author = get_user(request)
+        sample.text = request.POST['additionalData']
+        sample.save()
     response = json.dumps({'instruction': 'reload'})
     return HttpResponse(response)
