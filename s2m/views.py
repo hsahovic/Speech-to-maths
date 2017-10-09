@@ -26,18 +26,16 @@ def voice_analysis(request):
     try:
         filename_ogg = save_file_from_request(
             request, "ogg", post_arg="file", file_path=os.path.join(settings.MEDIA_ROOT, 'file_analysis'))
-        raise OSError
-        filename_wav = ogg_to_wav(filename_ogg, delete_ogg=False)
+        filename_wav = ogg_to_wav(filename_ogg, delete_ogg=True)
         # nbest n'est pas lisible, je ne sais pas ce que c'est. Meilleur nom à utiliser.
+        # nbest ---> API de Sphinx, renvoie les n meilleurs interprétations possibles du son lu
         text, nbest = sphinx.to_text(filename_wav)
+        os.remove(filename_wav)
         # a supprimer une fois le dev fini sur cette sequence
         print(text, nbest)
         try:
             parses = s2m_parser(text)
         except:
-            parses = []
-            # pourquoi cet except s'il amène à renvoyer [] ?
-        if not parses:
             i = 0
             while not parses and i < len(nbest):
                 try:
