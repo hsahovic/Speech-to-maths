@@ -43,7 +43,7 @@
 		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
 	</div><!--
- --><div class = "text-editor-button-group">
+ --><div class = "text-editor-button-group" preview('divtext', 'divmat', 'textArea')>
 		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
@@ -63,9 +63,15 @@
 </div>
 
 <div class = "doc-content">
-	<div class = "text-container">
-		<textarea name = "content" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
+
+	<div class = "text-container" id="divtext" style="display:block">
+		<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)" onblur="preview('divtext', 'divmat', 'textArea')">{{ doc.content }}</textarea>
 	</div>
+
+	<div class = "text-container"  id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh">
+
+	</div>
+
 </div>
 
 {% if doc.pdf %}
@@ -77,10 +83,38 @@
 
 {% csrf_token %}
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  jax: ["input/TeX","input/MathML","input/AsciiMath","output/HTML-CSS","output/NativeMML"],
+  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js"],
+  tex2jax: {
+  	inlineMath: [['$','$']],
+  	balanceBraces: true,
+  	processEnvironments: true,
+  	multiLine: true,
+  	preview: "TeX",
+	},
+  TeX: {
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+    noErrors: {
+    	inlineDelimiters: ["$","$"],
+    	multiLine: false,
+    	style: {
+      	"font-size": "normal",
+      	"border": "",
+      	"align":  "left",
+    	}
+    },
+  }
+});
+</script>
+
 <script> 
 	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
 	var documentSaveLink = "{% url 'save_document' %}"
 	var docID = {{ doc.id }};
+	var textContent = "blabla";
 </script>
 <script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script src = "{% static 'js/document/contentStateManager.js' %}"> </script>

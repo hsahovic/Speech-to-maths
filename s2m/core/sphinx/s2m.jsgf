@@ -2,42 +2,42 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = <expressionalias> <binaryoperator-operator> <expressionalias> | uniform | xray | <number> | bravo | ouvrez la parenthèse <expressionalias> fermez la parenthèse | delta | entre parenthèse <expressionalias> | <expressionalias> au carré | echo | <unaryoperator-operator> <expressionalias> | charlie | alpha | zulu | yankee;
-
-<lt99> = <safedozen> et un | <gt11lt19> | soixante <safedigit> | <safedozen> <safedigit> | soixante et un | soixante et onze | soixante <gt12lt19> | <digit> | quatre vingt onze | quatre vingt dix | soixante dix | quatre vingt <safedigit> | quatre vingt | quatre vingt un | quatre vingt <gt12lt19>;
-
-<integers> = <gt999999> [<lt999999>] | <lt999999>;
-
-<suite> = <integers> [<suite>];
-
-<lt999999> = [ [<lt999>] mille ] <lt999>;
-
-<gt11lt19> = <gt12lt19> | onze;
-
-<decimal> = <comma> <suite>;
-
-<gt12lt19> = douze | dix sept | dix neuf | quatorze | treize | seize | quinze | dix huit;
-
-<lt999> = [ [<safedigit>] cent ] <lt99>;
-
-<powers> = nonillion | million | trilliard | quintilliard | sextillion | quadrilliard | octillion | quadrillion | sextilliard | septilliard | nonilliard | décilliard | décillion | octilliard | trillion | milliard | quintillion | septillion | billion;
-
-<binaryoperator-operator> = équivaut à | inférieur à | moins ou plus | intégrale | somme | de | supérieur à | égal | sur | environ égal à | moins | plus ou moins | rond | puissance | vectoriel | contient | plus | inclus dans | fois | différent de;
-
-<number> = zéro | <lt999999>;
-
-<numbers> = <integers> [<decimal>];
-
-<safedigit> = cinq | huit | neuf | deux | sept | trois | six | quatre;
-
-<unaryoperator-operator> = racine de | moins | valeur absolu de | racine cubique de | racine carré de;
-
-<digit> = <safedigit> | un;
-
-<safedozen> = trente | octante | cinquante | quarante | septante | vingt | nonante;
+public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu | <expressionalias> au carré | echo | uniform | <number> | xray | alpha | delta | charlie | yankee | entre parenthèse <expressionalias> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias>;
 
 <expressionalias> = <expression>;
 
+<binaryoperator-operator> = sur | puissance | plus | moins ou plus | contient | environ égal à | vectoriel | rond | inférieur à | moins | égal | inclus dans | somme | supérieur à | fois | de | plus ou moins | différent de | équivaut à | intégrale;
+
+<unaryoperator-operator> = racine carré de | moins | racine de | valeur absolu de | racine cubique de;
+
+<number> = <lt999999> | zéro;
+
+<safedigit> = six | deux | neuf | cinq | huit | quatre | sept | trois;
+
+<digit> = <safedigit> | un;
+
+<safedozen> = nonante | octante | septante | trente | quarante | vingt | cinquante;
+
+<gt12lt19> = seize | quatorze | quinze | douze | dix neuf | dix sept | treize | dix huit;
+
+<gt11lt19> = onze | <gt12lt19>;
+
+<lt99> = quatre vingt dix | quatre vingt <safedigit> | <digit> | soixante et un | <safedozen> <safedigit> | soixante <safedigit> | soixante et onze | soixante <gt12lt19> | <gt11lt19> | quatre vingt <gt12lt19> | quatre vingt onze | quatre vingt | quatre vingt un | <safedozen> et un | soixante dix;
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<powers> = trilliard | million | sextilliard | sextillion | octillion | trillion | nonillion | nonilliard | septilliard | quadrillion | décillion | quintilliard | septillion | billion | quadrilliard | quintillion | octilliard | milliard | décilliard;
+
 <gt999999> = <lt999> <powers> [<gt999999>];
 
+<numbers> = <integers> [<decimal>];
+
+<decimal> = <comma> <suite>;
+
+<suite> = <integers> [<suite>];
+
 <comma> = point | virgule;
+
+<integers> = <gt999999> [<lt999999>] | <lt999999>;

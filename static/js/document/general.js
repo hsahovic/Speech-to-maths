@@ -110,6 +110,27 @@ window.addEventListener("keydown", function (event) {
     // event.preventDefault();
   }, true);
 
+
+// Affiche/cache la preview en MathJax et Cache/affiche la zone de saisie
+
+function preview(id1, id2, id3)
+{
+    var str = document.getElementById(id3).value;
+    document.getElementById(id2).innerHTML = str;
+    if(document.getElementById(id1).style.display=="none")
+    {
+        document.getElementById(id1).style.display="block";
+        document.getElementById(id2).style.display="none";
+    }
+    else
+    {
+        document.getElementById(id1).style.display="none";
+        document.getElementById(id2).style.display="block";
+    }
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    return true;
+}
+
 var changeHappened = false;
 var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
 manageQueueButtonsStyle();

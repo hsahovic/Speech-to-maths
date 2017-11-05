@@ -159,6 +159,7 @@ input {
 .text-container {
     padding: 2vh;
     border-radius: 1em;
+    cursor: text;
 }
 
 .form-section {
