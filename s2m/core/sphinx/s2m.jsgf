@@ -2,14 +2,25 @@
 
 grammar speech-to-math-v0;
 
+<<<<<<< HEAD
 public <expression> = <unaryoperator-operator> <expressionalias> | echo | <expressionalias> <binaryoperator-operator> <expressionalias> | ouvrez la parenth�se <expressionalias> fermez la parenth�se | zulu | yankee | entre parenth�se <expressionalias> | xray | <number> | <expressionalias> au carr� | charlie | uniform | delta | bravo | alpha;
 
 <powers> = quadrilliard | décillion | octilliard | nonillion | trillion | décilliard | septillion | trilliard | million | quintilliard | sextillion | octillion | nonilliard | milliard | sextilliard | quadrillion | septilliard | billion | quintillion;
 
 <expressionalias> = <expression>;
+=======
+public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu | <expressionalias> au carré | echo | uniform | <number> | xray | alpha | delta | charlie | yankee | entre parenthèse <expressionalias> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias>;
 
-<lt999999> = [ [<lt999>] mille ] <lt999>;
+<expressionalias> = <expression>;
 
+<binaryoperator-operator> = sur | puissance | plus | moins ou plus | contient | environ égal à | vectoriel | rond | inférieur à | moins | égal | inclus dans | somme | supérieur à | fois | de | plus ou moins | différent de | équivaut à | intégrale;
+
+<unaryoperator-operator> = racine carré de | moins | racine de | valeur absolu de | racine cubique de;
+>>>>>>> origin/master
+
+<number> = <lt999999> | zéro;
+
+<<<<<<< HEAD
 <safedozen> = septante | nonante | trente | vingt | octante | quarante | cinquante;
 
 <digit> = un | <safedigit>;
@@ -23,9 +34,23 @@ public <expression> = <unaryoperator-operator> <expressionalias> | echo | <expre
 <suite> = <integers> [<suite>];
 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
+=======
+<safedigit> = six | deux | neuf | cinq | huit | quatre | sept | trois;
 
-<number> = zéro | <lt999999>;
+<digit> = <safedigit> | un;
 
+<safedozen> = nonante | octante | septante | trente | quarante | vingt | cinquante;
+
+<gt12lt19> = seize | quatorze | quinze | douze | dix neuf | dix sept | treize | dix huit;
+
+<gt11lt19> = onze | <gt12lt19>;
+
+<lt99> = quatre vingt dix | quatre vingt <safedigit> | <digit> | soixante et un | <safedozen> <safedigit> | soixante <safedigit> | soixante et onze | soixante <gt12lt19> | <gt11lt19> | quatre vingt <gt12lt19> | quatre vingt onze | quatre vingt | quatre vingt un | <safedozen> et un | soixante dix;
+>>>>>>> origin/master
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<<<<<<< HEAD
 <decimal> = <comma> <suite>;
 
 <gt999999> = <lt999> <powers> [<gt999999>];
@@ -37,6 +62,19 @@ public <expression> = <unaryoperator-operator> <expressionalias> | echo | <expre
 <lt99> = quatre vingt | soixante <gt12lt19> | quatre vingt dix | quatre vingt <gt12lt19> | <digit> | quatre vingt un | <safedozen> <safedigit> | <safedozen> et un | <gt11lt19> | soixante et onze | soixante dix | quatre vingt onze | soixante <safedigit> | soixante et un | quatre vingt <safedigit>;
 
 <unaryoperator-operator> = racine cubique de | valeur absolu de | racine carr� de | racine de | moins;
+=======
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<powers> = trilliard | million | sextilliard | sextillion | octillion | trillion | nonillion | nonilliard | septilliard | quadrillion | décillion | quintilliard | septillion | billion | quadrilliard | quintillion | octilliard | milliard | décilliard;
+
+<gt999999> = <lt999> <powers> [<gt999999>];
+
+<numbers> = <integers> [<decimal>];
+
+<decimal> = <comma> <suite>;
+
+<suite> = <integers> [<suite>];
+>>>>>>> origin/master
 
 <comma> = point | virgule;
 
