@@ -17,7 +17,8 @@
 	
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 	
-		<button id = "start_rec" onclick = "manageRecording(voiceAnalysisLink, audioResponseManager);">
+		<button id = "start_rec" onclick = "sendContinuousAudio(500, voiceAnalysisLink, true, audioResponseManager) ;">
+		<!-- <button id = "start_rec" onclick = "sendAudioBlob(voiceAnalysisLink, true, audioResponseManager);"> -->
 			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 			Commencer la dictée
 		</button>

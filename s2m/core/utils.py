@@ -9,10 +9,12 @@ import os
 
 
 def natural_log(x):
+    # Doc string ?
     return int(log10(x))
 
 
 def _set_words(words):
+    # Doc string ? Est-ce que ça devrait pas être une méthode du number parser ?
     if type(words) == list:
         for el in words:
             if type(el) != str:
@@ -43,6 +45,7 @@ def listset(l):
 
 
 def nobrackets(s):
+    # Doc string ? + titre pas pep 8 è_é
     bracketted_regex = re.compile(r'\([\w-]+\)', re.UNICODE)
     return bracketted_regex.sub('', s)
 
@@ -56,10 +59,12 @@ def reverse_dict(d):
 
 
 def dec(x):
+    # Doc string ?
     return Decimal(str(x))
 
 
 def args_from_dict(d):
+    # Doc string ?
     return reduce(lambda x, y: '%s -%s %s' % (x, y[0], y[1]),
                   d.items())
 
