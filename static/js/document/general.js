@@ -115,7 +115,7 @@ window.addEventListener("keydown", function (event) {
 
 function preview(id1, id2, id3)
 {
-    var str = "getValText(id3)";
+    var str = getValText(id3);
     document.getElementById(id2).innerHTML = str;
     if(document.getElementById(id1).style.display=="none")
     {
@@ -130,7 +130,7 @@ function preview(id1, id2, id3)
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     return true;
 }
-// Gère le contenu à afficher dans la div en MathJax
+// Gère le contenu à afficher dans la div pour MathJax
 function getValText(id)
 {
     var str = document.getElementById(id).value;
