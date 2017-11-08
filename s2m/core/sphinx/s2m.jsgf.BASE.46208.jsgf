@@ -1,0 +1,43 @@
+#JSGF V0;
+
+grammar speech-to-math-v0;
+
+public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu | <expressionalias> au carré | echo | uniform | <number> | xray | alpha | delta | charlie | yankee | entre parenthèse <expressionalias> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias>;
+
+<expressionalias> = <expression>;
+
+<binaryoperator-operator> = sur | puissance | plus | moins ou plus | contient | environ égal à | vectoriel | rond | inférieur à | moins | égal | inclus dans | somme | supérieur à | fois | de | plus ou moins | différent de | équivaut à | intégrale;
+
+<unaryoperator-operator> = racine carré de | moins | racine de | valeur absolu de | racine cubique de;
+
+<number> = <lt999999> | zéro;
+
+<safedigit> = six | deux | neuf | cinq | huit | quatre | sept | trois;
+
+<digit> = <safedigit> | un;
+
+<safedozen> = nonante | octante | septante | trente | quarante | vingt | cinquante;
+
+<gt12lt19> = seize | quatorze | quinze | douze | dix neuf | dix sept | treize | dix huit;
+
+<gt11lt19> = onze | <gt12lt19>;
+
+<lt99> = quatre vingt dix | quatre vingt <safedigit> | <digit> | soixante et un | <safedozen> <safedigit> | soixante <safedigit> | soixante et onze | soixante <gt12lt19> | <gt11lt19> | quatre vingt <gt12lt19> | quatre vingt onze | quatre vingt | quatre vingt un | <safedozen> et un | soixante dix;
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<powers> = trilliard | million | sextilliard | sextillion | octillion | trillion | nonillion | nonilliard | septilliard | quadrillion | décillion | quintilliard | septillion | billion | quadrilliard | quintillion | octilliard | milliard | décilliard;
+
+<gt999999> = <lt999> <powers> [<gt999999>];
+
+<numbers> = <integers> [<decimal>];
+
+<decimal> = <comma> <suite>;
+
+<suite> = <integers> [<suite>];
+
+<comma> = point | virgule;
+
+<integers> = <gt999999> [<lt999999>] | <lt999999>;

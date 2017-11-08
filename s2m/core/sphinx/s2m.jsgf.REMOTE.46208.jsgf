@@ -3,9 +3,6 @@
 grammar speech-to-math-v0;
 
 <<<<<<< HEAD
-public <expression> = yankee | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias> | charlie | <expressionalias> au carré | entre parenthèse <expressionalias> | uniform | delta | <number> | bravo | <unaryoperator-operator> <expressionalias> | zulu | xray | echo | alpha;
-=======
-<<<<<<< HEAD
 public <expression> = <unaryoperator-operator> <expressionalias> | echo | <expressionalias> <binaryoperator-operator> <expressionalias> | ouvrez la parenth�se <expressionalias> fermez la parenth�se | zulu | yankee | entre parenth�se <expressionalias> | xray | <number> | <expressionalias> au carr� | charlie | uniform | delta | bravo | alpha;
 
 <powers> = quadrilliard | décillion | octilliard | nonillion | trillion | décilliard | septillion | trilliard | million | quintilliard | sextillion | octillion | nonilliard | milliard | sextilliard | quadrillion | septilliard | billion | quintillion;
@@ -13,24 +10,16 @@ public <expression> = <unaryoperator-operator> <expressionalias> | echo | <expre
 <expressionalias> = <expression>;
 =======
 public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu | <expressionalias> au carré | echo | uniform | <number> | xray | alpha | delta | charlie | yankee | entre parenthèse <expressionalias> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias>;
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
 
 <expressionalias> = <expression>;
 
-<binaryoperator-operator> = moins | contient | moins ou plus | intégrale | plus | plus ou moins | de | rond | puissance | environ égal à | différent de | égal | supérieur à | sur | inférieur à | équivaut à | fois | somme | inclus dans | vectoriel;
+<binaryoperator-operator> = sur | puissance | plus | moins ou plus | contient | environ égal à | vectoriel | rond | inférieur à | moins | égal | inclus dans | somme | supérieur à | fois | de | plus ou moins | différent de | équivaut à | intégrale;
 
-<<<<<<< HEAD
-<unaryoperator-operator> = moins | valeur absolu de | racine cubique de | racine carré de | racine de;
-=======
 <unaryoperator-operator> = racine carré de | moins | racine de | valeur absolu de | racine cubique de;
 >>>>>>> origin/master
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
 
-<number> = zéro | <lt999999>;
+<number> = <lt999999> | zéro;
 
-<<<<<<< HEAD
-<safedigit> = deux | huit | sept | trois | neuf | quatre | six | cinq;
-=======
 <<<<<<< HEAD
 <safedozen> = septante | nonante | trente | vingt | octante | quarante | cinquante;
 
@@ -47,22 +36,17 @@ public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
 =======
 <safedigit> = six | deux | neuf | cinq | huit | quatre | sept | trois;
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
 
-<digit> = un | <safedigit>;
+<digit> = <safedigit> | un;
 
-<safedozen> = septante | nonante | vingt | cinquante | quarante | trente | octante;
+<safedozen> = nonante | octante | septante | trente | quarante | vingt | cinquante;
 
-<gt12lt19> = treize | dix sept | quinze | dix huit | quatorze | seize | dix neuf | douze;
+<gt12lt19> = seize | quatorze | quinze | douze | dix neuf | dix sept | treize | dix huit;
 
 <gt11lt19> = onze | <gt12lt19>;
 
-<<<<<<< HEAD
-<lt99> = <safedozen> <safedigit> | <gt11lt19> | soixante <safedigit> | soixante dix | quatre vingt dix | quatre vingt un | quatre vingt onze | soixante <gt12lt19> | quatre vingt <gt12lt19> | <digit> | soixante et onze | quatre vingt | quatre vingt <safedigit> | <safedozen> et un | soixante et un;
-=======
 <lt99> = quatre vingt dix | quatre vingt <safedigit> | <digit> | soixante et un | <safedozen> <safedigit> | soixante <safedigit> | soixante et onze | soixante <gt12lt19> | <gt11lt19> | quatre vingt <gt12lt19> | quatre vingt onze | quatre vingt | quatre vingt un | <safedozen> et un | soixante dix;
 >>>>>>> origin/master
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
 
@@ -81,7 +65,7 @@ public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu 
 =======
 <lt999999> = [ [<lt999>] mille ] <lt999>;
 
-<powers> = milliard | nonilliard | million | quadrilliard | sextilliard | billion | septillion | nonillion | quintilliard | octilliard | décillion | septilliard | trilliard | quadrillion | sextillion | quintillion | trillion | octillion | décilliard;
+<powers> = trilliard | million | sextilliard | sextillion | octillion | trillion | nonillion | nonilliard | septilliard | quadrillion | décillion | quintilliard | septillion | billion | quadrilliard | quintillion | octilliard | milliard | décilliard;
 
 <gt999999> = <lt999> <powers> [<gt999999>];
 
@@ -92,6 +76,6 @@ public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu 
 <suite> = <integers> [<suite>];
 >>>>>>> origin/master
 
-<comma> = virgule | point;
+<comma> = point | virgule;
 
 <integers> = <gt999999> [<lt999999>] | <lt999999>;

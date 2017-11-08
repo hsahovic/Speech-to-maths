@@ -98,6 +98,20 @@ def document(request, address):
 
 
 @login_required
+def documents(request):
+    user = get_user(request)
+    try:
+        for n in request.POST['delete-value'].split(';'):
+            doc = get_document(request, id_=int(n))
+            doc.is_in_trash = True
+            doc.save()
+    except Exception:
+        pass
+    docs = models.Document.objects.filter(author=user, is_in_trash=False)
+    return render(request, 'documents.html', locals())
+
+
+@login_required
 def documents_search(request, context_length=50):
     user = get_user(request)
     docs = models.Document.objects.filter(author=user, is_in_trash=False)
@@ -127,25 +141,12 @@ def documents_search(request, context_length=50):
 
 
 @login_required
-def documents(request):
-    user = get_user(request)
-    try:
-        for n in request.POST['delete-value'].split(';'):
-            doc = get_document(request, id_=int(n))
-            doc.is_in_trash = True
-            doc.save()
-    except Exception:
-        pass
-    docs = models.Document.objects.filter(author=user, is_in_trash=False)
-    return render(request, 'documents.html', locals())
-
-
-@login_required
 def save_document(request):
     # sécurité ?
     data = json.loads(request.POST['data'])
     doc = get_document(request, id_=data["docID"])
     doc.content = data["newContent"]
+    # Regenere pdf ?
     doc.save()
     return HttpResponse(json.dumps({"result": True}))
 
@@ -169,8 +170,8 @@ def sign_up(request):
 
 @login_required
 def training(request):
-    def generate_training_data () :
-        return "2 + 2", "deux plus deux"
+    def generate_training_data():
+        return "\\frac{2 + 3}{4}", "deux plus deux"
 
     formule, text = generate_training_data()
     return render(request, 'training.html', locals())
@@ -180,4 +181,4 @@ def training(request):
 # for doc in models.Document.objects.all():
     # doc.address = uuid.uuid4()
     # doc.save()
-# 
+#

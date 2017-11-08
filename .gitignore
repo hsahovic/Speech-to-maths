@@ -50,3 +50,4 @@ db.sqlite3
 s2m/file_analysis/file.ogg
 *.pyc
 *.pyc
+*.ogg
