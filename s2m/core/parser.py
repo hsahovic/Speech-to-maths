@@ -49,8 +49,11 @@ class Token:
         return False
     
     def __hash__(self):
-         
-        return reduce(lambda a, b: a ^ hash(b), self.__formula, hash(self.__tag))
+
+        if self.__formula:
+            return reduce(lambda a, b: a ^ hash(b), self.__formula, hash(self.__tag))
+        else:
+            return hash(self.__tag)
 
 
 class Parser:

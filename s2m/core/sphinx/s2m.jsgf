@@ -2,96 +2,42 @@
 
 grammar speech-to-math-v0;
 
-<<<<<<< HEAD
-public <expression> = yankee | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias> | charlie | <expressionalias> au carré | entre parenthèse <expressionalias> | uniform | delta | <number> | bravo | <unaryoperator-operator> <expressionalias> | zulu | xray | echo | alpha;
-=======
-<<<<<<< HEAD
-public <expression> = <unaryoperator-operator> <expressionalias> | echo | <expressionalias> <binaryoperator-operator> <expressionalias> | ouvrez la parenth�se <expressionalias> fermez la parenth�se | zulu | yankee | entre parenth�se <expressionalias> | xray | <number> | <expressionalias> au carr� | charlie | uniform | delta | bravo | alpha;
+public <expression> = charlie | echo | <expressionalias> <binaryoperator-operator> <expressionalias> | yankee | uniform | xray | ouvrez la parenthèse <expressionalias> fermez la parenthèse | delta | alpha | <unaryoperator-operator> <expressionalias> | <expressionalias> au carré | bravo | zulu | <number> | entre parenthèse <expressionalias>;
 
-<powers> = quadrilliard | décillion | octilliard | nonillion | trillion | décilliard | septillion | trilliard | million | quintilliard | sextillion | octillion | nonilliard | milliard | sextilliard | quadrillion | septilliard | billion | quintillion;
+<safedozen> = nonante | octante | vingt | trente | cinquante | septante | quarante;
 
-<expressionalias> = <expression>;
-=======
-public <expression> = bravo | <unaryoperator-operator> <expressionalias> | zulu | <expressionalias> au carré | echo | uniform | <number> | xray | alpha | delta | charlie | yankee | entre parenthèse <expressionalias> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | <expressionalias> <binaryoperator-operator> <expressionalias>;
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
-
-<expressionalias> = <expression>;
-
-<binaryoperator-operator> = moins | contient | moins ou plus | intégrale | plus | plus ou moins | de | rond | puissance | environ égal à | différent de | égal | supérieur à | sur | inférieur à | équivaut à | fois | somme | inclus dans | vectoriel;
-
-<<<<<<< HEAD
-<unaryoperator-operator> = moins | valeur absolu de | racine cubique de | racine carré de | racine de;
-=======
-<unaryoperator-operator> = racine carré de | moins | racine de | valeur absolu de | racine cubique de;
->>>>>>> origin/master
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
-
-<number> = zéro | <lt999999>;
-
-<<<<<<< HEAD
-<safedigit> = deux | huit | sept | trois | neuf | quatre | six | cinq;
-=======
-<<<<<<< HEAD
-<safedozen> = septante | nonante | trente | vingt | octante | quarante | cinquante;
+<unaryoperator-operator> = racine carré de | moins | racine cubique de | racine de | valeur absolu de;
 
 <digit> = un | <safedigit>;
-
-<numbers> = <integers> [<decimal>];
-
-<safedigit> = huit | cinq | quatre | trois | sept | deux | neuf | six;
-
-<gt12lt19> = quatorze | dix huit | seize | quinze | douze | dix sept | dix neuf | treize;
-
-<suite> = <integers> [<suite>];
-
-<lt999> = [ [<safedigit>] cent ] <lt99>;
-=======
-<safedigit> = six | deux | neuf | cinq | huit | quatre | sept | trois;
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
-
-<digit> = un | <safedigit>;
-
-<safedozen> = septante | nonante | vingt | cinquante | quarante | trente | octante;
-
-<gt12lt19> = treize | dix sept | quinze | dix huit | quatorze | seize | dix neuf | douze;
-
-<gt11lt19> = onze | <gt12lt19>;
-
-<<<<<<< HEAD
-<lt99> = <safedozen> <safedigit> | <gt11lt19> | soixante <safedigit> | soixante dix | quatre vingt dix | quatre vingt un | quatre vingt onze | soixante <gt12lt19> | quatre vingt <gt12lt19> | <digit> | soixante et onze | quatre vingt | quatre vingt <safedigit> | <safedozen> et un | soixante et un;
-=======
-<lt99> = quatre vingt dix | quatre vingt <safedigit> | <digit> | soixante et un | <safedozen> <safedigit> | soixante <safedigit> | soixante et onze | soixante <gt12lt19> | <gt11lt19> | quatre vingt <gt12lt19> | quatre vingt onze | quatre vingt | quatre vingt un | <safedozen> et un | soixante dix;
->>>>>>> origin/master
->>>>>>> 35bbdd71400932e32edffc10b0333f649ccdf959
-
-<lt999> = [ [<safedigit>] cent ] <lt99>;
-
-<<<<<<< HEAD
-<decimal> = <comma> <suite>;
-
-<gt999999> = <lt999> <powers> [<gt999999>];
-
-<gt11lt19> = <gt12lt19> | onze;
-
-<binaryoperator-operator> = fois | plus ou moins | moins ou plus | inf�rieur � | puissance | inclus dans | contient | plus | de | somme | sup�rieur � | sur | int�grale | �gal | environ �gal � | diff�rent de | �quivaut � | moins | vectoriel | rond;
-
-<lt99> = quatre vingt | soixante <gt12lt19> | quatre vingt dix | quatre vingt <gt12lt19> | <digit> | quatre vingt un | <safedozen> <safedigit> | <safedozen> et un | <gt11lt19> | soixante et onze | soixante dix | quatre vingt onze | soixante <safedigit> | soixante et un | quatre vingt <safedigit>;
-
-<unaryoperator-operator> = racine cubique de | valeur absolu de | racine carr� de | racine de | moins;
-=======
-<lt999999> = [ [<lt999>] mille ] <lt999>;
-
-<powers> = milliard | nonilliard | million | quadrilliard | sextilliard | billion | septillion | nonillion | quintilliard | octilliard | décillion | septilliard | trilliard | quadrillion | sextillion | quintillion | trillion | octillion | décilliard;
-
-<gt999999> = <lt999> <powers> [<gt999999>];
-
-<numbers> = <integers> [<decimal>];
-
-<decimal> = <comma> <suite>;
-
-<suite> = <integers> [<suite>];
->>>>>>> origin/master
 
 <comma> = virgule | point;
 
-<integers> = <gt999999> [<lt999999>] | <lt999999>;
+<gt11lt19> = <gt12lt19> | onze;
+
+<gt999999> = <lt999> <powers> [<gt999999>];
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<integers> = <lt999999> | <gt999999> [<lt999999>];
+
+<suite> = <integers> [<suite>];
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<expressionalias> = <expression>;
+
+<number> = zéro | <lt999999>;
+
+<decimal> = <comma> <suite>;
+
+<safedigit> = six | sept | huit | neuf | trois | quatre | cinq | deux;
+
+<powers> = octillion | décillion | quintilliard | sextillion | quadrilliard | septillion | trillion | billion | quintillion | octilliard | milliard | décilliard | million | trilliard | nonillion | quadrillion | sextilliard | nonilliard | septilliard;
+
+<numbers> = <integers> [<decimal>];
+
+<gt12lt19> = dix huit | seize | dix neuf | quatorze | quinze | douze | dix sept | treize;
+
+<lt99> = soixante et un | quatre vingt un | quatre vingt <safedigit> | <digit> | quatre vingt <gt12lt19> | quatre vingt | <safedozen> et un | soixante dix | soixante et onze | soixante <safedigit> | soixante <gt12lt19> | <safedozen> <safedigit> | quatre vingt dix | quatre vingt onze | <gt11lt19>;
+
+<binaryoperator-operator> = sur | rond | moins | plus | vectoriel | de | plus ou moins | fois | différent de | inférieur à | supérieur à | puissance | environ égal à | inclus dans | moins ou plus | intégrale | égal | équivaut à | somme | contient;

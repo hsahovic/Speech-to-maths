@@ -9,9 +9,16 @@ class Number(Formula):
     def __init__(self, n):
 
         if type(n) == float \
-           or type(n) == int \
-           or type(n) == str:
+           or type(n) == int:
             self.__n = n
+            self.__val = n
+        elif type(n) == str:
+            self.__n = n
+            np = NumberParser()
+            try:
+                self.__val = np(n, strict=True)
+            except ValueError:
+                raise ValueError('String %r cannot be interpreted as a number' % n)
         else:
             raise TypeError('Number must be a float, an int or a string, not %r' % n)
 
@@ -19,26 +26,22 @@ class Number(Formula):
 
         if p == 'n':
             return self.__n
+        if p == 'val':
+            return self.__val     
         elif p == 'priority':
             return 5
-        elif p == 'val':
-            if type(self.__n) == str:
-                np = NumberParser()
-                return np(self.__n)
-            else:
-                return self.__n
         else:
             raise AttributeError
 
     def __eq__(self, other):
 	
         if other and isinstance(other, Number):
-            return other.n == self.__n
+            return other.val == self.__val
         return False 
 
     def __hash__(self):
 
-        return hash(self.__n)
+        return hash(self.__val)
 
     def count_brackets(self):
 
@@ -51,14 +54,14 @@ class Number(Formula):
         numbers = 0.1
         variables = 0.5
         others = 1.
-        if f.__class__ == Number:
-            if f.val == self.val:
+        if isinstance(f, Number):
+            if f.val == self.__val:
                 return 0.
             else:
                 return numbers
-        elif f.__class__ == Variable:
+        elif isinstance(f, Variable):
             return variables
-        elif issubclass(f.__class__, Formula):
+        elif isinstance(f, Formula):
             return others
         else:
             raise TypeError('Cannot compare Number to non-formula %r' % f)
@@ -69,22 +72,12 @@ class Number(Formula):
 
     def _latex(self):
 
-        return repr(self.val), 0
+        return repr(self.__val), 0
 
     def latex(self):
 
-        return repr(self.val)
+        return repr(self.__val)
 
-    def concat(self, p):
-
-        if type(self.__n) == str \
-           and p.__class__ == Number \
-           and type(p.n) == str:
-            return Number(self.__n + " " + p.n)
-        else:
-            raise TypeError('Concatenation of Numbers must be applied to Number classes ' \
-                            + 'with string-encoded attributes.')
-        
     def transcription(self):
 
         np = NumberParser()
@@ -94,13 +87,21 @@ class Number(Formula):
 
         def number_reduce(word):
             if word in NumberParser.NUMBER_WORDS:
-                return Token('number', [Number(word)])
+                try:
+                    return Token('number', [Number(word)])
+                except:
+                    return Token('number', [word])
             else:
                 return None
 
         def number_expand(tok1, tok2):
             if tok1.tag == tok2.tag == 'number':
-                return Token('number', [tok1.formula[0].concat(tok2.formula[0])])
+                try:
+                    new_formula = tok1.formula + tok2.formula
+                    new_number = map(lambda a: a if type(a) == str else a.n, new_formula)
+                    return Token('number', [Number(' '.join(new_number))])
+                except:
+                    return Token('number', new_formula)
             else:
                 return None
 
