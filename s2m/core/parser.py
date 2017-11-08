@@ -1,4 +1,4 @@
-"""[PSC Speech-to-Math]           (Streichholzschaechtelchen)e
+"""[PSC Speech-to-Math]           (Streichholzschaechtelchen)
                         parser.py
 *************************************************************
 *Effectue l'analyse syntaxique d'un texte en francais en    *
@@ -14,6 +14,7 @@
 
 from s2m.core.sphinx_config import SphinxConfig
 from s2m.core.version import *
+from functools import reduce
 
 class Token:
 
@@ -41,7 +42,17 @@ class Token:
         else:
             raise AttributeError
 
+    def __eq__(self, other):
         
+        if other and isinstance(other, Token):
+            return other.tag == self.__tag and other.formula == self.__formula
+        return False
+    
+    def __hash__(self):
+         
+        return reduce(lambda a, b: a ^ hash(b), self.__formula, hash(self.__tag))
+
+
 class Parser:
 
     def __init__(self):
@@ -77,8 +88,6 @@ class Parser:
             raise ValueError('Name %r is already the name of a rule.' % name)
         else:
             self.__names.append(name)
-
-        #self.add_reduce(parser_lambdas.reduce_1(name, d, f))
 
         k = 0
 
@@ -194,11 +203,11 @@ class Parser:
         line = []
         
         for word in words:
-            cell = []
+            cell = set()
             for f in self.__reduces:
                 word_parsed = f(word)
                 if word_parsed:
-                    cell.append(word_parsed)
+                    cell.add(word_parsed)
             if cell:
                 line.append(cell)
             else:
@@ -208,15 +217,16 @@ class Parser:
         for i in range(2, len(words)+1):
             line = []
             for j in range(0, len(words)+1-i):
-                cell = []
+                cell = set()
                 for k in range(1, i):
                     for lhs in lines[k-1][j]:
                         for rhs in lines[i-k-1][j+k]:
                             for f in self.__expands:
                                 words_parsed = f(lhs, rhs)
                                 if words_parsed:
-                                    cell.append(words_parsed)
+                                    cell.add(words_parsed)
                 line.append(cell)
             lines.append(line)
            
         return [tok.formula[0] for tok in lines[-1][0] if tok.formula and len(tok.formula) == 1]
+

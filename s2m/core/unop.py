@@ -46,6 +46,16 @@ class UnaryOperator(Formula):
         else:
             raise AttributeError
 
+    def __eq__(self, other):
+	
+        if other and isinstance(other, UnaryOperator):
+            return other.o == self.__o and other.r == self.__r
+        return False
+
+    def __hash__(self):
+        
+        return hash(self.__o) ^ hash(self.__r)
+
     def count_brackets(self):
 
         y, n = 0, 0

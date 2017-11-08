@@ -87,6 +87,16 @@ class BinaryOperator(Formula):
         else:
             raise AttributeError
 
+    def __eq__(self, other):
+	
+        if other and isinstance(other, BinaryOperator):
+            return other.l == self.__l and other.o == self.__o and other.r == self.__r
+        return False
+
+    def __hash__(self):
+
+        return hash(self.__l) ^ hash(self.__o) ^ hash(self.__r)
+
     def count_brackets(self):
         """Donne le nombre de blocs parentheses et le nombre de blocs non
            parentheses dans le code LaTeX genere"""

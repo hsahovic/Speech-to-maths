@@ -30,6 +30,16 @@ class Number(Formula):
         else:
             raise AttributeError
 
+    def __eq__(self, other):
+	
+        if other and isinstance(other, Number):
+            return other.n == self.__n
+        return False 
+
+    def __hash__(self):
+
+        return hash(self.__n)
+
     def count_brackets(self):
 
         return 0, 0
