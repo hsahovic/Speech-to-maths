@@ -65,11 +65,10 @@
 <div class = "doc-content">
 
 	<div class = "text-container" id="divtext" style="display:block">
-		<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)" onblur="preview('divtext', 'divmat', 'textArea')">{{ doc.content }}</textarea>
+		<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)" onblur="preview('divtext', 'divmat', 'textArea')" style = "font-size: 16px;">{{ doc.content }}</textarea>
 	</div>
 
-	<div class = "text-container"  id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh">
-
+	<div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh">
 	</div>
 
 </div>
@@ -92,9 +91,9 @@ MathJax.Hub.Config({
   	inlineMath: [['$','$']],
   	balanceBraces: true,
   	processEnvironments: true,
-  	multiLine: true,
+  	multiLine: false,
   	preview: "TeX",
-	},
+  },
   TeX: {
     extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
     noErrors: {
@@ -114,7 +113,6 @@ MathJax.Hub.Config({
 	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
 	var documentSaveLink = "{% url 'save_document' %}"
 	var docID = {{ doc.id }};
-	var textContent = "blabla";
 </script>
 <script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script src = "{% static 'js/document/contentStateManager.js' %}"> </script>

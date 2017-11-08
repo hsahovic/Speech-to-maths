@@ -120,6 +120,10 @@ h2 {
     background-color: white;
 }
 
+.text-container textarea{
+    font-size: 16px;
+}
+
 .form-section {
     text-align: center;
     background-color: white;
@@ -153,6 +157,7 @@ h2 {
 
 .additional-data {
     color : #09f;
+
 }
 
 .text-editor-button {
@@ -176,4 +181,9 @@ h2 {
 
 .white-section {
     background-color: white;
+}
+
+.element {
+    color: #5050bc;
+    font-weight: bold;
 }

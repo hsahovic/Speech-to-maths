@@ -115,7 +115,7 @@ window.addEventListener("keydown", function (event) {
 
 function preview(id1, id2, id3)
 {
-    var str = document.getElementById(id3).value;
+    var str = "getValText(id3)";
     document.getElementById(id2).innerHTML = str;
     if(document.getElementById(id1).style.display=="none")
     {
@@ -129,6 +129,17 @@ function preview(id1, id2, id3)
     }
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     return true;
+}
+// Gère le contenu à afficher dans la div en MathJax
+function getValText(id)
+{
+    var str = document.getElementById(id).value;
+    str = str.replace( /\r?\n/g, "<br>" );
+    str = str.replace("\\begin{center}", "<span style='text-align:center'>").replace("\\end{center}", "</span>");
+    str = str.replace("\\begin{flushleft}", "<span>").replace("\\end{flushleft}", "</span>");
+    str = str.replace("\\begin{flushright}", "<span style='float:right'>").replace("\\end{flushright}", "</span>");
+    str = str.replace("\\begin{document}", "<span>\\begin{</span><span class='additional-data' style='font-weight:bold'>document</span>}").replace("\\end{document}", "<span>\\end{</span><span class='additional-data' style='font-weight:bold'>document</span>}");
+    return str;
 }
 
 var changeHappened = false;
