@@ -86,6 +86,16 @@ class Variable(Formula):
         else:
             raise AttributeError
 
+    def __eq__(self, other):
+	
+        if other and isinstance(other, Variable):
+            return other.v == self.__v
+        return False
+
+    def __hash__(self):
+        
+        return hash(self.__v)
+
     def count_brackets(self):
 
         return 0, 0

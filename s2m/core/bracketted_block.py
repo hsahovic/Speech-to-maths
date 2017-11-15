@@ -18,6 +18,16 @@ class BrackettedBlock(Formula):
         else:
             raise AttributeError
 
+    def __eq__(self, other):
+	
+        if other and isinstance(other, BrackettedBlock):
+            return other.b == self.__b
+        return False
+
+    def __hash__(self):
+
+        return hash(self.__b)
+
     def _latex(self):
 
         b_tex, b_level = self.__b._latex()

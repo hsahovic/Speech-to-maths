@@ -81,7 +81,7 @@ class SphinxConfig:
         disjunction_regex = re.compile(r'\s*\|\s*', re.UNICODE)
         vocabulary_regex = re.compile(r'(?:[^\w<>]|\s*^)(\w+)(?=[^\w<>]|\s*$)', re.UNICODE)
 
-        with open(filename, 'r') as jsgf:
+        with open(filename, 'r', encoding='utf-8') as jsgf:
             read_header = False
             while True:
                 line = jsgf.readline()
@@ -133,7 +133,7 @@ class SphinxConfig:
         """
         # Ecriture du fichier s2m.jsgf (grammaire)
         grammar = grammar or os.path.join("s2m", "core", "sphinx", "s2m.jsgf")
-        with open(grammar, "w") as jsgf:
+        with open(grammar, "w", encoding='utf-8') as jsgf:
             jsgf.write("#JSGF V%s;" % self.v)
             jsgf.write("\n\ngrammar %s;" % self.name)
             if self.expressions:  # Comportement à préciser dans le cas où expressions est vide
@@ -151,8 +151,8 @@ class SphinxConfig:
         dictionary_s2m = dictionary_s2m or os.path.join("s2m", "core", "sphinx", "s2m.dict")
         dictionary_fr = os.path.join("s2m", "core", "sphinx", "fr.dict")
         first_word_regex = re.compile(r'^[\w-]+', re.UNICODE)
-        with open(dictionary_s2m, "w") as dict_s2m:
-            with open(dictionary_fr, "r") as dict_fr:
+        with open(dictionary_s2m, "w", encoding='utf-8') as dict_s2m:
+            with open(dictionary_fr, "r", encoding='utf-8') as dict_fr:
                 i, n, f = 0, len(wrds), False
                 while True:
                     try:

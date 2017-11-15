@@ -89,9 +89,7 @@ class NumberParser:
         if p == 'words':
             return self.words or []
 
-    def integer_parser(self, words = None): 
-        if words: 
-            self.words = _set_words(words) 
+    def _integer_parser(self): 
         total_value = 0
         while self.words: 
             value = self._integer_parser_lt1000()
@@ -117,7 +115,8 @@ class NumberParser:
                 return None
             
     def number_parser(self, words, strict=False):
-        value = self.integer_parser(words)
+        self.words = _set_words(words)
+        value = self._integer_parser()
         if value is None:
             return None
         if self.words:
@@ -128,7 +127,7 @@ class NumberParser:
                     while self.words and self.words[0] == 'zero':
                         decimal += 1
                         del self.words[0]
-                    comp = self.integer_parser()
+                    comp = self._integer_parser()
                     if comp:
                         decimal += natural_log(comp) + 1
                         value += float(comp) / (10 ** decimal)
@@ -137,7 +136,7 @@ class NumberParser:
         if not (strict and self.words):
             return value
         else:
-            return ValueError('[strict=True] String %r does not represent any valid number.' % ' '.join(words))
+            raise ValueError('[strict=True] String %r does not represent any valid number.' % ''.join(words))
                 
     def _end_of_parsed_integer(self): 
         return (not self.words) or self.words[0] in self.COMMA
