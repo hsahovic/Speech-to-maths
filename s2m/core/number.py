@@ -2,7 +2,9 @@ from s2m.core.formulae import Formula
 from s2m.core.variable import Variable
 from s2m.core.number_parser import NumberParser
 from s2m.core.parser import Token
+
 import os
+import numpy
 
 class Number(Formula):
 
@@ -99,3 +101,9 @@ class Number(Formula):
 
         number_jsgf = os.path.join('s2m', 'core', 'sphinx', 'number.jsgf')
         parser.sphinx_config.import_file(number_jsgf)
+    @classmethod
+    def generate_random(cls) :
+        """
+        Generates a random instance of Number.
+        """
+        return Number(numpy.random.randint(0,100000))

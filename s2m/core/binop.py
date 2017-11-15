@@ -2,6 +2,8 @@ from s2m.core.formulae import Formula
 from s2m.core.number import Number
 from s2m.core.utils import reverse_dict
 
+import random
+
 
 class BinaryOperator(Formula):
 
@@ -232,3 +234,15 @@ class BinaryOperator(Formula):
         parser.add_easy_reduce(*binary_operator_easy)
         parser.add_complex_rule(*binary_operator_complex)
         parser.add_complex_rule(*squared_complex)
+
+    @classmethod
+    def generate_random(cls,l=None,r=None,depth=1) :
+        """
+        Generates a random instance of BinaryOperator.
+        """
+        o = random.choice(list(cls.__OPERATORS.keys()))
+        if l == None:
+            l=Formula.generate_random(depth=depth)           
+        if r == None:
+            r=Formula.generate_random(depth=depth)
+        return BinaryOperator(l,o,r)

@@ -1,6 +1,7 @@
 from s2m.core.formulae import Formula
 from s2m.core.utils import reverse_dict
 
+import random
 
 class UnaryOperator(Formula):
 
@@ -119,3 +120,13 @@ class UnaryOperator(Formula):
 
         parser.add_easy_reduce(*unary_operator_easy)
         parser.add_complex_rule(*unary_operator_complex)
+
+    @classmethod
+    def generate_random(cls,r=None,depth=1) :
+        """
+        Generates a random instance of UnaryOperator.
+        """
+        o = random.choice(list(cls.__OPERATORS.keys()))        
+        if r == None:
+            r=Formula.generate_random(depth=depth)
+        return UnaryOperator(o,r)

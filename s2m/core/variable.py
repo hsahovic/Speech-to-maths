@@ -1,6 +1,6 @@
 from s2m.core.formulae import Formula
 from s2m.core.utils import reverse_dict
-
+import random
 
 class Variable(Formula):
 
@@ -133,3 +133,11 @@ class Variable(Formula):
                                    True)
 
         parser.add_easy_reduce(*radio_roman_easy_reduce)
+
+    @classmethod
+    def generate_random(cls):
+        """
+        Generates a random variable(either greek or radio)
+        """
+        
+        return Variable(random.choice(list(cls.__GREEC_PARSED.keys() | cls.__RADIO_ROMAN_PARSED.keys())))

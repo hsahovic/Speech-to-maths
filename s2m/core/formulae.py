@@ -15,6 +15,8 @@ from abc import ABCMeta, abstractmethod
 from s2m.core.number_parser import NumberParser
 from s2m.core.parser import Token
 
+import random
+
 class Formula(metaclass=ABCMeta):
 
     @abstractmethod
@@ -67,4 +69,17 @@ class Formula(metaclass=ABCMeta):
             return '\\left[ %s \\right]'
         elif level > 6:
             return '\\left\\lbrace %s \\right\\rbrace'
+    
+    @classmethod
+    def generate_random(cls,depth):
+        from s2m.core.binop import BinaryOperator
+        from s2m.core.unop import UnaryOperator
+        from s2m.core.number import Number
+        from s2m.core.variable import Variable
 
+        subclasses= [UnaryOperator,BinaryOperator]
+        subclasses_nodepth=[Number,Variable]
+        if depth == 0:
+            return random.choice(subclasses_nodepth).generate_random()
+        else:
+            return random.choice(subclasses).generate_random(depth=depth-1)
