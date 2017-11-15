@@ -8,15 +8,17 @@ from s2m.core.number import Number
 from s2m.core.utils import listset
 from s2m.core.sphinx_config import SphinxConfig
 
+import random
+
 class S2MParser():
 
     def __init__(self):
         self.__parser = Parser()
+        Variable.teach(self.__parser)
+        Number.teach(self.__parser)
         BinaryOperator.teach(self.__parser)
         UnaryOperator.teach(self.__parser)
         BrackettedBlock.teach(self.__parser)
-        Variable.teach(self.__parser)
-        Number.teach(self.__parser)
         self.__parser.sphinx_config.update_config_files()
 
     def parse(self, w, formal=False):

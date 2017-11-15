@@ -77,17 +77,20 @@ class Formula(metaclass=ABCMeta):
             return '\\left[ %s \\right]'
         elif level > 6:
             return '\\left\\lbrace %s \\right\\rbrace'
-    
+
     @classmethod
-    def generate_random(cls,depth):
+    def generate_random(cls, depth=5):
+        
         from s2m.core.binop import BinaryOperator
         from s2m.core.unop import UnaryOperator
         from s2m.core.number import Number
         from s2m.core.variable import Variable
+        from s2m.core.bracketted_block import BrackettedBlock
 
-        subclasses= [UnaryOperator,BinaryOperator]
-        subclasses_nodepth=[Number,Variable]
-        if depth == 0:
+        subclasses = [UnaryOperator, BinaryOperator, BrackettedBlock]
+        subclasses_nodepth = [Number, Variable]
+        
+        if depth <= 0:
             return random.choice(subclasses_nodepth).generate_random()
         else:
             return random.choice(subclasses).generate_random(depth=depth-1)

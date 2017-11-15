@@ -43,7 +43,10 @@ def voice_analysis(request):
                 except:
                     pass
                 i += 1
-        response = json.dumps({'instruction': 'write', 'content': parses})
+        if parses:
+            response = json.dumps({'instruction': 'write', 'content': parses})
+        else:
+            reponse = json.dumps({'instruction': 'nop'})
         return HttpResponse(response)
     except OSError:
         # Windows tests

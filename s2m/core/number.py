@@ -84,8 +84,9 @@ class Number(Formula):
 
         np = NumberParser()
         return np.transcribe(self.val)
-    
-    def teach(parser):
+
+    @classmethod
+    def teach(cls, parser):
 
         def number_reduce(word):
             if word in NumberParser.NUMBER_WORDS:
@@ -112,6 +113,7 @@ class Number(Formula):
 
         number_jsgf = os.path.join('s2m', 'core', 'sphinx', 'number.jsgf')
         parser.sphinx_config.import_file(number_jsgf)
+
     @classmethod
     def generate_random(cls) :
         """

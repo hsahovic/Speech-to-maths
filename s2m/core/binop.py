@@ -8,23 +8,23 @@ import random
 class BinaryOperator(Formula):
 
     __OPERATORS = {'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
-                   'NEQ': {'latex': '%s \neq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'GEQ': {'latex': '%s \geq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'LEQ': {'latex': '%s \leq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'EQV': {'latex': '%s \sim %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'SEQ': {'latex': '%s \simeq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'SBS': {'latex': '%s \subset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'SPS': {'latex': '%s \supset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   #'INT': {'latex': '\int_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
-                   #'SUM': {'latex': '\sum_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   'NEQ': {'latex': '%s \\neq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'GEQ': {'latex': '%s \\geq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'LEQ': {'latex': '%s \\leq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'EQV': {'latex': '%s \\sim %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'SEQ': {'latex': '%s \\simeq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'SBS': {'latex': '%s \\subset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'SPS': {'latex': '%s \\supset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                   #'INT': {'latex': '\\int_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                   #'SUM': {'latex': '\\sum_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
                    'ADD': {'latex': '%s + %s', 'priority': 1, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SUB': {'latex': '%s - %s', 'priority': 1, 'associative': False, 'weak': True, 'nobrackets': False},
-                   'PMS': {'latex': '%s \pm %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
-                   'MPS': {'latex': '%s \mp %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
+                   'PMS': {'latex': '%s \\pm %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
+                   'MPS': {'latex': '%s \\mp %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
                    'MUL': {'latex': '%s \\times %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                    'DIV': {'latex': '\\frac{%s}{%s}', 'priority': 2, 'associative': False, 'weak': False, 'nobrackets': True},
-                   'CMP': {'latex': '%s \circ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
-                   'VEC': {'latex': '%s \ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'CMP': {'latex': '%s \\circ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
+                   'VEC': {'latex': '%s \\wedge %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                    'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False},
                    'EVL': {'latex': '%s \\left( %s \\right)', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True},
                    }
@@ -38,7 +38,7 @@ class BinaryOperator(Formula):
                           'différent de': 'NEQ',
                           'supérieur à': 'GEQ',
                           'inférieur à': 'LEQ',
-                          'plus ou moins': 'PSM',
+                          'plus ou moins': 'PMS',
                           'moins ou plus': 'MPS',
                           'rond': 'CMP',
                           'vectoriel': 'VEC',
@@ -216,11 +216,11 @@ class BinaryOperator(Formula):
             return '%s %s %s' % (self.__l.transcription(),
                                  self.__OPERATORS_REVERSE[self.__o],
                                  self.__r.transcription())
-
-    def teach(parser):
+    @classmethod
+    def teach(cls, parser):
 
         binary_operator_easy = ('binaryoperator-operator',
-                                BinaryOperator.__OPERATORS_PARSED,
+                                cls.__OPERATORS_PARSED,
                                 lambda x: x)
 
         # Defines A op B -> BinaryOperator(A, op, B)
@@ -246,13 +246,13 @@ class BinaryOperator(Formula):
         parser.add_complex_rule(*squared_complex)
 
     @classmethod
-    def generate_random(cls,l=None,r=None,depth=1) :
+    def generate_random(cls, l=None, r=None, depth=1):
         """
         Generates a random instance of BinaryOperator.
         """
         o = random.choice(list(cls.__OPERATORS.keys()))
         if l == None:
-            l=Formula.generate_random(depth=depth)           
+            l = Formula.generate_random(depth=depth-1)           
         if r == None:
-            r=Formula.generate_random(depth=depth)
-        return BinaryOperator(l,o,r)
+            r = Formula.generate_random(depth=depth-1)
+        return BinaryOperator(l, o, r)

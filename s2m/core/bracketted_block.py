@@ -1,5 +1,7 @@
 from s2m.core.formulae import Formula
 
+import random
+
 class BrackettedBlock(Formula):
 
     def __init__(self, b):
@@ -55,7 +57,8 @@ class BrackettedBlock(Formula):
         return 'ouvrez la parenthèse %s fermez la parenthèse' \
                % self.__b.transcription()
 
-    def teach(parser):
+    @classmethod
+    def teach(cls, parser):
 
         def bracketted_block_complex_expand(words):
             return BrackettedBlock(words[0])
@@ -73,3 +76,11 @@ class BrackettedBlock(Formula):
         parser.add_complex_rule(*bracketted_block_explicit_complex)
         parser.add_complex_rule(*bracketted_block_implicit_complex)
 
+    @classmethod
+    def generate_random(cls, b=None, depth=1):
+        """
+        Generates a random instance of BrackettedBlock.
+        """
+        if b == None:
+            b = Formula.generate_random(depth=depth-1)           
+        return BrackettedBlock(b)

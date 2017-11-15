@@ -112,11 +112,12 @@ class UnaryOperator(Formula):
         else:
             return self.__OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
-    def teach(parser):
+    @classmethod
+    def teach(cls, parser):
 
         # Recognizes unary operators
         unary_operator_easy = ('unaryoperator-operator',
-                               UnaryOperator.__OPERATORS_PARSED,
+                               cls.__OPERATORS_PARSED,
                                lambda x: x)
 
         # Defines op A -> UnaryOperator(op, A)
@@ -132,11 +133,11 @@ class UnaryOperator(Formula):
         parser.add_complex_rule(*unary_operator_complex)
 
     @classmethod
-    def generate_random(cls,r=None,depth=1) :
+    def generate_random(cls, r=None, depth=1) :
         """
         Generates a random instance of UnaryOperator.
         """
         o = random.choice(list(cls.__OPERATORS.keys()))        
         if r == None:
-            r=Formula.generate_random(depth=depth)
-        return UnaryOperator(o,r)
+            r = Formula.generate_random(depth=depth-1)
+        return UnaryOperator(o, r)
