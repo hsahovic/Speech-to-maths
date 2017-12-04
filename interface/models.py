@@ -1,21 +1,30 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.files import File
+from django.core.exceptions import ObjectDoesNotExist
 
-from  s2m.settings import MEDIA_ROOT
+from s2m.settings import MEDIA_ROOT
 from s2m.core.utils import generate_random_word
 
 import os
 import subprocess
 import uuid
 
-
-
 class Utilisateur(User):
 
     def __str__(self):
         return self.username
 
+    def __init__(self, *args, **kwargs):
+        from s2m.core.constants import ConstantsWrapper
+        self.constants = ConstantsWrapper(self)
+        super().__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            from s2m.core.constants import constants
+            constants.create_user_constants(self)
+        super().save(*args, **kwargs)
 
 class Document(models.Model):
 
@@ -28,9 +37,17 @@ class Document(models.Model):
     pdf = models.FileField(upload_to="latex_files/", default="")
     title = models.CharField(max_length=2048)
 
-    def __str__(self):
-        return self.title
+    def __init__(self, *args, **kwargs):
+        from s2m.core.constants import ConstantsWrapper
+        self.constants = ConstantsWrapper(self)
+        super().__init__(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            from s2m.core.constants import constants
+            constants.create_document_constants(self)
+        super().save(*args, **kwargs)
+        
     def generate_pdf(self):
         path_to_file = os.path.join(MEDIA_ROOT, "pdf_generation")
         if not os.path.exists(path_to_file) :
@@ -65,3 +82,31 @@ class TrainingSample(models.Model):
 
     def __str__(self):
         return self.text
+
+class Constant(models.Model):
+    
+    name = models.CharField(max_length=16)
+    value = models.FloatField()
+
+    class Meta:
+        abstract = True
+    
+class DocumentConstant(Constant):
+
+    document = models.ForeignKey(Document,
+                                 blank=True,
+                                 null=True,
+                                 on_delete=models.CASCADE,
+                                 related_name='constset')
+
+class UserConstant(Constant):
+
+    user = models.ForeignKey(Utilisateur,
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE,
+                             related_name='constset')
+
+class GeneralConstant(Constant):
+
+    pass
