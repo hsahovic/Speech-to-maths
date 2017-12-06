@@ -1,5 +1,8 @@
 from s2m.core.formulae import Formula
+
 from s2m.core.utils import reverse_dict
+from s2m.core.utils import merge_lists
+
 import random
 
 class Variable(Formula):
@@ -100,22 +103,20 @@ class Variable(Formula):
 
         return 0, 0
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
         from s2m.core.number import Number
-
-        if f.__class__ == Variable:
-            return 0.
-        elif f.__class__ == Number:
-            return 0.5
-        elif issubclass(f.__class__, Formula):
+        
+        if isinstance(other, Variable):
             return 1.
+        elif isinstance(other, Number):
+            return 0.5
         else:
-            raise TypeError('Cannot compare Variable to non-formula %r' % f)
+            return 0.
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return 1.
+        return merge_lists([], head=1.)
 
     def _latex(self):
 

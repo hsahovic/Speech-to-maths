@@ -3,6 +3,8 @@ from s2m.core.variable import Variable
 from s2m.core.number_parser import NumberParser
 from s2m.core.parser import Token
 
+from s2m.core.utils import merge_lists
+
 import os
 import numpy
 
@@ -49,28 +51,20 @@ class Number(Formula):
 
         return 0, 0
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
         from s2m.core.variable import Variable
-
-        numbers = 0.1
-        variables = 0.5
-        others = 1.
-        if isinstance(f, Number):
-            if f.val == self.__val:
-                return 0.
-            else:
-                return numbers
-        elif isinstance(f, Variable):
-            return variables
-        elif isinstance(f, Formula):
-            return others
+        
+        if isinstance(other, Number):
+            return 1.
+        elif isinstance(other, Variable):
+            return 0.5
         else:
-            raise TypeError('Cannot compare Number to non-formula %r' % f)
+            return 0.
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return 1.
+        return merge_lists([], head=1.)
 
     def _latex(self):
 

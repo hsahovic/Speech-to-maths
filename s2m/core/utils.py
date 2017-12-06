@@ -95,3 +95,23 @@ def generate_random_word(length=12):
     Returns a str made up of a random sequence of length ascii characters 
     """
     return ''.join(random.choice(list(string.ascii_lowercase)) for i in range(length))
+
+
+def merge_lists(lists, head=None, length=8):
+    l = [] if head is None else [head]
+    length = length - 1 if head else length
+    lists = [[e for e in l if e is not None] for l in lists]
+    if lists == []:
+        return l + [None] * length
+    n = len(lists)
+    lens = [len(l) for l in lists]
+    for i in range(max(lens)):
+        for j in range(n):
+            if i >= lens[j]:
+                continue
+            else:
+                l.append(lists[j][i])
+                length -= 1
+                if length == 0:
+                    return l
+    return l + [None] * length

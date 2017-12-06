@@ -1,6 +1,8 @@
 from s2m.core.formulae import Formula
 from s2m.core.number import Number
+
 from s2m.core.utils import reverse_dict
+from s2m.core.utils import merge_lists
 
 import random
 
@@ -90,9 +92,14 @@ class BinaryOperator(Formula):
             raise AttributeError
 
     def __eq__(self, other):
-	
+
         if other and isinstance(other, BinaryOperator):
-            return other.l == self.__l and other.o == self.__o and other.r == self.__r
+            if other.o == self.__o:
+                if self.associative:
+                    #workaround! caution!
+                    return other.latex() == self.latex()
+                else:
+                    return other.l == self.__l and other.r == self.__r
         return False
 
     def __hash__(self):
@@ -127,19 +134,6 @@ class BinaryOperator(Formula):
 
         return y, n
 
-    def distance(self, f):
-        """Definit une (pseudo-)distance entre self et une autre formule f"""
-
-        if f.__class__ == BinaryOperator:
-            if f.o == self.__o:
-                return 0.4 * (self.__l.distance(f.l) + self.__r.distance(f.r))
-            else:
-                return 1.
-        elif issubclass(f.__class__, Formula):
-            return 1.
-        else:
-            raise TypeError('Cannot compare formula with non-formula %r' % f)
-
     def flatten(self):
         """Liste les enfants de self dans la representation n-aire minimale"""
 
@@ -159,27 +153,29 @@ class BinaryOperator(Formula):
 
         return children
 
-    def symmetry_index(self):
-        """Evalue la symetrie de self"""
+    def a_similarity(self, other):
+        
+        if isinstance(other, BinaryOperator) \
+           and self.__o == other.o:
+            return (self.__l.a_similarity(other.l) \
+                    + self.__r.a_similarity(other.r))/2
+        else:
+            return 0.
+
+    def d_symmetry(self):
 
         if not self.associative:
-            return 1 - min(self.__l.distance(self.__r),
-                           1 - 0.25 * self.__l.symmetry_index()
-                             - 0.25 * self.__r.symmetry_index())
+            return merge_lists([self.__l.d_symmetry(),
+                                self.__r.d_symmetry()],
+                               head=self.__l.a_similarity(self.__r))
         else:
             children = self.flatten()
             l = len(children)
-            chart = [[0. for _ in range(l)]
-                     for __ in range(l)]
-            s = 0
-            for i in range(l):
-                for j in range(i + 1, l):
-                    chart[i][j] = children[i].distance(children[j])
-                co_child_sym = 1 - 0.5 * children[i].symmetry_index()
-                sum_dist = (sum(chart[i]) + sum(chart[k][i]
-                                                for k in range(0, i))) / (l - 1)
-                s += min(co_child_sym, sum_dist)
-            return 1 - s / l
+            similarities = [children[i].a_similarity(children[j])
+                            for i in range(l) for j in range(i + 1, l)]
+            avg_similarity = sum(similarities) / len(similarities)
+            return merge_lists([child.d_symmetry() for child in children],
+                               head=avg_similarity)
 
     def _latex(self):
 

@@ -1,5 +1,7 @@
 from s2m.core.formulae import Formula
+
 from s2m.core.utils import reverse_dict
+from s2m.core.utils import merge_lists
 
 import random
 
@@ -73,21 +75,17 @@ class UnaryOperator(Formula):
 
         return y, n
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
-        if f.__class__ == UnaryOperator:
-            if f.o == self.__o:
-                return self.__r.distance(f.r)
-            else:
-                return 1.
-        elif issubclass(f.__class__, Formula):
-            return 1.
+        if isinstance(other, UnaryOperator) \
+           and self.__o == other.o:
+            return self.__r.a_similarity(other.r)
         else:
-            raise TypeError('Cannot compare formula with non-formula %r' % f)
+            return 0.
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return self.__r.symmetry_index()
+        return self.__r.d_symmetry()
 
     def _latex(self):
 

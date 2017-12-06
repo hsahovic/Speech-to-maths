@@ -14,6 +14,7 @@
 
 from s2m.core.sphinx_config import SphinxConfig
 from s2m.core.version import *
+
 from functools import reduce
 
 class Token:
@@ -198,13 +199,17 @@ class Parser:
                 self.add_expand(parser_lambdas.l_w(name, len(words)-1, f))
 
         self.__sphinx_config.add_complex_rule(name, s, is_expression)
-                
+
+    
     def cky(self, s):
+
+        THRESHOLD = 0.75
+        MAXCOUNT = 8
 
         words = s.split(' ')
         lines = []
         line = []
-        
+
         for word in words:
             cell = set()
             for f in self.__reduces:
@@ -220,16 +225,28 @@ class Parser:
         for i in range(2, len(words)+1):
             line = []
             for j in range(0, len(words)+1-i):
+                cell_buf = []
                 cell = set()
+                max_evaluation = 0
                 for k in range(1, i):
                     for lhs in lines[k-1][j]:
                         for rhs in lines[i-k-1][j+k]:
                             for f in self.__expands:
                                 words_parsed = f(lhs, rhs)
                                 if words_parsed:
-                                    cell.add(words_parsed)
+                                    if words_parsed.is_full_formula:
+                                        evaluation = words_parsed.formula[0].evaluation()
+                                        cell_buf.append((words_parsed, evaluation))
+                                        if evaluation > max_evaluation:
+                                            max_evaluation = evaluation
+                                    else:
+                                        cell.add(words_parsed)
+                cell_buf.sort(key=lambda x:x[1], reverse=True)
+                for k, v in cell_buf[:MAXCOUNT]:
+                    if v > THRESHOLD * max_evaluation:
+                        cell.add(k)
                 line.append(cell)
             lines.append(line)
-           
-        return [tok.formula[0] for tok in lines[-1][0] if tok.formula and len(tok.formula) == 1]
-
+            
+        return sorted([tok.formula[0] for tok in lines[-1][0] if tok.is_full_formula],
+                       key=lambda x:x.evaluation(), reverse=True)

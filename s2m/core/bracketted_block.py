@@ -1,5 +1,7 @@
 from s2m.core.formulae import Formula
 
+from s2m.core.utils import merge_lists
+
 import random
 
 class BrackettedBlock(Formula):
@@ -44,13 +46,13 @@ class BrackettedBlock(Formula):
         y, n = self.__b.count_brackets()
         return y + 1, n
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
-        return self.__b.distance(f)
+        return self.__b.a_similarity(other)
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return self.__b.symmetry_index()
+        return self.__b.d_symmetry()
 
     def transcription(self):
 
