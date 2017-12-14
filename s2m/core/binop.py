@@ -154,7 +154,7 @@ class BinaryOperator(Formula):
         return children
 
     def a_similarity(self, other):
-        
+
         if isinstance(other, BinaryOperator) \
            and self.__o == other.o:
             return (self.__l.a_similarity(other.l) \
@@ -248,7 +248,7 @@ class BinaryOperator(Formula):
         """
         o = random.choice(list(cls.__OPERATORS.keys()))
         if l == None:
-            l = Formula.generate_random(depth=depth-1)           
+            l = Formula.generate_random(depth=depth-1)
         if r == None:
             r = Formula.generate_random(depth=depth-1)
         return BinaryOperator(l, o, r)
