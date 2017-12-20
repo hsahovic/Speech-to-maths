@@ -1,9 +1,9 @@
 from s2m.core.number_parser import NumberParser
 from s2m.core.parser import Parser
-from s2m.core.S2MParser import S2MParser
+from s2m.core.S2MParser import s2m_parser as parser
 
 #Tests du number parser pour tester la lecture de nombres en lettres
-parser = NumberParser()
+#parser = NumberParser()
 assert parser(['un']) == 1
 assert parser(['huit']) == 8
 assert parser(['dix']) == 10
@@ -41,6 +41,10 @@ assert parser('cent cinquante et un virgule quarante six') == 151.46
 assert parser('deux cent soixante et un mille six cent quarante trois virgule huit million quatre cent quatre vingt trois mille cinq cent douze') == 261643.8483512
 
 #Tests de parser d'opérations binaires
-parser = S2MParser()
-assert "2 + 2" in parser.parse("deux plus deux")
-assert "2 * 2" in parser.parse("deux fois deux")
+#parser = S2MParser()
+assert "2 + 2" in parser("deux plus deux")
+assert "2 * 2" in parser("deux fois deux")
+assert "\\frac{2}{2}" in parser("deux sur deux")
+assert "{2}^{2}" in parser("deux puissance deux")
+assert "{2}^{2}" in parser("deux au carré")
+assert "3 \\neq 2" in parser("trois différent de deux")
