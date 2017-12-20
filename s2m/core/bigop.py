@@ -4,6 +4,7 @@
 
 from s2m.core.formulae import Formula
 from s2m.core.number import Number
+from s2m.core.binop import BigOperator
 from s2m.core.utils import reverse_dict
 
 import random
@@ -34,7 +35,7 @@ class BigOperator(Formula):
         for form in args: 
             if not isinstance(form, Formula):
                 raise ValueError('Input not Formula : %r' % form)
-        self.fl=args
+        self.__fl=args
         self.__o=o
             
 
@@ -80,19 +81,24 @@ class BigOperator(Formula):
         else: return '',0
 
     def count_brackets(self):
-        pass
+        return count_brackets(self.___fl(len(self.__fl)-1))
         
     def a_similarity(self, f):
-        pass
+         if isinstance(other, BigOperator) \
+           and self.__o == other.o:
+           s=0
+           for i in range(len(self.__fl)):
+               s+=(self.__l(i)).a_similarity
+            return s/len(self.__fl)
+        else:
+            return 0.
+
     def d_symmetry(self):
         pass
     def teach(self):
         pass
 
-
-        
-    
-    def latex(self):
+     def latex(self):
         """Genere le code LaTeX correspondant a self"""
         return self._latex()[0]
 
