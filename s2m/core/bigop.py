@@ -4,6 +4,7 @@
 
 from s2m.core.formulae import Formula
 from s2m.core.number import Number
+from s2m.core.binop import BigOperator
 from s2m.core.utils import reverse_dict
 
 import random
@@ -12,14 +13,14 @@ import random
 class BigOperator(Formula):
 
 # Est-ce qu'on gère le contenu du BigOp ? Normalement oui ! 
-    __OPERATORS = {'ITG': {'latex': '\int_{%s}^{%s} %s', 'priority': 1},
-    'SOM': {'latex': '\sum_{%s}^{%s} %s', 'priority': 1},
-    'PRO': {'latex': '\prod_{%s}^{%s} %s','priority': 2},
-    'ITR': {'latex': '\prod_{%s}^{%s} %s','priority': 2},
-    'UNI': {'latex': '\prod_{%s}^{%s} %s','priority': 1}}
+    __OPERATORS = {'ITG': {'latex': '\int_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
+    'SUM': {'latex': '\sum_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
+    'PRO': {'latex': '\prod_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
+    'ITR': {'latex': '\prod_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
+    'UNI': {'latex': '\prod_{%s}^{%s} %s','priority': 1, 'type': 'SUM'}}
 
     __OPERATORS_PARSED = {'intégrale': 'ITG',
-     'somme': 'SOM',
+     'somme': 'SUM',
      'produit': 'PRO',
      'intersection': 'ITR',
       'union': 'UNI'}
@@ -29,12 +30,12 @@ class BigOperator(Formula):
     def __init__(self, o, *args): ##EN CONSTRUCTION !! ## à adapter avec args  
         if o not in self.operators:
             raise ValueError('Unknown big operator code : %r' % o)
-        if o in ['INT','SOM','PRO','ITR','UNI']:
+        if self.__OPERATORS[o]['type']=='SUM':
             if len(args) > 3 or len(args)==0: raise ValueError('Wrong amout of arguments for operator: %r' % len(args))    
         for form in args: 
             if not isinstance(form, Formula):
                 raise ValueError('Input not Formula : %r' % form)
-        self.fl=args
+        self.__fl=args
         self.__o=o
             
 
@@ -63,36 +64,41 @@ class BigOperator(Formula):
    
 
     def _latex(self):
-        if self.__o in ['ITG','SOM','PRO','ITR','UNI']:
+        if self.__OPERATORS[self.__o]['type']=='SUM':
             c_tex, c_level='',0
             d_tex, d_level='',0
             u_tex, u_level='',0
             if len(self.__fl)==1:
-                c_tex, c_level=self.__fl[len(self.__fl)-1].latex()
+                c_tex, c_level=self.__fl[len(self.__fl)-1]._latex()
             if len(self.__fl)==2:
-                c_tex, c_level=self.__fl[len(self.__fl)-1].latex()
-                d_tex, d_level=self.__fl[0].latex()
+                c_tex, c_level=self.__fl[len(self.__fl)-1]._latex()
+                d_tex, d_level=self.__fl[0]._latex()
             if len(self.__fl)==3:
-                c_tex, c_level=self.__fl[len(self.__fl)-1].latex()
-                d_tex, d_level=self.__fl[0].latex()
-                u_tex, u_level=self.__fl[1].latex()
+                c_tex, c_level=self.__fl[len(self.__fl)-1]._latex()
+                d_tex, d_level=self.__fl[0]._latex()
+                u_tex, u_level=self.__fl[1]._latex()
             return self.latex_model % (d_tex,u_tex,c_tex), c_level
         else: return '',0
 
     def count_brackets(self):
-        pass
+        return count_brackets(self.___fl(len(self.__fl)-1))
         
     def a_similarity(self, f):
-        pass
+         if isinstance(other, BigOperator) \
+           and self.__o == other.o:
+           s=0
+           for i in range(len(self.__fl)):
+               s+=(self.__l(i)).a_similarity
+            return s/len(self.__fl)
+        else:
+            return 0.
+
     def d_symmetry(self):
         pass
     def teach(self):
         pass
 
-
-        
-    
-    def latex(self):
+     def latex(self):
         """Genere le code LaTeX correspondant a self"""
         return self._latex()[0]
 
