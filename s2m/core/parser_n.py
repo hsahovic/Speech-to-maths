@@ -61,8 +61,8 @@ class Parser:
 
     def __init__(self):
 
-        self.__expands = []
-        self.__reduces = []
+        self.__expands = {}
+        self.__reduces = {}
         self.__aux = {}
         self.__names = []
         self.__sphinx_config = SphinxConfig(S2M_GRAMMAR_NAME,
@@ -76,13 +76,22 @@ class Parser:
         else:
             raise AttributeError
         
-    def add_expand(self, f):
+    def add_expand(self, name, word1, word2, f=None):
 
-        self.__expands.append(f)
+        exp = (name, f)
+        words12 = (word1, word2)
+        if words12 in self.__expands:
+            self.__expands[words12].append(exp)
+        else:
+            self.__expands[words12] = [exp]
 
-    def add_reduce(self, f):
+    def add_reduce(self, name, word, formula=None):
 
-        self.__reduces.append(f)
+        tok = Token(name, [formula] if formula else [])
+        if word in self.__reduces:
+            self.__reduces[word].append(tok)
+        else:
+            self.__reduces[word] = [tok]
 
     def add_easy_reduce(self, name, d, f, is_expression=False):
 
@@ -100,27 +109,35 @@ class Parser:
             if len(words) == 0:
                 raise ValueError('String to be recognized by the parser must be non-empty.')
             elif len(words) == 1:
-                self.add_reduce(parser_lambdas.reduce_1(name, key, f(val)))
+                self.add_reduce(name, key, f(val))
             elif len(words) == 2:
-                self.add_reduce(parser_lambdas.reduce_3(name, k, 0, words[0]))
-                self.add_reduce(parser_lambdas.reduce_3(name, k, 1, words[1]))
-                self.add_expand(parser_lambdas._r_2(name, k, f(val)))
+                self.add_reduce('%s/%r.0' % (name, k), words[0])
+                self.add_reduce('%s/%r.1' % (name, k), words[1])
+                self.add_expand(name,
+                                '$%s/%r.0' % (name, k),
+                                '$%s/%r.1' % (name, k),
+                                lambda _: f(val))
                 k += 1
             else:
-                for i,word in enumerate(words):
-                    self.add_reduce(parser_lambdas.reduce_3(name, k, i, word))
-                self.add_expand(parser_lambdas._r_1(name, k))
+                for i, word in enumerate(words):
+                    self.add_reduce('%s/%r.%r' % (name, k, i), words[i])
+                self.add_expand('%s/%r.0t1' % (name, k),
+                                '$%s/%r.0' % (name, k),
+                                '$%s/%r.1' % (name, k))
                 for i in range(2, len(words)-1):
-                    self.add_expand(parser_lambdas._r_i(name, k, i))
-                self.add_expand(parser_lambdas._r_l(name, k, len(words)-1, f(val)))
+                    self.add_expand('%s/%r.0t%r' % (name, k, i),
+                                    '$%s/%r.0t%r' % (name, k, i-1),
+                                    '$%s/%r.%r' % (name, k, i))
+                self.add_expand(name,
+                                '$%s/%r.0t%r' % (name, k, len(words)-2),
+                                '$%s/%r.%r' % (name, k, len(words)-1),
+                                lambda _: f(val))
                 k += 1
 
         self.__sphinx_config.add_simple_rule(name, d.keys(), is_expression)
 
     def add_complex_rule(self, name, s, f, is_expression=True):
 
-        import s2m.core.parser_lambdas as parser_lambdas
-        
         if name in self.__names:
             raise ValueError('Name %r is already the name of a rule.' % name)
         else:
@@ -128,79 +145,35 @@ class Parser:
             
         words = s.split(' ')
         if len(words) < 2:
-            raise ValueError('String describing a complex rule must be composed of at least two words, unlike %r.' % s)
-        
-        for i,word in enumerate(words):
+            raise ValueError('String describing a complex rule must be composed of at least two words, unlike %r.' % s)        
+
+        for i, word in enumerate(words):
             if word == '%f' or word[0] == '$':
                 continue
-            self.add_reduce(parser_lambdas.reduce_2(name, i, word))
+            self.add_reduce('%s.%r' % (name, i), word)
 
         if len(words) == 2:
-            
-            if words[0] == '%f':
-                if words[1] == '%f':
-                    self.add_expand(parser_lambdas._2_ff(name, f))
-                elif words[1][0] == '$':
-                    self.add_expand(parser_lambdas._2_ft(name, words[1][1:], f))
-                else:
-                    self.add_expand(parser_lambdas._2_fw(name, f))
-            elif words[0][0] == '$':
-                if words[1] == '%f':
-                    self.add_expand(parser_lambdas._2_tf(name, words[0][1:], f))
-                elif words[1][0] == '$':
-                    self.add_expand(parser_lambdas._2_tt(name, words[0][1:], words[1][1:], f))
-                else:
-                    self.add_expand(parser_lambdas._2_tw(name, words[0][1:], f))
-            else:
-                if words[1] == '%f':
-                    self.add_expand(parser_lambdas._2_wf(name, f))
-                elif words[1][0] == '$':
-                    self.add_expand(parser_lambdas._2_wt(name, words[1][1:], f))
-                else:
-                    self.add_expand(parser_lambdas._2_ww(name, f))
-
+            self.add_expand(name,
+                            '$%s.0' % name,
+                            '$%s.1' % name)
         else:
-            
-            if words[0] == '%f':
-                if words[1] == '%f':
-                    self.add_expand(parser_lambdas._1_ff(name))
-                elif words[1][0] == '$':
-                    self.add_expand(parser_lambdas._1_ft(name, words[1][1:]))
-                else:
-                    self.add_expand(parser_lambdas._1_fw(name))
-            elif words[0][0] == '$':
-                if words[1] == '%f':
-                    self.add_expand(parser_lambdas._1_tf(name, words[0][1:]))
-                elif words[1][0] == '$':
-                    self.add_expand(parser_lambdas._1_tt(name, words[0][1:], words[1][1:]))
-                else:
-                    self.add_expand(parser_lambdas._1_tw(name, words[0][1:]))
-            else:
-                if words[1] == '%f':
-                    self.add_expand(parser_lambdas._1_wf(name))
-                elif words[1][0] == '$':
-                    self.add_expand(parser_lambdas._1_wt(name, words[1][1:]))
-                else:
-                    self.add_expand(parser_lambdas._1_ww(name))
-                
-            for i in range(2,len(words)-1):
-                if words[i] == '%f':
-                    self.add_expand(parser_lambdas.i_f(name, i))
-                elif words[i][0] == '$':
-                    self.add_expand(parser_lambdas.i_t(name, i, words[i][1:]))
-                else:
-                    self.add_expand(parser_lambdas.i_w(name, i))
-
-            if words[len(words)-1] == '%f':
-                self.add_expand(parser_lambdas.l_f(name, len(words)-1, f))
-            elif words[len(words)-1][0] == '$':
-                self.add_expand(parser_lambdas.l_t(name, len(words)-1, words[-1][1:], f))
-            else:
-                self.add_expand(parser_lambdas.l_w(name, len(words)-1, f))
-
+            self.add_expand('%s.0t1' % name,
+                            '$%s.0' % name,
+                            '$%s.1' % name)
+            for i in range(2, len(words)-1):
+                self.add_expand('%s.0t%r' % (name, i),
+                                '$%s.0t%r' % (name, i-1),
+                                '$%s.%r' % (name, i))
+            self.add_expand(name,
+                            '$%s.0t%r' % (name, len(words)-2),
+                            '$%s.%r' % (name, len(words)-1),
+                            f)
+       
         self.__sphinx_config.add_complex_rule(name, s, is_expression)
 
-    
+    def myers(self, s):
+        pass
+        
     def cky(self, s):
 
         THRESHOLD = 0.75
