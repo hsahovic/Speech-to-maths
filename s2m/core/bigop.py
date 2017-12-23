@@ -1,42 +1,40 @@
 #### EN DÉVELOPPEMENT ####
 ### 
-
+from functools import reduce
 
 from s2m.core.formulae import Formula
-from s2m.core.number import Number
-from s2m.core.binop import BigOperator
 from s2m.core.utils import reverse_dict
 
 import random
-
 
 class BigOperator(Formula):
 
 # Est-ce qu'on gère le contenu du BigOp ? Normalement oui ! 
     __OPERATORS = {'ITG': {'latex': '\int_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
-    'SUM': {'latex': '\sum_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
-    'PRO': {'latex': '\prod_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
-    'ITR': {'latex': '\prod_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
-    'UNI': {'latex': '\prod_{%s}^{%s} %s','priority': 1, 'type': 'SUM'}}
+                   'SUM': {'latex': '\sum_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
+                   'PRO': {'latex': '\prod_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
+                   'ITR': {'latex': '\bigcap_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
+                   'UNI': {'latex': '\bigcup_{%s}^{%s} %s','priority': 1, 'type': 'SUM'}}
 
     __OPERATORS_PARSED = {'intégrale': 'ITG',
-     'somme': 'SUM',
-     'produit': 'PRO',
-     'intersection': 'ITR',
-      'union': 'UNI'}
+                          'somme': 'SUM',
+                          'produit': 'PRO',
+                          'intersection': 'ITR',
+                          'union': 'UNI'}
 
     __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
     def __init__(self, o, *args): ##EN CONSTRUCTION !! ## à adapter avec args  
         if o not in self.operators:
             raise ValueError('Unknown big operator code : %r' % o)
-        if self.__OPERATORS[o]['type']=='SUM':
-            if len(args) > 3 or len(args)==0: raise ValueError('Wrong amout of arguments for operator: %r' % len(args))    
+        if self.__OPERATORS[o]['type'] == 'SUM':
+            if len(args) > 3 or len(args) == 0:
+                raise ValueError('Wrong amout of arguments for operator: %r' % len(args))    
         for form in args: 
             if not isinstance(form, Formula):
-                raise ValueError('Input not Formula : %r' % form)
-        self.__fl=args
-        self.__o=o
+                raise ValueError('Input not Formula: %r' % form)
+        self.__fl = args
+        self.__o = o
             
 
     def __getattr__(self, p):
@@ -48,6 +46,10 @@ class BigOperator(Formula):
             return self.__OPERATORS[self.__o]['priority']
         elif p == 'latex_model':
             return self.__OPERATORS[self.__o]['latex']
+        elif p == 'operator_type':
+            return self.__OPERATORS[self.__o]['type']
+        elif p == 'arity':
+            return len(self.__fl)
         elif p == 'operators':
             return self.__OPERATORS.keys()
         else:
@@ -55,56 +57,79 @@ class BigOperator(Formula):
 
     def __eq__(self, other):
          if other and isinstance(other, BigOperator):
-            if other.o == self.__o and len(other.l)==len(self.__fl):
+            if other.o == self.__o and other.arity == self.arity:
                 for i, form in enumerate(self.__fl):
-                    if not (form == other.fl[i]): return False
-                else: return True
+                    if form != other.fl[i]:
+                        return False
+                else:
+                    return True
          return False
 
-   
+    def __hash__(self):
+        return reduce(lambda a, b: a ^ hash(b), self.__fl, 0)
 
     def _latex(self):
-        if self.__OPERATORS[self.__o]['type']=='SUM':
-            c_tex, c_level='',0
-            d_tex, d_level='',0
-            u_tex, u_level='',0
-            if len(self.__fl)==1:
-                c_tex, c_level=self.__fl[len(self.__fl)-1]._latex()
-            if len(self.__fl)==2:
-                c_tex, c_level=self.__fl[len(self.__fl)-1]._latex()
-                d_tex, d_level=self.__fl[0]._latex()
-            if len(self.__fl)==3:
-                c_tex, c_level=self.__fl[len(self.__fl)-1]._latex()
-                d_tex, d_level=self.__fl[0]._latex()
-                u_tex, u_level=self.__fl[1]._latex()
-            return self.latex_model % (d_tex,u_tex,c_tex), c_level
-        else: return '',0
+        if self.operator_type == 'SUM':
+            c_tex, c_level = '', 0
+            d_tex, d_level = '', 0
+            u_tex, u_level = '', 0
+            if len(self.__fl) == 1:
+                c_tex, c_level = self.__fl[0]._latex()
+            if len(self.__fl) == 2:
+                c_tex, c_level = self.__fl[1]._latex()
+                d_tex, d_level = self.__fl[0]._latex()
+            if len(self.__fl) == 3:
+                c_tex, c_level = self.__fl[2]._latex()
+                d_tex, d_level = self.__fl[0]._latex()
+                u_tex, u_level = self.__fl[1]._latex()
+            return self.latex_model % (d_tex, u_tex, c_tex), c_level
+        else:
+            return '', 0
+
+    def latex(self):
+        """Genere le code LaTeX correspondant a self"""
+        return self._latex()[0]
 
     def count_brackets(self):
-        return count_brackets(self.___fl(len(self.__fl)-1))
-        
+        return count_brackets(self.__fl[-1])
+
     def a_similarity(self, f):
-         if isinstance(other, BigOperator) \
-           and self.__o == other.o:
-           s=0
-           for i in range(len(self.__fl)):
-               s+=(self.__l(i)).a_similarity
+        if isinstance(other, BigOperator) \
+           and self.__o == other.o \
+           and self.arity == other.arity:
+            s = 0
+            for i in range(self.arity):
+                s += (self.__l(i)).a_similarity()
             return s/len(self.__fl)
         else:
             return 0.
 
     def d_symmetry(self):
-        pass
+        return self.__fl[-1].d_symmetry()
+
+    #TODO
     def teach(self):
         pass
 
-     def latex(self):
-        """Genere le code LaTeX correspondant a self"""
-        return self._latex()[0]
-
     def transcription(self):
-        pass
+        if self.operator_type == 'SUM':
+            if self.__o == 'INT':
+                connector = 'de'
+            else:
+                connector = 'des'
+            if len(self.__fl) == 1:
+                return '%s %s %s' % (self.__OPERATORS_REVERSE[self.__o],
+                                     connector,
+                                     self.__fl[0].transcription())
+            elif len(self.__fl) == 2:
+                return '%s sur %s %s %s' % (self.__OPERATORS_REVERSE[self.__o],
+                                            self.__fl[0].transcription(),
+                                            connector,
+                                            self.__fl[1].transcription())
+            else:
+                return '%s de %s à %s %s %s' % (self.__OPERATORS_REVERSE[self.__o],
+                                                self.__fl[0].transcription(),
+                                                self.__fl[1].transcription(),
+                                                connector,
+                                                self.__fl[2].transcription())
       
-
-
-
