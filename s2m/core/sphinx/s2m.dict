@@ -21,6 +21,9 @@ dans(2) dd an zz
 de dd
 de(2) dd ee
 delta dd ai ll tt aa
+des dd ai
+des(2) dd ai zz
+des(3) dd ei
 deux dd eu
 deux(2) dd eu zz
 différent dd ii ff ai rr an
@@ -54,6 +57,7 @@ huit(2) uy ii tt
 inclus in kk ll uu
 inclus(2) in kk ll uu zz
 inférieur in ff ai rr yy oe rr
+intersection in tt ai rr ss ai kk ss yy on
 intégrale in tt ai gg rr aa ll
 intégrale(2) in tt ai gg rr aa ll ee
 la ll aa
@@ -88,6 +92,9 @@ plus(2) pp ll uu zz
 plus(3) pp ll uu ss
 point pp ww in
 point(2) pp ww in tt
+pour pp ou rr
+produit pp rr oo dd uy ii
+produit(2) pp rr oo dd uy ii tt
 puissance pp uy ii ss an ss
 puissance(2) pp uy ii ss an ss ee
 quadrilliard kk ww aa dd rr ii ll ii aa rr
@@ -153,6 +160,8 @@ un(2) un nn
 un(3) uu nn
 uniform uu nn ii ff oo rr mm
 uniform(2) yy ou nn ii ff oo rr mm
+union uu nn yy au nn
+union(2) uu nn yy on
 valeur vv aa ll oe rr
 vectoriel vv ai kk tt oo rr yy ei ll
 vectoriel(2) vv ai kk tt oo rr ii ei ll

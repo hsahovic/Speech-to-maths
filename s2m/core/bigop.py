@@ -91,7 +91,7 @@ class BigOperator(Formula):
         return self._latex()[0]
 
     def count_brackets(self):
-        return count_brackets(self.__fl[-1])
+        return self.__fl[-1].count_brackets()
 
     def a_similarity(self, f):
         if isinstance(other, BigOperator) \
@@ -107,13 +107,52 @@ class BigOperator(Formula):
     def d_symmetry(self):
         return self.__fl[-1].d_symmetry()
 
-    #TODO
-    def teach(self):
-        pass
+    @classmethod
+    def teach(cls, parser):
+
+        big_operator_easy = ('bigoperator-operator',
+                             cls.__OPERATORS_PARSED,
+                             lambda x: x)
+
+        big_operator_from = ('bigoperator-from',
+                             {'de': None, 'pour': None, 'sur': None},
+                             lambda x: None)
+
+        big_operator_of = ('bigoperator-of',
+                           {'de': None, 'des': None},
+                           lambda x: None)
+
+        # Defines op A -> BinaryOperator(op, A)
+        def big_operator_expand(formulae):
+            return BigOperator(*[f for f in formulae if f is not None])
+
+        big_operator_arity1_complex = ('bigoperator-1',
+                                       '$bigoperator-operator $bigoperator-of %f',
+                                       big_operator_expand,
+                                       True)
+
+        # Defines op from A of B -> BinaryOperator(op, A, B)
+        big_operator_arity2_complex = ('bigoperator-2',
+                                       '$bigoperator-operator $bigoperator-from %f $bigoperator-of %f',
+                                       big_operator_expand,
+                                       True)
+
+        # Defines op from A to B of C -> BinaryOperator(op, A, B, C)
+        big_operator_arity3_complex = ('bigoperator-3',
+                                       '$bigoperator-operator $bigoperator-from %f à %f $bigoperator-of %f',
+                                       big_operator_expand,
+                                       True)
+
+        parser.add_easy_reduce(*big_operator_easy)
+        parser.add_easy_reduce(*big_operator_from)
+        parser.add_easy_reduce(*big_operator_of)
+        parser.add_complex_rule(*big_operator_arity1_complex)
+        parser.add_complex_rule(*big_operator_arity2_complex)
+        parser.add_complex_rule(*big_operator_arity3_complex)
 
     def transcription(self):
         if self.operator_type == 'SUM':
-            if self.__o == 'INT':
+            if self.__o == 'ITG':
                 connector = 'de'
             else:
                 connector = 'des'

@@ -1,120 +1,13 @@
 from math import ceil
 
-class PrefixDict:
+from s2m.core.prefix_dict import PrefixDict
+from s2m.core.phone_string import PhoneString
+from s2m.core.phones_map import PhonesMap
 
-    __dict = {}
-
-    def __init__(self, d={}):
-        for k, v in d.items():
-            self[k] = v
-
-    @classmethod
-    def leaves(cls, node, l):
-        for k, v in node.items():
-            if k is None:
-                l.append(v)
-            else:
-                PrefixDict.leaves(v, l)
-        return l
-
-    def children(self, key):
-        if type(key) != str:
-            raise TypeError('PrefixDict except keys of type str, not %r'
-                            % type(key))
-        d = self.__dict
-        for c in key:
-            if c in d:
-                d = d[c]
-            else:
-                return []
-        return [k for k in d.keys() if k is not None]
-    
-    def get_all(self, key):
-        if type(key) != str:
-            raise TypeError('PrefixDict except keys of type str, not %r'
-                            % type(key))
-        d = self.__dict
-        for c in key:
-            if c in d:
-                d = d[c]
-            else:
-                return []
-        return sorted(PrefixDict.leaves(d, []))
-    
-    def __getitem__(self, key):
-        if type(key) != str:
-            raise TypeError('PrefixDict except keys of type str, not %r'
-                            % type(key))
-        d = self.__dict
-        for c in key:
-            if c in d:
-                d = d[c]
-            else:
-                return KeyError(key)
-        if None in d:
-            return d[None]
-        else:
-            return KeyError(key)
-
-    def __setitem__(self, key, value):
-        if type(key) != str:
-            raise TypeError('PrefixDict except keys of type str, not %r'
-                            % type(key))
-        d = self.__dict
-        for c in key:
-            if c in d:
-                d = d[c]
-            else:
-                d[c] = {}
-                d = d[c]
-        d[None] = value
-
-    @classmethod
-    def _delitem(cls, d, key, i=0):
-        if i == len(key):
-            del d[None]
-        else:
-            e = d[key[i]]
-            PrefixDict._delitem(e, key, i+1)
-            if e == {}:
-                del d[key[i]]
-        
-    def __delitem__(self, key):
-        if type(key) != str:
-            raise TypeError('PrefixDict except keys of type str, not %r'
-                            % type(key))
-        if key in self:
-            PrefixDict._delitem(self.__dict, key)
-        else:
-            raise KeyError(key)
- 
-    def __contains__(self, item):
-        d = self.__dict
-        for c in item:
-            if c in d:
-                d = d[c]
-            else:
-                return False
-        return None in d
-
-class ProximityDict(PrefixDict):
+class ProximityDict(PrefixDict, PhonesMap):
 
     INFTY = float('inf')
-    DELETE_COST = 1
-    INSERT_COST = 1
-    REPLACE_COST = 1
-    MARGIN = 1
-
-    MAX_LENGTH_FACTOR = (INSERT_COST + DELETE_COST) / DELETE_COST
-
-    def insert_cost(self, syll):
-        return self.INSERT_COST
-    
-    def delete_cost(self, syll):
-        return self.DELETE_COST
-    
-    def replace_cost(self, syll1, syll2):
-        return 0 if syll1 == syll2 else self.REPLACE_COST
+    __memo = {}
 
     def _update_cost_pref(self, current_cost, current_prefs, current_min_cost, new_pref):
         if current_cost <= current_min_cost + self.MARGIN:
@@ -125,15 +18,52 @@ class ProximityDict(PrefixDict):
                 current_min_cost = current_cost
         return current_min_cost
 
-    def find_nearest(self, word):
+    def load(self, filename, map=None):
+        self.__dict = {}
+        with open(filename, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line[:-1]
+                key, value = line.split(' ', 1)
+                key = key.split('(', 1)[0]
+                self[PhoneString(value)] = key
+        if map:
+            self.load_map(map)
+
+    def find_nearest(self, word, max_count=5):
+        if word in self.__memo:
+            return self.__memo[word]
+        pronunciations = self.get_reverse(word)
+        nearest = {}
+        current_min = self.INFTY
+        for pronunciation in pronunciations:
+            for nword, score in self.find_nearest_by_pronunciation(pronunciation):
+                if nword == word:
+                    continue
+                if nword in nearest:
+                    nearest[nword] = min(nearest[nword],
+                                         score)
+                else:
+                    nearest[nword] = score
+                if score < current_min:
+                    current_min = score
+        output = sorted([(w, s) for w, s in nearest.items()
+                         if s <= current_min + self.MARGIN],
+                        key=lambda x:x[1])[:max_count]
+        self.__memo[word] = output
+        return output
+
+    def find_nearest_by_pronunciation(self, word):
+        word = PhoneString(word)
         h_len = len(word) + 1
-        v_len = ceil(self.MAX_LENGTH_FACTOR * len(word)) + 1
+        v_len = max(ceil(self.MAX_LENGTH_FACTOR * len(word)),
+                    len(self)) + 1
         #Le tableau créé a toujours plus de lignes que de colonnes
         #On ne maintient qu'une ligne et une colonne à la fois
         #en suivant la diagonale descendante pour remplir la table
         h_nearest = [{} for _ in range(h_len)]
         v_nearest = [{} for _ in range(v_len-1)]
-        h_nearest[0] = {'': 0}
+        h_nearest[0] = {PhoneString(''): 0}
         for j in range(h_len):
             #Traitement d'une ligne horizontale partant de la position j,j
             for k in range(j or 1, h_len):
@@ -144,7 +74,7 @@ class ProximityDict(PrefixDict):
                     for next_syll in self.children(pref):
                         current_replace_cost = self.replace_cost(next_syll, word[k-1])
                         current_cost = current_replace_cost + cost
-                        new_pref = pref + next_syll
+                        new_pref = pref + PhoneString(next_syll)
                         current_min_cost = self._update_cost_pref(current_cost, current_prefs,
                                                                   current_min_cost, new_pref)
                 #Calcul de la distance obtenue par suppression du dernier élément
@@ -152,7 +82,7 @@ class ProximityDict(PrefixDict):
                     for pref, cost in h_nearest[k-j+1].items():
                         for next_syll in self.children(pref):
                             current_cost = self.delete_cost(next_syll) + cost
-                            new_pref = pref + next_syll
+                            new_pref = pref + PhoneString(next_syll)
                             current_min_cost = self._update_cost_pref(current_cost, current_prefs,
                                                                       current_min_cost, new_pref)
                 #Calcul de la distance obtenue par insertion du dernier élément
@@ -170,7 +100,7 @@ class ProximityDict(PrefixDict):
                     if cost <= current_min_cost + self.MARGIN:
                         h_nearest[k-j][pref] = cost
             #Traitement d'une ligne verticale partant de la position j,j
-            for k in range(j+1, v_len-1):
+            for k in range(j+1, v_len):
                 current_min_cost = self.INFTY
                 current_prefs = {}
                 #Calcul de la distance obtenue par remplacement du dernier élément
@@ -178,7 +108,7 @@ class ProximityDict(PrefixDict):
                     for next_syll in self.children(pref):
                         current_replace_cost = self.replace_cost(next_syll, word[j-1])
                         current_cost = current_replace_cost + cost
-                        new_pref = pref + next_syll
+                        new_pref = pref + PhoneString(next_syll)
                         current_min_cost = self._update_cost_pref(current_cost, current_prefs,
                                                                   current_min_cost, new_pref)
                 #Calcul de la distance obtenue par suppression du dernier élément
@@ -189,7 +119,7 @@ class ProximityDict(PrefixDict):
                 for pref, cost in iter_items:
                     for next_syll in self.children(pref):
                         current_cost = self.delete_cost(next_syll) + cost
-                        new_pref = pref + next_syll
+                        new_pref = pref + PhoneString(next_syll)
                         current_min_cost = self._update_cost_pref(current_cost, current_prefs,
                                                                   current_min_cost, new_pref)
                         
@@ -217,10 +147,7 @@ class ProximityDict(PrefixDict):
         #Renvoie la liste des mots les plus proches se trouvant dans le dictionnaire
         return sorted([(self[k], v) for k, v in nearest.items()],
                       key=lambda x:x[1])
-        
 
-##Needed
-##1. tableau de distance entre les sons
-##2. systeme de chargement du dictionnaire
-##3. algorithme de calcul de proximity_dictionary (avec sauvegarde)
-##4. parser complet
+##Todo
+##4. Chargement automatique des paramètres
+##5. Myers (argh)

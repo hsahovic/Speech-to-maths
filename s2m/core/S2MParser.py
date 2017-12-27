@@ -5,7 +5,9 @@ from s2m.core.unop import UnaryOperator
 from s2m.core.bracketted_block import BrackettedBlock
 from s2m.core.variable import Variable
 from s2m.core.number import Number
+from s2m.core.bigop import BigOperator
 from s2m.core.utils import listset
+from s2m.core.utils import normalize_scores
 from s2m.core.sphinx_config import SphinxConfig
 
 import random
@@ -19,6 +21,7 @@ class S2MParser():
         BinaryOperator.teach(self.__parser)
         UnaryOperator.teach(self.__parser)
         BrackettedBlock.teach(self.__parser)
+        BigOperator.teach(self.__parser)
         self.__parser.sphinx_config.update_config_files()
 
     def parse(self, w, formal=False):
@@ -28,7 +31,8 @@ class S2MParser():
         if formal:
             return parses
         else:
-            return listset([(p.latex(), p.evaluation()) for p in parses])
+            return normalize_scores(listset(
+                [(p.latex(), p.evaluation()) for p in parses]))
 
     def __call__(self, w, formal=False):
         return self.parse(w, formal=formal)

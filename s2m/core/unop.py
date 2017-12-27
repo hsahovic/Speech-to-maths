@@ -120,7 +120,7 @@ class UnaryOperator(Formula):
 
         # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
-            return UnaryOperator(words[0], words[1])
+            return UnaryOperator(*words)
 
         unary_operator_complex = ('unaryoperator',
                                   '$unaryoperator-operator %f',
