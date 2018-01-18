@@ -181,9 +181,6 @@ class Parser:
         current_min = float('inf')
         current_argmin = arg_C[desc][l][i]
 
-        #temp
-        _time = time()
-        
         if desc in self.__expands:
             for k in range(0, l):
                 for (l_desc, r_desc), f in self.__expands[desc]:
@@ -195,9 +192,6 @@ class Parser:
                                                                        current_argmin,
                                                                        current_argmin_temp,
                                                                        hyp)
-
-        #temp
-        d2 = time()
 
         nearest = {}
         for word in words[i:i+l]:
@@ -228,9 +222,6 @@ class Parser:
                         else:
                             current_argmin = [formula]
 
-        #temp
-        #print('k',d2-_time,time()-d2)
-
         arg_C[desc][l][i] = current_argmin
         
         return current_min
@@ -240,9 +231,6 @@ class Parser:
         words = s.split(' ')
         N = len(words)
 
-        #temp
-        _time = time()
-        
         #Initialisation de G
         G = [[0] for _ in range(N+1)]
         for i in range(N):
@@ -250,30 +238,18 @@ class Parser:
             for j in range(i+1, N):
                 G[i].append(G[i][-1] + self.proximity_dict.word_delete_cost(words[j]))
 
-        #temp
-        #print(time() - _time)
-        _time = time()
-                
         #Initialisation de C
         C = { desc: [ [float('inf') for _1 in range(N+1-_2)] for _2 in range(N+1) ]
               for desc in self.__descriptors }
         arg_C = { desc: [ [ [] for _1 in range(N+1-_2) ] for _2 in range(N+1) ]
               for desc in self.__descriptors }
 
-        #temp
-        
-        #print(time()-_time)
-        _time = time()
-        
         for l in range(0, N+1):
             for i in range(0, N-l+1):
-                #temp
                 heap = heapdict()
                 for desc in self.__descriptors:
                     heap[desc] = C[desc][l][i] \
                                  = self._known(words, desc, C, arg_C, G, l, i)
-                #temp
-                d1=time()
                 while heap:
                     desc, _ = heap.popitem()
                     if desc in self.__expands:
@@ -281,7 +257,6 @@ class Parser:
                             if key not in self.__expands:
                                 continue
                             for (desc1, desc2), f in self.__expands[key]:
-                                #utiliser un dictionnaire inversé, c'est absurde de faire tous les tests à chaque fois
                                 if desc1 == desc or desc2 == desc:
                                     hyp1 = C[desc1][l][i] + C[desc2][0][0]
                                     hyp2 = C[desc2][l][i] + C[desc1][0][0]
@@ -305,13 +280,8 @@ class Parser:
                         if C[desc][l][i] < C['%f'][l][i]:
                             heap['%f'] = C['%f'][l][i] = C[desc][l][i]
                             arg_C['%f'][l][i] = arg_C[desc][l][i]
-                #print(d1-_time,time()-d1)
                 _time=time()
-        #temp
-        #print(time()-_time)
-
         
         return arg_C['%f'][N][0]
-        ##pour le moment pas d'élagage
-        ##pas de gestion des nombres non plus
+
         
