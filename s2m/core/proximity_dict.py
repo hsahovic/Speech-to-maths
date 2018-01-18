@@ -4,10 +4,12 @@ from s2m.core.prefix_dict import PrefixDict
 from s2m.core.phone_string import PhoneString
 from s2m.core.phones_map import PhonesMap
 
+
 class ProximityDict(PrefixDict, PhonesMap):
 
     INFTY = float('inf')
     __memo = {}
+    __memodc = {}
 
     def _update_cost_pref(self, current_cost, current_prefs, current_min_cost, new_pref):
         if current_cost <= current_min_cost + self.MARGIN:
@@ -30,7 +32,17 @@ class ProximityDict(PrefixDict, PhonesMap):
         if map:
             self.load_map(map)
 
-    def find_nearest(self, word, max_count=5):
+    def word_delete_cost(self, word):
+        if word in self.__memodc:
+            return self.__memodc[word]
+        pronunciations = self.get_reverse(word)
+        current_min = self.INFTY
+        for pronunciation in pronunciations:
+            current_min = min(sum([self.delete_cost(phone) for phone in pronunciation]),
+                              current_min)
+        return current_min
+        
+    def find_nearest(self, word, max_count=15):
         if word in self.__memo:
             return self.__memo[word]
         pronunciations = self.get_reverse(word)
@@ -147,7 +159,3 @@ class ProximityDict(PrefixDict, PhonesMap):
         #Renvoie la liste des mots les plus proches se trouvant dans le dictionnaire
         return sorted([(self[k], v) for k, v in nearest.items()],
                       key=lambda x:x[1])
-
-##Todo
-##4. Chargement automatique des paramètres
-##5. Myers (argh)

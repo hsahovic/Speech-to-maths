@@ -14,94 +14,80 @@
 
 from s2m.core.sphinx_config import SphinxConfig
 from s2m.core.version import *
+from s2m.core.utils import _unslash
 
 from functools import reduce
+#Priority queue implementation by Daniel Stutzbach
+from heapdict import heapdict
 
-class Token:
-
-    def __init__(self, tag, formula=None):
-
-        if type(tag) != str:
-            raise TypeError('Token tag must be a string, not %r.' % tag)
-        elif formula and not type(formula) == list:
-            raise TypeError('Token formula must be a list, not %r.' % formula)
-        else:
-            self.__tag, self.__formula = tag, formula
-
-    def __getattr__(self, p):
-
-        from s2m.core.formulae import Formula
-
-        if p == 'tag':
-            return self.__tag
-        elif p == 'formula':
-            return self.__formula
-        elif p == 'is_full_formula':
-            return self.__formula \
-                   and len(self.__formula) == 1 \
-                   and issubclass(self.__formula[0].__class__, Formula)
-        else:
-            raise AttributeError
-
-    def __eq__(self, other):
-        
-        if other and isinstance(other, Token):
-            return other.tag == self.__tag and other.formula == self.__formula
-        return False
-    
-    def __hash__(self):
-
-        if self.__formula:
-            return reduce(lambda a, b: a ^ hash(b), self.__formula, hash(self.__tag))
-        else:
-            return hash(self.__tag)
-
+#temp
+from time import time
 
 class Parser:
 
-    def __init__(self):
+    ##Temp
+    def temptemp(self):
+        return self.__expands, self.__reduces
+    ##End-Temp
+
+    def __init__(self, proximity_dict):
 
         self.__expands = {}
         self.__reduces = {}
         self.__aux = {}
-        self.__names = []
+        self.__rule_names = []
+        self.__descriptors = {'%f'}
+        self.__expression_descriptors = set()
         self.__sphinx_config = SphinxConfig(S2M_GRAMMAR_NAME,
                                             S2M_GRAMMAR_VERSION,
                                             S2M_VERSION)
+        self.__proximity_dict = proximity_dict
 
     def __getattr__(self, p):
 
         if p == 'sphinx_config':
             return self.__sphinx_config
+        elif p == 'proximity_dict':
+            return self.__proximity_dict
         else:
             raise AttributeError
         
-    def add_expand(self, name, word1, word2, f=None):
+    def add_expand(self, desc, l_desc, r_desc, f=None):
 
-        exp = (name, f)
-        words12 = (word1, word2)
-        if words12 in self.__expands:
-            self.__expands[words12].append(exp)
+        lr_desc = (l_desc, r_desc)
+        unslashed_desc = _unslash(desc)
+        if unslashed_desc in self.__expands:
+            self.__expands[unslashed_desc].append((lr_desc, f))
         else:
-            self.__expands[words12] = [exp]
+            self.__expands[unslashed_desc] = [(lr_desc, f)]
+            self.__descriptors.add(unslashed_desc)
 
-    def add_reduce(self, name, word, formula=None):
+    def add_reduce(self, desc, word, formula=None):
 
-        tok = Token(name, [formula] if formula else [])
-        if word in self.__reduces:
-            self.__reduces[word].append(tok)
+        unslashed_desc = _unslash(desc)
+        if unslashed_desc in self.__reduces:
+            self.__reduces[unslashed_desc].append((word, formula))
         else:
-            self.__reduces[word] = [tok]
+            self.__reduces[unslashed_desc] = [(word, formula)]
+            self.__descriptors.add(unslashed_desc)
+
+    def _validate_name(self, name, is_expression):
+
+        if name in self.__rule_names:
+            raise ValueError('Name %r is already the name of a rule.' % name)
+        else:
+            self.__rule_names.append(name)
+        if is_expression:
+            self.__expression_descriptors.add(_unslash('$' + name))
 
     def add_easy_reduce(self, name, d, f, is_expression=False):
 
         import s2m.core.parser_lambdas as parser_lambdas
-        
-        if name in self.__names:
-            raise ValueError('Name %r is already the name of a rule.' % name)
-        else:
-            self.__names.append(name)
 
+        self._validate_name(name, is_expression)
+
+        unslashed_name = _unslash('$' + name)
+        
         k = 0
 
         for key, val in d.items():
@@ -109,117 +95,223 @@ class Parser:
             if len(words) == 0:
                 raise ValueError('String to be recognized by the parser must be non-empty.')
             elif len(words) == 1:
-                self.add_reduce(name, key, f(val))
+                self.add_reduce(unslashed_name, key, f(val))
             elif len(words) == 2:
-                self.add_reduce('%s/%r.0' % (name, k), words[0])
-                self.add_reduce('%s/%r.1' % (name, k), words[1])
-                self.add_expand(name,
+                self.add_reduce('$%s/%r.0' % (name, k), words[0])
+                self.add_reduce('$%s/%r.1' % (name, k), words[1])
+                self.add_expand(unslashed_name,
                                 '$%s/%r.0' % (name, k),
                                 '$%s/%r.1' % (name, k),
-                                lambda _: f(val))
+                                lambda _,val=val: f(val))
                 k += 1
             else:
                 for i, word in enumerate(words):
-                    self.add_reduce('%s/%r.%r' % (name, k, i), words[i])
-                self.add_expand('%s/%r.0t1' % (name, k),
+                    self.add_reduce('$%s/%r.%r' % (name, k, i), words[i])
+                self.add_expand('$%s/%r.0t1' % (name, k),
                                 '$%s/%r.0' % (name, k),
                                 '$%s/%r.1' % (name, k))
                 for i in range(2, len(words)-1):
-                    self.add_expand('%s/%r.0t%r' % (name, k, i),
+                    self.add_expand('$%s/%r.0t%r' % (name, k, i),
                                     '$%s/%r.0t%r' % (name, k, i-1),
                                     '$%s/%r.%r' % (name, k, i))
-                self.add_expand(name,
+                self.add_expand(unslashed_name,
                                 '$%s/%r.0t%r' % (name, k, len(words)-2),
                                 '$%s/%r.%r' % (name, k, len(words)-1),
-                                lambda _: f(val))
+                                lambda _,val=val: f(val))
                 k += 1
 
         self.__sphinx_config.add_simple_rule(name, d.keys(), is_expression)
 
     def add_complex_rule(self, name, s, f, is_expression=True):
 
-        if name in self.__names:
-            raise ValueError('Name %r is already the name of a rule.' % name)
-        else:
-            self.__names.append(name)
-            
+        self._validate_name(name, is_expression)
+
+        unslashed_name = _unslash('$' + name)
+        
         words = s.split(' ')
         if len(words) < 2:
             raise ValueError('String describing a complex rule must be composed of at least two words, unlike %r.' % s)        
-
+        is_word = [True] * len(words)
+        descs = []
+        
         for i, word in enumerate(words):
             if word == '%f' or word[0] == '$':
-                continue
-            self.add_reduce('%s.%r' % (name, i), word)
+                descs.append(word)
+            else:
+                new_desc = '$%s.%r' % (name, i)
+                self.add_reduce(new_desc, word)
+                descs.append(new_desc)
 
         if len(words) == 2:
-            self.add_expand(name,
-                            '$%s.0' % name,
-                            '$%s.1' % name)
-        else:
-            self.add_expand('%s.0t1' % name,
-                            '$%s.0' % name,
-                            '$%s.1' % name)
-            for i in range(2, len(words)-1):
-                self.add_expand('%s.0t%r' % (name, i),
-                                '$%s.0t%r' % (name, i-1),
-                                '$%s.%r' % (name, i))
-            self.add_expand(name,
-                            '$%s.0t%r' % (name, len(words)-2),
-                            '$%s.%r' % (name, len(words)-1),
+            self.add_expand(unslashed_name,
+                            descs[0],
+                            descs[1],
                             f)
-       
+        else:
+            self.add_expand('$%s.0t1' % name,
+                            descs[0],
+                            descs[1])
+            for i in range(2, len(words)-1):
+                self.add_expand('$%s.0t%r' % (name, i),
+                                '$%s.0t%r' % (name, i-1),
+                                descs[i])
+            self.add_expand(unslashed_name,
+                            '$%s.0t%r' % (name, len(words)-2),
+                            descs[-1],
+                            f)
+         
         self.__sphinx_config.add_complex_rule(name, s, is_expression)
 
-    def myers(self, s):
-        pass
+    def _update_min(self, f, current_min, current_argmin, current_argmin_temp, hyp):
+        try:
+            if f:
+                new_argmin = f(current_argmin_temp)
+                if type(new_argmin) is list:
+                    return new_argmin, hyp
+                else:
+                    return [new_argmin], hyp
+            else:
+                return current_argmin_temp, hyp
+        except:
+            return current_argmin, current_min
         
-    def cky(self, s):
+    
+    def _known(self, words, desc, C, arg_C, G, l, i):
 
-        THRESHOLD = 0.75
-        MAXCOUNT = 8
+        current_min = float('inf')
+        current_argmin = arg_C[desc][l][i]
+
+        #temp
+        _time = time()
+        
+        if desc in self.__expands:
+            for k in range(0, l):
+                for (l_desc, r_desc), f in self.__expands[desc]:
+                    hyp = C[l_desc][k][i] + C[r_desc][l-k][i+k]
+                    if hyp < current_min:
+                        current_argmin_temp = arg_C[l_desc][k][i] + arg_C[r_desc][l-k][i+k]
+                        current_argmin, current_min = self._update_min(f,
+                                                                       current_min,
+                                                                       current_argmin,
+                                                                       current_argmin_temp,
+                                                                       hyp)
+
+        #temp
+        d2 = time()
+
+        nearest = {}
+        for word in words[i:i+l]:
+            new_nearest = self.proximity_dict.find_nearest(word)
+            for k, v in new_nearest:
+                if k not in nearest:
+                    nearest[k] = v, word
+                else:
+                    if nearest[k][0] > v:
+                        nearest[k] = v, word
+            nearest[word] = 0, word
+
+        if desc in self.__reduces:
+            for word, formula in self.__reduces[desc]:
+                hyp = self.proximity_dict.word_delete_cost(word) + G[i][l]
+                if hyp < current_min:
+                    current_min = hyp
+                    if formula is None:
+                        current_argmin = []
+                    else:
+                        current_argmin = [formula]
+                if word in nearest:
+                    hyp = nearest[word][0] + G[i][l] - self.proximity_dict.word_delete_cost(nearest[word][1])
+                    if hyp < current_min:
+                        current_min = hyp
+                        if formula is None:
+                            current_argmin = []
+                        else:
+                            current_argmin = [formula]
+
+        #temp
+        #print('k',d2-_time,time()-d2)
+
+        arg_C[desc][l][i] = current_argmin
+        
+        return current_min
+    
+    def myers(self, s):
 
         words = s.split(' ')
-        lines = []
-        line = []
+        N = len(words)
 
-        for word in words:
-            cell = set()
-            for f in self.__reduces:
-                word_parsed = f(word)
-                if word_parsed:
-                    cell.add(word_parsed)
-            if cell:
-                line.append(cell)
-            else:
-                raise ValueError('Syntax error: Word %r is not defined.' % word) 
-        lines.append(line)
+        #temp
+        _time = time()
+        
+        #Initialisation de G
+        G = [[0] for _ in range(N+1)]
+        for i in range(N):
+            G[i].append(self.proximity_dict.word_delete_cost(words[i]))
+            for j in range(i+1, N):
+                G[i].append(G[i][-1] + self.proximity_dict.word_delete_cost(words[j]))
 
-        for i in range(2, len(words)+1):
-            line = []
-            for j in range(0, len(words)+1-i):
-                cell_buf = []
-                cell = set()
-                max_evaluation = 0
-                for k in range(1, i):
-                    for lhs in lines[k-1][j]:
-                        for rhs in lines[i-k-1][j+k]:
-                            for f in self.__expands:
-                                words_parsed = f(lhs, rhs)
-                                if words_parsed:
-                                    if words_parsed.is_full_formula:
-                                        evaluation = words_parsed.formula[0].evaluation()
-                                        cell_buf.append((words_parsed, evaluation))
-                                        if evaluation > max_evaluation:
-                                            max_evaluation = evaluation
-                                    else:
-                                        cell.add(words_parsed)
-                cell_buf.sort(key=lambda x:x[1], reverse=True)
-                for k, v in cell_buf[:MAXCOUNT]:
-                    if v > THRESHOLD * max_evaluation:
-                        cell.add(k)
-                line.append(cell)
-            lines.append(line)
-            
-        return sorted([tok.formula[0] for tok in lines[-1][0] if tok.is_full_formula],
-                       key=lambda x:x.evaluation(), reverse=True)
+        #temp
+        #print(time() - _time)
+        _time = time()
+                
+        #Initialisation de C
+        C = { desc: [ [float('inf') for _1 in range(N+1-_2)] for _2 in range(N+1) ]
+              for desc in self.__descriptors }
+        arg_C = { desc: [ [ [] for _1 in range(N+1-_2) ] for _2 in range(N+1) ]
+              for desc in self.__descriptors }
+
+        #temp
+        
+        #print(time()-_time)
+        _time = time()
+        
+        for l in range(0, N+1):
+            for i in range(0, N-l+1):
+                #temp
+                heap = heapdict()
+                for desc in self.__descriptors:
+                    heap[desc] = C[desc][l][i] \
+                                 = self._known(words, desc, C, arg_C, G, l, i)
+                #temp
+                d1=time()
+                while heap:
+                    desc, _ = heap.popitem()
+                    if desc in self.__expands:
+                        for key in heap:
+                            if key not in self.__expands:
+                                continue
+                            for (desc1, desc2), f in self.__expands[key]:
+                                #utiliser un dictionnaire inversé, c'est absurde de faire tous les tests à chaque fois
+                                if desc1 == desc or desc2 == desc:
+                                    hyp1 = C[desc1][l][i] + C[desc2][0][0]
+                                    hyp2 = C[desc2][l][i] + C[desc1][0][0]
+                                    if hyp1 < C[key][l][i]:
+                                        argmin_temp = arg_C[desc1][l][i] + arg_C[desc2][0][0]
+                                        arg_C[key][l][i], C[key][l][i] = self._update_min(f,
+                                                                                          C[key][l][i],
+                                                                                          arg_C[key][l][i],
+                                                                                          argmin_temp,
+                                                                                          hyp1)
+                                        heap[key] = C[key][l][i]
+                                    if hyp2 < C[key][l][i]:
+                                        argmin_temp = arg_C[desc2][l][i] + arg_C[desc1][0][0]
+                                        arg_C[key][l][i], C[key][l][i] = self._update_min(f,
+                                                                                          C[key][l][i],
+                                                                                          arg_C[key][l][i],
+                                                                                          argmin_temp,
+                                                                                          hyp2)
+                                        heap[key] = C[key][l][i]
+                    if desc in self.__expression_descriptors and '%f' in heap:
+                        if C[desc][l][i] < C['%f'][l][i]:
+                            heap['%f'] = C['%f'][l][i] = C[desc][l][i]
+                            arg_C['%f'][l][i] = arg_C[desc][l][i]
+                #print(d1-_time,time()-d1)
+                _time=time()
+        #temp
+        #print(time()-_time)
+
+        
+        return arg_C['%f'][N][0]
+        ##pour le moment pas d'élagage
+        ##pas de gestion des nombres non plus
+        

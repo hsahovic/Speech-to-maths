@@ -135,3 +135,8 @@ def dist2d(a, b):
 
 def norm2d(a):
     return sqrt(a[0]**2 + a[1]**2)
+
+
+def _unslash(s):
+    unslash_regex = re.compile(r'^(\$[\w\-]+(?:(?:\/\w+)?\.\w+)?)(?:\/[\w\-]+)?$')
+    return unslash_regex.match(s).group(1)

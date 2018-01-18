@@ -33,6 +33,7 @@ class BinaryOperator(Formula):
                           'moins': 'SUB',
                           'fois': 'MUL',
                           'sur': 'DIV',
+                          'divisé par': 'DIV',
                           'puissance': 'POW',
                           'égal': 'EQU',
                           'différent de': 'NEQ',
@@ -228,7 +229,7 @@ class BinaryOperator(Formula):
         def squared_complex_expand(formulae):
             return BinaryOperator(formulae[0], 'POW', Number(2))
 
-        squared_complex = ('squared',
+        squared_complex = ('binaryoperator/squared',
                            '%f au carré',
                            squared_complex_expand,
                            True)

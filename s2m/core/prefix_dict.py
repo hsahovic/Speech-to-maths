@@ -7,9 +7,14 @@ class PrefixDict:
         for k, v in d.items():
             self[k] = v
 
+    ##Temp
     def _asDict(self):
         return self.__dict
 
+    def _asReverseDict(self):
+        return self.__reverse_dict
+    ##End-Temp
+    
     def __len__(self):
         return self.__minlen
     

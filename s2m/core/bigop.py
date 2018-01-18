@@ -126,19 +126,19 @@ class BigOperator(Formula):
         def big_operator_expand(formulae):
             return BigOperator(*[f for f in formulae if f is not None])
 
-        big_operator_arity1_complex = ('bigoperator-1',
+        big_operator_arity1_complex = ('bigoperator/arity1',
                                        '$bigoperator-operator $bigoperator-of %f',
                                        big_operator_expand,
                                        True)
 
         # Defines op from A of B -> BinaryOperator(op, A, B)
-        big_operator_arity2_complex = ('bigoperator-2',
+        big_operator_arity2_complex = ('bigoperator/arity2',
                                        '$bigoperator-operator $bigoperator-from %f $bigoperator-of %f',
                                        big_operator_expand,
                                        True)
 
         # Defines op from A to B of C -> BinaryOperator(op, A, B, C)
-        big_operator_arity3_complex = ('bigoperator-3',
+        big_operator_arity3_complex = ('bigoperator/arity3',
                                        '$bigoperator-operator $bigoperator-from %f à %f $bigoperator-of %f',
                                        big_operator_expand,
                                        True)

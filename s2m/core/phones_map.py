@@ -1,4 +1,5 @@
 from s2m.core.utils import norm2d, dist2d
+from s2m.core.phone_string import PhoneString
 
 class PhonesMap:
 
@@ -40,7 +41,7 @@ class PhonesMap:
 
     def delete_cost(self, phone):
         return self.insert_cost(phone)
-
+        
     def replace_cost(self, phone1, phone2):
         m1, x1, y1 = self.__map[phone1]
         m2, x2, y2 = self.__map[phone2]

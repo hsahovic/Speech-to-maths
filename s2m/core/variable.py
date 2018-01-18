@@ -139,7 +139,7 @@ class Variable(Formula):
     @classmethod
     def teach(cls, parser):
 
-        radio_roman_easy_reduce = ('variable-radio-roman',
+        radio_roman_easy_reduce = ('variable/radio-roman',
                                    Variable.__RADIO_ROMAN_PARSED,
                                    lambda x: Variable(x),
                                    True)
