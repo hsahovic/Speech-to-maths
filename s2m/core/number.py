@@ -82,33 +82,54 @@ class Number(Formula):
     @classmethod
     def teach(cls, parser):
 
-        def number_expand(words):
-            words_string = []
+        def build_word_string(words):
+
+            word_string = []
             for word in words:
                 if isinstance(word, Number):
-                    words_string.append(word.n)
+                    word_string.append(word.n)
                 elif type(word) is str:
-                    words_string.append(word)
+                    word_string.append(word)
                 else:
                     raise TypeError('Words in list should be Number or str, not %r' % type(word))
+            return word_string
+        
+        def number_expand(words):
+
+            word_string = build_word_string(words)
             try:
                 return Number(' '.join(words_string))
             except ValueError:
                 return words_string
 
+        def number_expand_final(words):
+
+            word_string = build_word_string(words)
+            return Number(' '.join(words_string))
+            
         def number_reduce(word):
             try:
                 return Number(word)
             except ValueError:
                 return word
 
-        parser.add_complex_rule('number',
-                                '$number $number',
+        parser.add_complex_rule('number-prefix',
+                                '$number-prefix $number-prefix',
                                 number_expand,
+                                False)
+
+        parser.add_complex_rule('number',
+                                '$number-prefix $number-prefix',
+                                number_expand_final,
                                 True)
 
-        parser.add_easy_reduce('number/reduce',
+        parser.add_easy_reduce('number-prefix/reduce',
                                {x: x for x in NumberParser.NUMBER_WORDS},
+                               number_reduce,
+                               False)
+
+        parser.add_easy_reduce('number/reduce',
+                               {x: x for x in NumberParser.AUTONOMOUS_NUMBER_WORDS},
                                number_reduce,
                                True)
 

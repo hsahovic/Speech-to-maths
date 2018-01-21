@@ -1,34 +1,14 @@
-"""[PSC Speech-to-Math]           (Streichholzschaechtelchen)
-                        parser.py
-*************************************************************
-*Effectue l'analyse syntaxique d'un texte en francais en    *
-*s'appuyant sur les structures definies dans formulae.py.   *
-*L'algorithme d'analyse syntaxique employe est CKY.         *
-*L'analyseur syntaxique embarque une instance de la classe  *
-*de configuration SphinxConfig.                             *
-*Le fichier parser_lambdas.py contient les lambdas-fonctions*
-*necessaires a la conversion CNF faible -> CNF.             *
-*La classe Parser est encapsulee par S2MParser et ne doit   *
-*pas etre appelee ou instanciee directement.                *
-**********************************************************"""
-
 from s2m.core.sphinx_config import SphinxConfig
 from s2m.core.version import *
 from s2m.core.utils import _unslash
+from s2m.core.bwoq import BoundedWriteOnlyQueue
+from s2m.core.formulae import Formula
 
 from functools import reduce
 #Priority queue implementation by Daniel Stutzbach
 from heapdict import heapdict
 
-#temp
-from time import time
-
 class Parser:
-
-    ##Temp
-    def temptemp(self):
-        return self.__expands, self.__reduces
-    ##End-Temp
 
     def __init__(self, proximity_dict):
 
@@ -162,70 +142,80 @@ class Parser:
          
         self.__sphinx_config.add_complex_rule(name, s, is_expression)
 
-    def _update_min(self, f, current_min, current_argmin, current_argmin_temp, hyp):
-        try:
-            if f:
-                new_argmin = f(current_argmin_temp)
-                if type(new_argmin) is list:
-                    return new_argmin, hyp
-                else:
-                    return [new_argmin], hyp
-            else:
-                return current_argmin_temp, hyp
-        except:
-            return current_argmin, current_min
-        
-    
-    def _known(self, words, desc, C, arg_C, G, l, i):
+    def _compare(self, x, y):
 
-        current_min = float('inf')
-        current_argmin = arg_C[desc][l][i]
+        if x[1] > y[1]:
+            return True
+        elif x[1] < y[1]:
+            return False
+        elif len(x[0]) == 1 and len(y[0]) == 1 \
+             and isinstance(x[0][0], Formula) and isinstance(y[0][0], Formula) \
+             and x[0][0].evaluation() < y[0][0].evaluation():
+            return True
+        else:
+            return False
+
+    def _assemble(self, f, formulae):
+
+        if f:
+            new_formula = f(formulae)
+            if type(new_formula) is list:
+                return new_formula
+            else:
+                return [new_formula]
+        else:
+            return formulae
+
+    def _combine(self, l_queue, r_queue, dest, f):
+
+        for l_formula, l_score in l_queue:
+            for r_formula, r_score in r_queue:
+                score_hyp, formulae = l_score + r_score, l_formula + r_formula
+                try:
+                    new_formula = self._assemble(f, formulae)
+                except:
+                    pass
+                else:
+                    dest[new_formula] = score_hyp
+    
+    def _known(self, words, desc, C, G, l, i):
 
         if desc in self.__expands:
             for k in range(0, l):
                 for (l_desc, r_desc), f in self.__expands[desc]:
-                    hyp = C[l_desc][k][i] + C[r_desc][l-k][i+k]
-                    if hyp < current_min:
-                        current_argmin_temp = arg_C[l_desc][k][i] + arg_C[r_desc][l-k][i+k]
-                        current_argmin, current_min = self._update_min(f,
-                                                                       current_min,
-                                                                       current_argmin,
-                                                                       current_argmin_temp,
-                                                                       hyp)
+                    self._combine(C[l_desc][k][i],
+                                  C[r_desc][l-k][i+k],
+                                  C[desc][l][i],
+                                  f)
 
         nearest = {}
         for word in words[i:i+l]:
             new_nearest = self.proximity_dict.find_nearest(word)
+            delete_cost = self.proximity_dict.word_delete_cost(word)
             for k, v in new_nearest:
                 if k not in nearest:
-                    nearest[k] = v, word
+                    nearest[k] = v - delete_cost
                 else:
-                    if nearest[k][0] > v:
-                        nearest[k] = v, word
-            nearest[word] = 0, word
+                    if nearest[k] > v - delete_cost:
+                        nearest[k] = v - delete_cost
+            nearest[word] = - delete_cost
 
         if desc in self.__reduces:
             for word, formula in self.__reduces[desc]:
-                hyp = self.proximity_dict.word_delete_cost(word) + G[i][l]
-                if hyp < current_min:
-                    current_min = hyp
-                    if formula is None:
-                        current_argmin = []
-                    else:
-                        current_argmin = [formula]
+                hyp_score = self.proximity_dict.word_delete_cost(word) + G[i][l]
                 if word in nearest:
-                    hyp = nearest[word][0] + G[i][l] - self.proximity_dict.word_delete_cost(nearest[word][1])
-                    if hyp < current_min:
-                        current_min = hyp
-                        if formula is None:
-                            current_argmin = []
-                        else:
-                            current_argmin = [formula]
+                    hyp_score2 = nearest[word] + G[i][l]
+                    if hyp_score2 < hyp_score:
+                        hyp_score = hyp_score2
+                if formula is None:
+                    C[desc][l][i][ [] ] = hyp_score
+                else:
+                    C[desc][l][i][ [formula] ] = hyp_score
 
-        arg_C[desc][l][i] = current_argmin
+        C[desc][l][i].prune()
         
-        return current_min
-    
+        return C[desc][l][i].min_value()
+
     def myers(self, s):
 
         words = s.split(' ')
@@ -239,17 +229,15 @@ class Parser:
                 G[i].append(G[i][-1] + self.proximity_dict.word_delete_cost(words[j]))
 
         #Initialisation de C
-        C = { desc: [ [float('inf') for _1 in range(N+1-_2)] for _2 in range(N+1) ]
-              for desc in self.__descriptors }
-        arg_C = { desc: [ [ [] for _1 in range(N+1-_2) ] for _2 in range(N+1) ]
+        C = { desc: [ [BoundedWriteOnlyQueue(comparator=self._compare)
+                       for _1 in range(N+1-_2)] for _2 in range(N+1) ]
               for desc in self.__descriptors }
 
         for l in range(0, N+1):
             for i in range(0, N-l+1):
                 heap = heapdict()
                 for desc in self.__descriptors:
-                    heap[desc] = C[desc][l][i] \
-                                 = self._known(words, desc, C, arg_C, G, l, i)
+                    heap[desc] = self._known(words, desc, C, G, l, i)
                 while heap:
                     desc, _ = heap.popitem()
                     if desc in self.__expands:
@@ -258,27 +246,19 @@ class Parser:
                                 continue
                             for (desc1, desc2), f in self.__expands[key]:
                                 if desc1 == desc or desc2 == desc:
-                                    hyp1 = C[desc1][l][i] + C[desc2][0][0]
-                                    hyp2 = C[desc2][l][i] + C[desc1][0][0]
-                                    if hyp1 < C[key][l][i]:
-                                        argmin_temp = arg_C[desc1][l][i] + arg_C[desc2][0][0]
-                                        arg_C[key][l][i], C[key][l][i] = self._update_min(f,
-                                                                                          C[key][l][i],
-                                                                                          arg_C[key][l][i],
-                                                                                          argmin_temp,
-                                                                                          hyp1)
-                                        heap[key] = C[key][l][i]
-                                    if hyp2 < C[key][l][i]:
-                                        argmin_temp = arg_C[desc2][l][i] + arg_C[desc1][0][0]
-                                        arg_C[key][l][i], C[key][l][i] = self._update_min(f,
-                                                                                          C[key][l][i],
-                                                                                          arg_C[key][l][i],
-                                                                                          argmin_temp,
-                                                                                          hyp2)
-                                        heap[key] = C[key][l][i]
+                                    self._combine(C[desc1][l][i],
+                                                  C[desc2][0][0],
+                                                  C[key][l][i],
+                                                  f)
+                                    self._combine(C[desc2][l][i],
+                                                  C[desc1][0][0],
+                                                  C[key][l][i],
+                                                  f)
+                                    C[key][l][i].prune()
+                                    heap[key] = C[key][l][i].min_value()
                     if desc in self.__expression_descriptors and '%f' in heap:
-                        if C[desc][l][i] < C['%f'][l][i]:
-                            heap['%f'] = C['%f'][l][i] = C[desc][l][i]
-                            arg_C['%f'][l][i] = arg_C[desc][l][i]
-        
-        return arg_C['%f'][N][0]
+                        for formula, score in C[desc][l][i]:
+                            C['%f'][l][i][formula] = score
+                        C['%f'][l][i].prune()
+
+        return C['%f'][N][0].sorted_list()

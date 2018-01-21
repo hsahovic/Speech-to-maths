@@ -93,7 +93,7 @@ class BigOperator(Formula):
     def count_brackets(self):
         return self.__fl[-1].count_brackets()
 
-    def a_similarity(self, f):
+    def a_similarity(self, other):
         if isinstance(other, BigOperator) \
            and self.__o == other.o \
            and self.arity == other.arity:

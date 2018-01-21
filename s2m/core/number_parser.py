@@ -76,6 +76,7 @@ class NumberParser:
     
     COMMA = ['virgule', 'point']
 
+    #il y a des redondances (pourquoi ?)
     NUMBER_WORDS = list(DIGITS.keys()) \
                    + list(NUMBERS.keys()) \
                    + list(OTHER_NUMBERS.keys()) \
@@ -84,6 +85,12 @@ class NumberParser:
                    + list(SAFE_DOZENS.keys()) \
                    + COMMA \
                    + ['et']
+
+    AUTONOMOUS_NUMBER_WORDS = list(DIGITS.keys()) \
+                              + list(NUMBERS.keys()) \
+                              + list(OTHER_NUMBERS.keys()) \
+                              + OTHERS \
+                              + list(SAFE_DOZENS.keys())
     
     def __getattr__(self, p):
         if p == 'words':

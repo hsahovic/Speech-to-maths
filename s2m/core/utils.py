@@ -140,3 +140,8 @@ def norm2d(a):
 def _unslash(s):
     unslash_regex = re.compile(r'^(\$[\w\-]+(?:(?:\/\w+)?\.\w+)?)(?:\/[\w\-]+)?$')
     return unslash_regex.match(s).group(1)
+
+
+def _unlist(l):
+
+    return tuple(l) if type(l) is list else l

@@ -1,5 +1,6 @@
+
 #Temp
-from s2m.core.parser_n import Parser
+from s2m.core.parser_n2 import Parser
 #End-Temp
 from s2m.core.formulae import Formula
 from s2m.core.binop import BinaryOperator
@@ -36,8 +37,10 @@ class S2MParser():
         if formal:
             return parses
         else:
-            return normalize_scores(listset(
-                [(p.latex(), p.evaluation()) for p in parses]))
+            #isinstance is a workaround
+            return normalize_scores(listset(sorted(
+                [(p[0][0].latex(), p[0][0].evaluation()) for p in parses
+                 if isinstance(p[0][0], Formula)], key=lambda x: x[1], reverse=True)))
 
     def __call__(self, w, formal=False):
         return self.parse(w, formal=formal)

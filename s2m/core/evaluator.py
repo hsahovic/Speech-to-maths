@@ -6,7 +6,7 @@ class Evaluator:
         count_brackets_v = self.h_count_brackets(formula)[0]
         symmetry = self.h_symmetry(formula)
         WEIGHTS = (0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125, 0.00390625)
-        symmetry_v = sum(s * w for s, w in zip(symmetry, WEIGHTS)) 
+        symmetry_v = sum(s * w for s, w in zip(symmetry, WEIGHTS))
         return (count_brackets_v + symmetry_v) / 2
 
     ##Functions starting with h_ are heuristics
