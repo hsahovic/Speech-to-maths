@@ -1,5 +1,7 @@
 from s2m.core.formulae import Formula
+
 from s2m.core.utils import reverse_dict
+from s2m.core.utils import merge_lists
 
 import random
 
@@ -48,13 +50,13 @@ class UnaryOperator(Formula):
             raise AttributeError
 
     def __eq__(self, other):
-	
+
         if other and isinstance(other, UnaryOperator):
             return other.o == self.__o and other.r == self.__r
         return False
 
     def __hash__(self):
-        
+
         return hash(self.__o) ^ hash(self.__r)
 
     def count_brackets(self):
@@ -73,21 +75,17 @@ class UnaryOperator(Formula):
 
         return y, n
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
-        if f.__class__ == UnaryOperator:
-            if f.o == self.__o:
-                return self.__r.distance(f.r)
-            else:
-                return 1.
-        elif issubclass(f.__class__, Formula):
-            return 1.
+        if isinstance(other, UnaryOperator) \
+           and self.__o == other.o:
+            return self.__r.a_similarity(other.r)
         else:
-            raise TypeError('Cannot compare formula with non-formula %r' % f)
+            return 0.
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return self.__r.symmetry_index()
+        return self.__r.d_symmetry()
 
     def _latex(self):
 
@@ -112,16 +110,17 @@ class UnaryOperator(Formula):
         else:
             return self.__OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
-    def teach(parser):
+    @classmethod
+    def teach(cls, parser):
 
         # Recognizes unary operators
         unary_operator_easy = ('unaryoperator-operator',
-                               UnaryOperator.__OPERATORS_PARSED,
+                               cls.__OPERATORS_PARSED,
                                lambda x: x)
 
         # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
-            return UnaryOperator(words[0], words[1])
+            return UnaryOperator(*words)
 
         unary_operator_complex = ('unaryoperator',
                                   '$unaryoperator-operator %f',
@@ -132,11 +131,11 @@ class UnaryOperator(Formula):
         parser.add_complex_rule(*unary_operator_complex)
 
     @classmethod
-    def generate_random(cls,r=None,depth=1) :
+    def generate_random(cls, r=None, depth=1) :
         """
         Generates a random instance of UnaryOperator.
         """
-        o = random.choice(list(cls.__OPERATORS.keys()))        
+        o = random.choice(list(cls.__OPERATORS.keys()))
         if r == None:
-            r=Formula.generate_random(depth=depth)
-        return UnaryOperator(o,r)
+            r = Formula.generate_random(depth=depth-1)
+        return UnaryOperator(o, r)

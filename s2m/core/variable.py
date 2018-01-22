@@ -1,5 +1,8 @@
 from s2m.core.formulae import Formula
+
 from s2m.core.utils import reverse_dict
+from s2m.core.utils import merge_lists
+
 import random
 
 class Variable(Formula):
@@ -16,59 +19,59 @@ class Variable(Formula):
 
     __RADIO_ROMAN_REVERSE = reverse_dict(__RADIO_ROMAN_PARSED)
 
-    __GREEC_PARSED = {'alpha grec': '\alpha',
-                      'beta': '\beta',
-                      'gamma': '\gamma',
-                      'delta grec': '\delta',
-                      'epsilon': '\varepsilon',
-                      'epsilon variante': '\varepsilon',
-                      'zeta': '\zeta',
-                      'eta': '\eta',
-                      'theta': '\teta',
-                      'theta variante': '\vartheta',
-                      'iota': '\iota',
-                      'kappa': '\kappa',
-                      'lambda': '\lambda',
-                      'mu': '\mu',
-                      'nu': '\nu',
+    __GREEK_PARSED = {'alpha grec': '\\alpha',
+                      'beta': '\\beta',
+                      'gamma': '\\gamma',
+                      'delta grec': '\\delta',
+                      'epsilon': '\\varepsilon',
+                      'epsilon variante': '\\varepsilon',
+                      'zeta': '\\zeta',
+                      'eta': '\\eta',
+                      'theta': '\\theta',
+                      'theta variante': '\\vartheta',
+                      'iota': '\\iota',
+                      'kappa': '\\kappa',
+                      'lambda': '\\lambda',
+                      'mu': '\\mu',
+                      'nu': '\\nu',
                       'xi': '\\xi',
-                      'pi': '\pi',
-                      'pi variante': '\varpi',
-                      'rho': '\rho',
-                      'rho variante': '\varrho',
-                      'sigma': '\sigma',
-                      'sigma variante': '\varsigma',
-                      'tau': '\tau',
+                      'pi': '\\pi',
+                      'pi variante': '\\varpi',
+                      'rho': '\\rho',
+                      'rho variante': '\\varrho',
+                      'sigma': '\\sigma',
+                      'sigma variante': '\\varsigma',
+                      'tau': '\\tau',
                       'upsilon': '\\upsilon',
-                      'phi': '\phi',
-                      'phi variante': '\varphi',
-                      'chi': '\chi',
-                      'psi': '\psi',
-                      'omega': '\omega',
-                      'gamma majuscule': '\Gamma',
-                      'gamma majuscule variante': '\varGamma',
-                      'delta majuscule': '\Delta',
-                      'delta majuscule variante': '\varDelta',
-                      'theta majuscule': '\Theta',
-                      'theta majusucle variante': '\varTheta',
-                      'lambda majuscule': '\Lambda',
-                      'lambda majuscule variante': '\varLambda',
-                      'xi majuscule': '\Xi',
-                      'xi majuscule variante': '\varXi',
-                      'pi majuscule': '\Pi',
-                      'pi majuscule variante': '\varPi',
-                      'sigma majuscule': '\Sigma',
-                      'siigma majuscule variante': '\varSigma',
+                      'phi': '\\phi',
+                      'phi variante': '\\varphi',
+                      'chi': '\\chi',
+                      'psi': '\\psi',
+                      'omega': '\\omega',
+                      'gamma majuscule': '\\Gamma',
+                      'gamma majuscule variante': '\\varGamma',
+                      'delta majuscule': '\\Delta',
+                      'delta majuscule variante': '\\varDelta',
+                      'theta majuscule': '\\Theta',
+                      'theta majusucle variante': '\\varTheta',
+                      'lambda majuscule': '\\Lambda',
+                      'lambda majuscule variante': '\\varLambda',
+                      'xi majuscule': '\\Xi',
+                      'xi majuscule variante': '\\varXi',
+                      'pi majuscule': '\\Pi',
+                      'pi majuscule variante': '\\varPi',
+                      'sigma majuscule': '\\Sigma',
+                      'siigma majuscule variante': '\\varSigma',
                       'upsilon majuscule': '\\Upsilon',
-                      'upsilon majuscule variante': '\varUpsilon',
-                      'phi majuscule': '\Phi',
-                      'phi majuscule variante': '\varPhi',
-                      'psi majuscule': '\Psi',
-                      'psi majuscule variante': '\varPsi',
-                      'omega majuscule': '\Omega',
-                      'omega majusucule variante': '\varOmega',
+                      'upsilon majuscule variante': '\\varUpsilon',
+                      'phi majuscule': '\\Phi',
+                      'phi majuscule variante': '\\varPhi',
+                      'psi majuscule': '\\Psi',
+                      'psi majuscule variante': '\\varPsi',
+                      'omega majuscule': '\\Omega',
+                      'omega majuscule variante': '\\varOmega',
                       }
-    __GREEC_REVERSED = reverse_dict(__GREEC_PARSED)
+    __GREEK_REVERSE = reverse_dict(__GREEK_PARSED)
 
     def __init__(self, v):
 
@@ -100,22 +103,20 @@ class Variable(Formula):
 
         return 0, 0
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
         from s2m.core.number import Number
-
-        if f.__class__ == Variable:
-            return 0.
-        elif f.__class__ == Number:
-            return 0.5
-        elif issubclass(f.__class__, Formula):
+        
+        if isinstance(other, Variable):
             return 1.
+        elif isinstance(other, Number):
+            return 0.5
         else:
-            raise TypeError('Cannot compare Variable to non-formula %r' % f)
+            return 0.
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return 1.
+        return merge_lists([], head=1.)
 
     def _latex(self):
 
@@ -129,15 +130,16 @@ class Variable(Formula):
 
         if self.__v in self.__RADIO_ROMAN_REVERSE:
             return self.__RADIO_ROMAN_REVERSE[self.__v]
-        elif self.__v in self.__GREEC_REVERSED:
-            return self.__GREEC_REVERSED[self.__v]
+        elif self.__v in self.__GREEK_REVERSE:
+            return self.__GREEK_REVERSE[self.__v]
         else:
             raise ValueError('Transcription for variable name %r is not defined.'
                              % self.__v)
 
-    def teach(parser):
+    @classmethod
+    def teach(cls, parser):
 
-        radio_roman_easy_reduce = ('variable-radio-roman',
+        radio_roman_easy_reduce = ('variable/radio-roman',
                                    Variable.__RADIO_ROMAN_PARSED,
                                    lambda x: Variable(x),
                                    True)
@@ -150,4 +152,4 @@ class Variable(Formula):
         Generates a random variable(either greek or radio)
         """
         
-        return Variable(random.choice(list(cls.__GREEC_PARSED.keys() | cls.__RADIO_ROMAN_PARSED.keys())))
+        return Variable(random.choice(list(cls.__GREEK_REVERSE.keys() | cls.__RADIO_ROMAN_REVERSE.keys())))

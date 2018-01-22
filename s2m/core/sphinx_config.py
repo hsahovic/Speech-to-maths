@@ -48,7 +48,7 @@ class SphinxConfig:
         """
         lst = descriptor.split(" ")
         # Conversion en une liste de la description de la règle complexe.
-        # On va la stocker sous la nouvelle synthaxe dans une nouvelle liste....
+        # On va la stocker sous la nouvelle syntaxe dans une nouvelle liste....
         rule = []
         for wrd in lst:
             if wrd == "%f":
@@ -67,8 +67,7 @@ class SphinxConfig:
                 self.rules[name].add(rule_str)
             else:
                 self.rules[name] = set([rule_str])
-                self.d.add(name)
-
+               
     def import_file(self, filename):
         """Importe le contenu d'un autre fichier .jsgf
            en vérifiant l'absence d'incompatibilités

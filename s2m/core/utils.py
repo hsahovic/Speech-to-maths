@@ -1,6 +1,7 @@
-from numpy import log10, ceil
+from numpy import log10, ceil, sqrt
 from decimal import Decimal
 from numpy import random
+from functools import reduce
 
 import string
 
@@ -95,3 +96,52 @@ def generate_random_word(length=12):
     Returns a str made up of a random sequence of length ascii characters 
     """
     return ''.join(random.choice(list(string.ascii_lowercase)) for i in range(length))
+
+
+def merge_lists(lists, head=None, length=8):
+    l = [] if head is None else [head]
+    length = length - 1 if head else length
+    lists = [[e for e in l if e is not None] for l in lists]
+    if lists == []:
+        return l + [None] * length
+    n = len(lists)
+    lens = [len(l) for l in lists]
+    for i in range(max(lens)):
+        for j in range(n):
+            if i >= lens[j]:
+                continue
+            else:
+                l.append(lists[j][i])
+                length -= 1
+                if length == 0:
+                    return l
+    return l + [None] * length
+
+
+def normalize_scores(liste):
+    if liste == []:
+        return []
+    sum_of_scores = reduce(lambda a,b: a + b[1], liste, 0)
+    if sum_of_scores == 0:
+        nth = 1 / len(liste)
+        return [(a, nth) for a, b in liste]
+    else:
+        return [(a, b / sum_of_scores) for a, b in liste]
+
+
+def dist2d(a, b):
+    return sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
+
+
+def norm2d(a):
+    return sqrt(a[0]**2 + a[1]**2)
+
+
+def _unslash(s):
+    unslash_regex = re.compile(r'^(\$[\w\-]+(?:(?:\/\w+)?\.\w+)?)(?:\/[\w\-]+)?$')
+    return unslash_regex.match(s).group(1)
+
+
+def _unlist(l):
+
+    return tuple(l) if type(l) is list else l

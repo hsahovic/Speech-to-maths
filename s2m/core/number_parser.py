@@ -35,18 +35,18 @@ class NumberParser:
                'million' : 6, 
                'milliard' : 9, 
                'billion' : 12, 
-               'billard' : 15,
+               'billiard' : 15,
                'trillion' : 18,
                'trilliard' : 21, 
-               'quadrillon' : 24, 
-               'quadrillard' : 27,
+               'quadrillion' : 24, 
+               'quadrilliard' : 27,
                'quintillion' : 30,
-               'quintillard' : 33, 
+               'quintilliard' : 33, 
                'sextillion' : 36, 
-               'sextillard' : 39,
+               'sextilliard' : 39,
                'septillion' : 42,
                'septilliard' : 45, 
-               'octillon' : 48,
+               'octillion' : 48,
                'octilliard' : 51,
                'nonillion' : 54, 
                'nonilliard' : 57, 
@@ -76,6 +76,7 @@ class NumberParser:
     
     COMMA = ['virgule', 'point']
 
+    #il y a des redondances (pourquoi ?)
     NUMBER_WORDS = list(DIGITS.keys()) \
                    + list(NUMBERS.keys()) \
                    + list(OTHER_NUMBERS.keys()) \
@@ -84,6 +85,12 @@ class NumberParser:
                    + list(SAFE_DOZENS.keys()) \
                    + COMMA \
                    + ['et']
+
+    AUTONOMOUS_NUMBER_WORDS = list(DIGITS.keys()) \
+                              + list(NUMBERS.keys()) \
+                              + list(OTHER_NUMBERS.keys()) \
+                              + OTHERS \
+                              + list(SAFE_DOZENS.keys())
     
     def __getattr__(self, p):
         if p == 'words':
@@ -253,7 +260,7 @@ class NumberParser:
         n %= dec(10)
         if m in [1, 7, 9]:
             if m != 1:
-                l.append(self.DOZENS_REVERSE[10*m])
+                l.append(self.DOZENS_REVERSE[int(10*m)])
             if n == 0:
                 l.append('dix')
             elif n == 1:
@@ -261,19 +268,19 @@ class NumberParser:
                     l.append('et')
                 l.append('onze')
             elif n < 7:
-                l.append(self.NUMBERS_REVERSE[10+n])
+                l.append(self.NUMBERS_REVERSE[int(10+n)])
             else:
                 l.append('dix')
-                l.append(self.DIGITS_REVERSE[n])
+                l.append(self.DIGITS_REVERSE[int(n)])
         else:
             if m > 1:
-                l.append(self.DOZENS_REVERSE[10*m])
+                l.append(self.DOZENS_REVERSE[int(10*m)])
             if n == 1:
                 if m not in [0, 8]:
                     l.append('et')
                 l.append('un')
-            else:
-                l.append(self.DIGITS_REVERSE[n])
+            elif n > 0:
+                l.append(self.DIGITS_REVERSE[int(n)])
         return ' '.join(l)
     
     def _transcribe_lt999(self, n):
@@ -284,7 +291,7 @@ class NumberParser:
         if m == 1:
             l.append('cent')
         elif m > 1:
-            l.append(self.DIGITS_REVERSE[m])
+            l.append(self.DIGITS_REVERSE[int(m)])
             l.append('cent')
         n %= dec(100)
         t = self._transcribe_lt99(n)
@@ -302,10 +309,12 @@ class NumberParser:
             j = i // 3
             for k in range(j, 0, -1):
                 m = n // 10**(3*k)
+                if m == 0:
+                    continue
                 p = self._transcribe_lt999(m)
                 if p:
                     l.append(p)
-                    l.append(self.POWERS_REVERSE[3*k])
+                    l.append(self.POWERS_REVERSE[int(3*k)])
                 n %= dec(10**(3*k))
             m = int(n)
             if m > 0:
@@ -321,7 +330,7 @@ class NumberParser:
                 elif m == 1:
                     l.append('un')
                 else:
-                    l.append(self.DIGITS_REVERSE[m])
+                    l.append(self.DIGITS_REVERSE[int(m)])
                 n %= dec(1)
         return ' '.join(l)            
                         

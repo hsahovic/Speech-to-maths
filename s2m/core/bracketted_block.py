@@ -1,5 +1,9 @@
 from s2m.core.formulae import Formula
 
+from s2m.core.utils import merge_lists
+
+import random
+
 class BrackettedBlock(Formula):
 
     def __init__(self, b):
@@ -42,30 +46,31 @@ class BrackettedBlock(Formula):
         y, n = self.__b.count_brackets()
         return y + 1, n
 
-    def distance(self, f):
+    def a_similarity(self, other):
 
-        return self.__b.distance(f)
+        return self.__b.a_similarity(other)
 
-    def symmetry_index(self):
+    def d_symmetry(self):
 
-        return self.__b.symmetry_index()
+        return self.__b.d_symmetry()
 
     def transcription(self):
 
         return 'ouvrez la parenthèse %s fermez la parenthèse' \
                % self.__b.transcription()
 
-    def teach(parser):
+    @classmethod
+    def teach(cls, parser):
 
         def bracketted_block_complex_expand(words):
             return BrackettedBlock(words[0])
 
-        bracketted_block_explicit_complex = ('brackettedblock-explicit',
+        bracketted_block_explicit_complex = ('brackettedblock/explicit',
                                              'ouvrez la parenthèse %f fermez la parenthèse',
                                              bracketted_block_complex_expand,
                                              True)
 
-        bracketted_block_implicit_complex = ('brackettedblock-implicit',
+        bracketted_block_implicit_complex = ('brackettedblock/implicit',
                                              'entre parenthèse %f',
                                              bracketted_block_complex_expand,
                                              True)
@@ -73,3 +78,11 @@ class BrackettedBlock(Formula):
         parser.add_complex_rule(*bracketted_block_explicit_complex)
         parser.add_complex_rule(*bracketted_block_implicit_complex)
 
+    @classmethod
+    def generate_random(cls, b=None, depth=1):
+        """
+        Generates a random instance of BrackettedBlock.
+        """
+        if b == None:
+            b = Formula.generate_random(depth=depth-1)           
+        return BrackettedBlock(b)

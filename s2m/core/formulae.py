@@ -14,6 +14,7 @@
 from abc import ABCMeta, abstractmethod
 from s2m.core.number_parser import NumberParser
 from s2m.core.parser import Token
+from s2m.core.evaluator import evaluator
 
 import random
 
@@ -50,11 +51,11 @@ class Formula(metaclass=ABCMeta):
             return float(brackets[0]) / (brackets[0] + brackets[1])
 
     @abstractmethod
-    def distance(self, f):
+    def a_similarity(self, f):
         pass
 
     @abstractmethod
-    def symmetry_index(self):
+    def d_symmetry(self):
         pass
 
     @abstractmethod
@@ -77,17 +78,28 @@ class Formula(metaclass=ABCMeta):
             return '\\left[ %s \\right]'
         elif level > 6:
             return '\\left\\lbrace %s \\right\\rbrace'
-    
+
+    def evaluation(self):
+
+        return evaluator(self)
+
     @classmethod
-    def generate_random(cls,depth):
+    def generate_random(cls, depth=5):
+
         from s2m.core.binop import BinaryOperator
         from s2m.core.unop import UnaryOperator
         from s2m.core.number import Number
         from s2m.core.variable import Variable
+        from s2m.core.bracketted_block import BrackettedBlock
 
-        subclasses= [UnaryOperator,BinaryOperator]
-        subclasses_nodepth=[Number,Variable]
-        if depth == 0:
+        subclasses = [UnaryOperator, BinaryOperator, BrackettedBlock]
+        subclasses_nodepth = [Number, Variable]
+
+        if depth <= 0:
             return random.choice(subclasses_nodepth).generate_random()
         else:
             return random.choice(subclasses).generate_random(depth=depth-1)
+
+    @classmethod
+    def transcription(self):
+        pass

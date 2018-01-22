@@ -9,6 +9,8 @@ from .views_utils import get_document, get_user
 import json
 import uuid
 
+from s2m.core.formulae import Formula
+
 
 @login_required
 def account(request):
@@ -90,6 +92,7 @@ def delete_account(request):
 @login_required
 def document(request, address):
     doc = get_document(request, address=address)
+    text = doc.content
     if doc:
         if doc.is_in_trash:
             return redirect("error_400")
@@ -167,11 +170,12 @@ def sign_up(request):
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
 
-
 @login_required
 def training(request):
+    
     def generate_training_data():
-        return "\\frac{2 + 3}{4}", "deux plus deux"
+        random_formula = Formula.generate_random()
+        return random_formula.latex(), random_formula.transcription()
 
     formule, text = generate_training_data()
     return render(request, 'training.html', locals())
