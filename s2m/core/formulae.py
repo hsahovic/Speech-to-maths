@@ -99,3 +99,7 @@ class Formula(metaclass=ABCMeta):
             return random.choice(subclasses_nodepth).generate_random()
         else:
             return random.choice(subclasses).generate_random(depth=depth-1)
+
+    @classmethod
+    def transcription(self):
+        pass

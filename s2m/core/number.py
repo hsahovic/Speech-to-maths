@@ -98,14 +98,14 @@ class Number(Formula):
 
             word_string = build_word_string(words)
             try:
-                return Number(' '.join(words_string))
+                return Number(' '.join(word_string))
             except ValueError:
-                return words_string
+                return word_string
 
         def number_expand_final(words):
 
             word_string = build_word_string(words)
-            return Number(' '.join(words_string))
+            return Number(' '.join(word_string))
             
         def number_reduce(word):
             try:

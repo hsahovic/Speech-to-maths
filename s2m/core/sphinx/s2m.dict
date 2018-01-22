@@ -1,14 +1,18 @@
 absolu aa bb ss oo ll uu
 alpha aa ll ff aa
 au au
-billard bb ii yy aa rr
+billiard bb ii ll ii aa rr
+billiard(3) bb ii ll yy aa rr
 billion bb ii ll ii on
 billion(2) bb ii ll yy on
+blanc bb ll an
 bravo bb rr aa vv au
 carré kk aa rr ei
 cent ss an
 cent(2) ss an tt
 charlie ch aa rr ll ii
+chose ch au zz
+chose(2) ch au zz ee
 cinq ss in
 cinq(2) ss in kk
 cinquante ss in kk an tt
@@ -17,6 +21,7 @@ contient kk on tt yy in
 contient(2) kk on tt yy in tt
 cubique kk uu bb ii kk
 cubique(2) kk uu bb ii kk ee
+curseur kk uu rr ss oe rr
 dans dd an
 dans(2) dd an zz
 de dd
@@ -116,6 +121,8 @@ quatorze(2) kk aa tt oo rr zz ee
 quatorze(3) kk ww aa tt oo rr zz
 quatre kk aa tt rr
 quatre(2) kk aa tt rr ee
+quelque kk ai ll kk
+quelque(2) kk ai ll kk ee
 quintilliard kk in tt ii ll ii aa rr
 quintilliard(2) kk in tt ii ll yy aa rr
 quintillion kk in tt ii ll ii on

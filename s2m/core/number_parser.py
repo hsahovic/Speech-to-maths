@@ -35,7 +35,7 @@ class NumberParser:
                'million' : 6, 
                'milliard' : 9, 
                'billion' : 12, 
-               'billard' : 15,
+               'billiard' : 15,
                'trillion' : 18,
                'trilliard' : 21, 
                'quadrillion' : 24, 

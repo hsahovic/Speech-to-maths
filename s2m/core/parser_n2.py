@@ -10,7 +10,7 @@ from heapdict import heapdict
 
 class Parser:
 
-    def __init__(self, proximity_dict):
+    def __init__(self, proximity_dict, PlaceHolder=None):
 
         self.__expands = {}
         self.__reduces = {}
@@ -22,6 +22,7 @@ class Parser:
                                             S2M_GRAMMAR_VERSION,
                                             S2M_VERSION)
         self.__proximity_dict = proximity_dict
+        self.__PlaceHolder = PlaceHolder
 
     def __getattr__(self, p):
 
@@ -261,4 +262,14 @@ class Parser:
                             C['%f'][l][i][formula] = score
                         C['%f'][l][i].prune()
 
+        if self.__PlaceHolder:
+            if C['%f'][N][0].min_value() > 0.:
+                placeholder = self.__PlaceHolder()
+                placeholder_name = placeholder.transcription()
+                if words[-1] != placeholder_name:
+                    s += ' ' + placeholder_name
+                    new_parses = self.myers(s)
+                    if new_parses[0][1] == 0.:
+                        return new_parses
+            
         return C['%f'][N][0].sorted_list()
