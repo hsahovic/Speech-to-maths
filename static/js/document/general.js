@@ -142,6 +142,10 @@ function getValText(id)
     return str;
 }
 
+function startRecording() {
+    var mediaRecorder = sendContinuousAudio(500, voiceAnalysisLink, true, audioContentManager.manageAJAXResponse);
+}
+
 var changeHappened = false;
 var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
 manageQueueButtonsStyle();

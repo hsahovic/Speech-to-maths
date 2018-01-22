@@ -51,3 +51,6 @@ s2m/file_analysis/file.ogg
 *.pyc
 *.pyc
 *.ogg
+*.pyc
+s2m/core/sphinx/s2m.jsgf
+*.pyc

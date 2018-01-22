@@ -43,11 +43,11 @@ def voice_analysis(request):
                 except:
                     pass
                 i += 1
-        response = json.dumps({'instruction': 'write', 'content': parses})
+        response = json.dumps({'instruction': 'propose', 'content': parses})
         return HttpResponse(response)
     except OSError:
         # Windows tests
-        return HttpResponse(json.dumps({'instruction': 'write', 'content': [" Text de test", "T'es de test"]}))
+        return HttpResponse(json.dumps({'instruction': 'propose', 'content': [" Text de test", "T'es de test"]}))
 
 
 @login_required

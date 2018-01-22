@@ -214,3 +214,30 @@ input {
     margin-left : 1em;
     border-left : 2px solid #e6e6e6;
 }
+
+
+/* En developpement */
+
+.audio-display {
+    display : inline-block;
+    color : white;
+    position : fixed;
+    left : 0;
+    top : 0;
+    z-index: 777;
+    background-color: black;
+}
+
+.jumbo-section-sub-2 {
+    display : inline-block;
+    width: 40%;
+    border-radius: 1em;
+    margin : 2.5%;
+    padding: 2.5%;
+    text-align: center;
+    font-size: 2.4em;
+    vertical-align: middle;
+}
+.jumbo-section-sub-2 img {
+    max-width: 80%;
+}

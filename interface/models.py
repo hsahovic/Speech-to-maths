@@ -2,13 +2,12 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.files import File
 
-from  s2m.settings import MEDIA_ROOT
+from s2m.settings import MEDIA_ROOT
 from s2m.core.utils import generate_random_word
 
 import os
 import subprocess
 import uuid
-
 
 
 class Utilisateur(User):
@@ -33,8 +32,8 @@ class Document(models.Model):
 
     def generate_pdf(self):
         path_to_file = os.path.join(MEDIA_ROOT, "pdf_generation")
-        if not os.path.exists(path_to_file) :
-            try :
+        if not os.path.exists(path_to_file):
+            try:
                 os.makedirs(path_to_file)
             except OSError:
                 pass

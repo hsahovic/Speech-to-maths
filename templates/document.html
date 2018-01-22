@@ -17,8 +17,7 @@
 	
 		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 	
-		<button id = "start_rec" onclick = "sendContinuousAudio(500, voiceAnalysisLink, true, audioResponseManager) ;">
-		<!-- <button id = "start_rec" onclick = "sendAudioBlob(voiceAnalysisLink, true, audioResponseManager);"> -->
+		<button id = "start_rec" onclick = "startRecording();">
 			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 			Commencer la dictée
 		</button>
@@ -69,7 +68,7 @@
 		<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)" onblur="preview('divtext', 'divmat', 'textArea')" style = "font-size: 16px;">{{ doc.content }}</textarea>
 	</div>
 
-	<div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh">
+	<!-- <div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh"> -->
 	</div>
 
 </div>
@@ -80,6 +79,8 @@
 	<iframe src="{{ doc.pdf.url }}" width="1200" height="600" align="middle"></iframe>
 </div>
 {% endif %}
+
+<div id="responseDisplay" class = "audio-display"> </div>
 
 {% csrf_token %}
 
@@ -116,8 +117,10 @@ MathJax.Hub.Config({
 	var docID = {{ doc.id }};
 </script>
 <script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
-<script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
 <script src = "{% static 'js/document/contentModification.js' %}"> </script>
+<script src = "{% static 'js/audioContentManager.js' %}"> </script>
+<script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
+<script src = "{% static 'js/document/audioContentManager.js' %}"> </script>
 <script src = "{% static 'js/document/general.js' %}"> </script>
 <script src = "{% static 'js/manageRecording.js' %}"> </script>
 {% endblock %}

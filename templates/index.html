@@ -8,7 +8,7 @@
 	<section class = "jumbo-section title-section">
 		<div class = "centered-content">
 		<h1> <span> Faire des maths un jeu d'enfant </span> </h1>
-		<h2> <span> Speech to Maths permet de dicter des documents LaTeX. <br> Tout simplement. </span> </h2>
+		<h2> <span> Dicter des documents scientifiques. <br> Tout simplement. </span> </h2>
 		<h3> <span> <a class = "keep-color-link" href = "#techno"> Découvrez Speech to Maths </a> </span> </h3>
 		</div>
 	</section>	
@@ -16,19 +16,29 @@
 
 <section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
-	<h1 id = "techno"> Notre technologie </h1>
-	<p> Notre objectif est de faciliter la rédaction de documents scientifiques en proposant à l’utilisateur un outil permettant de dicter du texte et des équations et d’obtenir un document à la mise en page satisfaisante sans avoir besoin d'interagir directement avec du code Latex.<br>
-		Cela se traduit par deux caractéristiques principales :<br>
-		D’une part, un performant système d’analyse vocale combinant reconnaissance vocale et analyse syntaxique afin de permettre à l’utilisateur de contrôler pleinement et naturellement le contenu qu’il génère. Les diverses dépendances nécessaires pour remplir cet objectif ainsi que la multiplicité des packages LATEX que les utilisateurs peuvent requérir font d’une architecture basée sur un serveur centralisé  un choix logique.Dans cette optique, nous avons décidé, eu égard à la répartition des compétences dans le groupe, de nous tourner vers un serveur Django. Du point de vue de la reconnaissance vocale, nous nous baserons sur une solution préexistante. Dans un premier temps, nous nous intéresserons à la solution de reconnaissance vocale Sphynx.<br>
-		D’autre part, une interface utilisateur claire, accessible, efficiente et simple. Le choix du web est nécessaire en complément d’une architecture serveur, et permet à tout utilisateur doté d’une connexion internet (une fois le projet déployé) d’en faire usage, sans autre installation nécessaire.D’un point de vue programmation, on développe en HTML, CSS et JavaScript, modulo les fonctionnalités de Django qui permettent de simplifier ce développement.  </p>
-	</div>	
+	<h1 id = "equipe"> Nous </h1>
+	<img src = "{% static "img/haris.jpg" %}"> 
+	<p> Nous sommes 7 étudiants de l’Ecole Polytechnique, promotion X 2016, actuellement en deuxième année du cycle ingénieur (équivalent à une année de M1).Notre groupe présente une bonne diversité de profils (élèves français et internationaux, issus de l’uni ou de classes préparatoires).Notre groupe s’est formé à l’occasion du Projet Scientifique Collectif, un des incontournables de notre année à l’X. L’objectif du PSC est double : il s’agit d’une part de nous encourager à innover dans un domaine scientifique de notre choix, et d’autre part de découvrir et de pratiquer les bons comportements de gestion de projet en équipe.Nous bénéficions pour cela de l’expérience des chercheurs, enseignants et cadres de l’Ecole Polytechnique.</p>
+	</div>
 </section>
 
 <section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
-	<h1 id = "equipe"> Qui sommes nous ? </h1>
-	<p> Nous sommes 7 étudiants de l’Ecole Polytechnique, promotion X 2016, actuellement en deuxième année du cycle ingénieur (équivalent à une année de M1).Notre groupe présente une bonne diversité de profils (élèves français et internationaux, issus de l’uni ou de classes préparatoires).Notre groupe s’est formé à l’occasion du Projet Scientifique Collectif, un des incontournables de notre année à l’X. L’objectif du PSC est double : il s’agit d’une part de nous encourager à innover dans un domaine scientifique de notre choix, et d’autre part de découvrir et de pratiquer les bons comportements de gestion de projet en équipe.Nous bénéficions pour cela de l’expérience des chercheurs, enseignants et cadres de l’Ecole Polytechnique.</p>
-	</div>
+		<h1 id = "techno"> Notre technologie </h1>
+		<p> 
+			Nous combinons plusieurs technologies de pointe pour fournir à nos utilisateurs la meilleure experience possible. <br>
+			La transcription audio est basée sur <a href = "https://cmusphinx.github.io/">CMUSphinx</a> puis parsée par une version optimisée de <a href = "https://fr.wikipedia.org/wiki/Algorithme_de_Cocke-Younger-Kasami"> l'algorithme de Cocke-Younger-Kasami</a> pour en proposer des équivalents en LaTeX. <br>
+			Cette base est complétée par plusieurs couches de Machine Learning pour offrir à nous utlisateurs les résultats les plus pertinents, et par une interface web pensée pour proposer l'UX la plus intuitive possible.
+		</p>
+		<div class = "jumbo-section-sub-2-container">
+			<div class = "jumbo-section-sub-2">
+				<a href="https://www.djangoproject.com/"><img src="{% static "img/django-logo.png" %}"></a>
+			</div><!--
+		 --><div class = "jumbo-section-sub-2">
+				<a href="https://cmusphinx.github.io/"><span style='font-family: "Merriweather","PT Serif",Georgia,"Times New Roman",serif;color: #84172d;'>CMUSphinx</span></a>
+			</div>
+		</div>
+	</div>	
 </section>
 
 <section class = "jumbo-section jumbo-section-alternate-colors">
@@ -42,17 +52,4 @@
 	</div>
 </section>
 
-<!-- <script>
-
-	function manageTopBarColor() {
-		if (window.scrollY == 0)
-			document.getElementsByClassName("main-nav")[0].style.backgroundColor = "rgba(0,0,0,0)";
-		else
-			document.getElementsByClassName("main-nav")[0].style.backgroundColor = "white";
-	} 
-
-	window.addEventListener('scroll', manageTopBarColor);
-	manageTopBarColor();
-
-</script> -->
 {% endblock %}

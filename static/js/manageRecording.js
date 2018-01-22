@@ -1,10 +1,10 @@
 function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 	if (navigator.mediaDevices) {
+		var mediaRecorder = undefined; // TEST DEBUG ?
 		navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
 			var audioCtx = new AudioContext();
-			var chunks = [];
 			var dest = audioCtx.createMediaStreamDestination();
-			var mediaRecorder = new MediaRecorder(dest.stream);
+			mediaRecorder = new MediaRecorder(dest.stream); // TEST DEBUG ?
 			var source = audioCtx.createMediaStreamSource(stream);
 			var manualStop = false;
 
@@ -44,6 +44,7 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 				if (maxLength && !manualStop) {
 					mediaRecorder.start();
 					setTimeout(function(){
+						// verifier validite ?
 						mediaRecorder.stop();
 					}, maxLength);
 					mediaRecorder.onstop = stoppedRecorderManager;
@@ -52,9 +53,12 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 					stream.stop();
 				}
 			};
-			mediaRecorder.onstop = stoppedRecorderManager;
-
+			mediaRecorder.onstop = () => {
+				stoppedRecorderManager();
+				console.log("The media recorder was stopped"); // TO DO : DELETE DEBUG
+			}
 		});
+		return mediaRecorder;
 	}
 	else {
 		return(undefined);
@@ -90,7 +94,7 @@ function sendAudioBlob(link, manageButtons, responseManager, additionalData = un
 }
 
 function sendContinuousAudio(delay, link, manageButtons, responseManager) {
-	useAudioBlobs(function(blob){
+	return useAudioBlobs(function(blob){
 		let request = new XMLHttpRequest();
 		let formData = new FormData;
 		let cSRFToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
@@ -117,3 +121,6 @@ function sendContinuousAudio(delay, link, manageButtons, responseManager) {
 	}
 	, manageButtons, delay);
 }
+
+// TO DO : do this cleverly
+var chunks = [];
