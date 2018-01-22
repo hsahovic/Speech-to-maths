@@ -42,7 +42,7 @@ class ProximityDict(PrefixDict, PhonesMap):
                               current_min)
         return current_min
         
-    def find_nearest(self, word, max_count=15):
+    def find_nearest(self, word, max_count=10):
         if word in self.__memo:
             return self.__memo[word]
         pronunciations = self.get_reverse(word)

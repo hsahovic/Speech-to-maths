@@ -8,6 +8,10 @@ from functools import reduce
 #Priority queue implementation by Daniel Stutzbach
 from heapdict import heapdict
 
+#temp
+from time import time
+#endtemp
+
 class Parser:
 
     def __init__(self, proximity_dict, PlaceHolder=None):
@@ -168,27 +172,22 @@ class Parser:
             return formulae
 
     def _combine(self, l_queue, r_queue, dest, f):
-
+        
         for l_formula, l_score in l_queue:
             for r_formula, r_score in r_queue:
-                score_hyp, formulae = l_score + r_score, l_formula + r_formula
+                score_hyp = l_score + r_score
+                if dest.will_be_rejected(score_hyp):
+                    continue
+                formulae = l_formula + r_formula
                 try:
                     new_formula = self._assemble(f, formulae)
                 except:
                     pass
                 else:
                     dest[new_formula] = score_hyp
-    
-    def _known(self, words, desc, C, G, l, i):
 
-        if desc in self.__expands:
-            for k in range(0, l):
-                for (l_desc, r_desc), f in self.__expands[desc]:
-                    self._combine(C[l_desc][k][i],
-                                  C[r_desc][l-k][i+k],
-                                  C[desc][l][i],
-                                  f)
-
+    def _nearest(self, words, l, i):
+        
         nearest = {}
         for word in words[i:i+l]:
             new_nearest = self.proximity_dict.find_nearest(word)
@@ -200,12 +199,23 @@ class Parser:
                     if nearest[k] > v - delete_cost:
                         nearest[k] = v - delete_cost
             nearest[word] = - delete_cost
+        return nearest
+    
+    def _known(self, words, desc, C, G, nearest, l, i):
+
+        if desc in self.__expands:
+            for k in range(0, l):
+                for (l_desc, r_desc), f in self.__expands[desc]:
+                    self._combine(C[l_desc][k][i],
+                                  C[r_desc][l-k][i+k],
+                                  C[desc][l][i],
+                                  f)
 
         if desc in self.__reduces:
             for word, formula in self.__reduces[desc]:
                 hyp_score = self.proximity_dict.word_delete_cost(word) + G[i][l]
-                if word in nearest:
-                    hyp_score2 = nearest[word] + G[i][l]
+                if word in nearest[l][i]:
+                    hyp_score2 = nearest[l][i][word] + G[i][l]
                     if hyp_score2 < hyp_score:
                         hyp_score = hyp_score2
                 if formula is None:
@@ -234,11 +244,15 @@ class Parser:
                        for _1 in range(N+1-_2)] for _2 in range(N+1) ]
               for desc in self.__descriptors }
 
+        #Initialisation de nearest
+        nearest = [ [self._nearest(words, l, i) for i in range(N+1-l)]
+                    for l in range(N+1) ]
+        
         for l in range(0, N+1):
             for i in range(0, N-l+1):
                 heap = heapdict()
                 for desc in self.__descriptors:
-                    heap[desc] = self._known(words, desc, C, G, l, i)
+                    heap[desc] = self._known(words, desc, C, G, nearest, l, i)
                 while heap:
                     desc, _ = heap.popitem()
                     if desc in self.__expands:
@@ -271,5 +285,5 @@ class Parser:
                     new_parses = self.myers(s)
                     if new_parses[0][1] == 0.:
                         return new_parses
-            
+
         return C['%f'][N][0].sorted_list()

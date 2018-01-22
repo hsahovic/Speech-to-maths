@@ -15,6 +15,9 @@ class BoundedWriteOnlyQueue:
         ukey = _unlist(key)
         item = key, value
 
+        if self.will_be_rejected(value):
+            return
+
         if value < self.__min:
             self.__min = value
 
@@ -97,3 +100,8 @@ class BoundedWriteOnlyQueue:
     def min_value(self):
 
         return self.__min
+
+    def will_be_rejected(self, value):
+
+        return len(self.__dict) == self.__size \
+            and value > self.__dict[0][1]
