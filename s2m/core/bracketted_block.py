@@ -65,12 +65,12 @@ class BrackettedBlock(Formula):
         def bracketted_block_complex_expand(words):
             return BrackettedBlock(words[0])
 
-        bracketted_block_explicit_complex = ('brackettedblock-explicit',
+        bracketted_block_explicit_complex = ('brackettedblock/explicit',
                                              'ouvrez la parenthèse %f fermez la parenthèse',
                                              bracketted_block_complex_expand,
                                              True)
 
-        bracketted_block_implicit_complex = ('brackettedblock-implicit',
+        bracketted_block_implicit_complex = ('brackettedblock/implicit',
                                              'entre parenthèse %f',
                                              bracketted_block_complex_expand,
                                              True)

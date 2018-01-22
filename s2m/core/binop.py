@@ -17,8 +17,6 @@ class BinaryOperator(Formula):
                    'SEQ': {'latex': '%s \\simeq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SBS': {'latex': '%s \\subset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SPS': {'latex': '%s \\supset %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                   #'INT': {'latex': '\\int_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
-                   #'SUM': {'latex': '\\sum_{%s}^{%s}', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
                    'ADD': {'latex': '%s + %s', 'priority': 1, 'associative': True, 'weak': False, 'nobrackets': False},
                    'SUB': {'latex': '%s - %s', 'priority': 1, 'associative': False, 'weak': True, 'nobrackets': False},
                    'PMS': {'latex': '%s \\pm %s', 'priority': 1, 'associative': True, 'weak': True, 'nobrackets': False},
@@ -35,6 +33,7 @@ class BinaryOperator(Formula):
                           'moins': 'SUB',
                           'fois': 'MUL',
                           'sur': 'DIV',
+                          'divisé par': 'DIV',
                           'puissance': 'POW',
                           'égal': 'EQU',
                           'différent de': 'NEQ',
@@ -48,8 +47,6 @@ class BinaryOperator(Formula):
                           'contient': 'SPS',
                           'équivaut à': 'EQV',
                           'environ égal à': 'SEQ',
-                          'intégrale': 'INT',
-                          'somme': 'SUM',
                           'de': 'EVL',
                           }
 
@@ -154,7 +151,7 @@ class BinaryOperator(Formula):
         return children
 
     def a_similarity(self, other):
-        
+
         if isinstance(other, BinaryOperator) \
            and self.__o == other.o:
             return (self.__l.a_similarity(other.l) \
@@ -221,7 +218,7 @@ class BinaryOperator(Formula):
 
         # Defines A op B -> BinaryOperator(A, op, B)
         def binary_operator_complex_expand(formulae):
-            return BinaryOperator(formulae[0], formulae[1], formulae[2])
+            return BinaryOperator(*formulae)
 
         binary_operator_complex = ('binaryoperator',
                                    '%f $binaryoperator-operator %f',
@@ -232,7 +229,7 @@ class BinaryOperator(Formula):
         def squared_complex_expand(formulae):
             return BinaryOperator(formulae[0], 'POW', Number(2))
 
-        squared_complex = ('squared',
+        squared_complex = ('binaryoperator/squared',
                            '%f au carré',
                            squared_complex_expand,
                            True)
@@ -248,7 +245,7 @@ class BinaryOperator(Formula):
         """
         o = random.choice(list(cls.__OPERATORS.keys()))
         if l == None:
-            l = Formula.generate_random(depth=depth-1)           
+            l = Formula.generate_random(depth=depth-1)
         if r == None:
             r = Formula.generate_random(depth=depth-1)
         return BinaryOperator(l, o, r)

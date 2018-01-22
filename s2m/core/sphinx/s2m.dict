@@ -1,13 +1,18 @@
 absolu aa bb ss oo ll uu
 alpha aa ll ff aa
 au au
+billiard bb ii ll ii aa rr
+billiard(3) bb ii ll yy aa rr
 billion bb ii ll ii on
 billion(2) bb ii ll yy on
+blanc bb ll an
 bravo bb rr aa vv au
 carré kk aa rr ei
 cent ss an
 cent(2) ss an tt
 charlie ch aa rr ll ii
+chose ch au zz
+chose(2) ch au zz ee
 cinq ss in
 cinq(2) ss in kk
 cinquante ss in kk an tt
@@ -16,15 +21,20 @@ contient kk on tt yy in
 contient(2) kk on tt yy in tt
 cubique kk uu bb ii kk
 cubique(2) kk uu bb ii kk ee
+curseur kk uu rr ss oe rr
 dans dd an
 dans(2) dd an zz
 de dd
 de(2) dd ee
 delta dd ai ll tt aa
+des dd ai
+des(2) dd ai zz
+des(3) dd ei
 deux dd eu
 deux(2) dd eu zz
 différent dd ii ff ai rr an
 différent(2) dd ii ff ai rr an tt
+divisé dd ii vv ii zz ei
 dix dd ii
 dix(2) dd ii kk ss
 dix(3) dd ii ss
@@ -54,6 +64,7 @@ huit(2) uy ii tt
 inclus in kk ll uu
 inclus(2) in kk ll uu zz
 inférieur in ff ai rr yy oe rr
+intersection in tt ai rr ss ai kk ss yy on
 intégrale in tt ai gg rr aa ll
 intégrale(2) in tt ai gg rr aa ll ee
 la ll aa
@@ -81,6 +92,7 @@ onze(2) on zz ee
 ou ou
 ouvrez ou vv rr ei
 ouvrez(2) ou vv rr ei zz
+par pp aa rr
 parenthèse pp aa rr an tt ai zz
 parenthèse(2) pp aa rr an tt ai zz ee
 plus pp ll uu
@@ -88,6 +100,9 @@ plus(2) pp ll uu zz
 plus(3) pp ll uu ss
 point pp ww in
 point(2) pp ww in tt
+pour pp ou rr
+produit pp rr oo dd uy ii
+produit(2) pp rr oo dd uy ii tt
 puissance pp uy ii ss an ss
 puissance(2) pp uy ii ss an ss ee
 quadrilliard kk ww aa dd rr ii ll ii aa rr
@@ -106,6 +121,8 @@ quatorze(2) kk aa tt oo rr zz ee
 quatorze(3) kk ww aa tt oo rr zz
 quatre kk aa tt rr
 quatre(2) kk aa tt rr ee
+quelque kk ai ll kk
+quelque(2) kk ai ll kk ee
 quintilliard kk in tt ii ll ii aa rr
 quintilliard(2) kk in tt ii ll yy aa rr
 quintillion kk in tt ii ll ii on
@@ -153,6 +170,8 @@ un(2) un nn
 un(3) uu nn
 uniform uu nn ii ff oo rr mm
 uniform(2) yy ou nn ii ff oo rr mm
+union uu nn yy au nn
+union(2) uu nn yy on
 valeur vv aa ll oe rr
 vectoriel vv ai kk tt oo rr yy ei ll
 vectoriel(2) vv ai kk tt oo rr ii ei ll

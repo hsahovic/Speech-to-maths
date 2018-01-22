@@ -35,18 +35,18 @@ class NumberParser:
                'million' : 6, 
                'milliard' : 9, 
                'billion' : 12, 
-               'billard' : 15,
+               'billiard' : 15,
                'trillion' : 18,
                'trilliard' : 21, 
-               'quadrillon' : 24, 
-               'quadrillard' : 27,
+               'quadrillion' : 24, 
+               'quadrilliard' : 27,
                'quintillion' : 30,
-               'quintillard' : 33, 
+               'quintilliard' : 33, 
                'sextillion' : 36, 
-               'sextillard' : 39,
+               'sextilliard' : 39,
                'septillion' : 42,
                'septilliard' : 45, 
-               'octillon' : 48,
+               'octillion' : 48,
                'octilliard' : 51,
                'nonillion' : 54, 
                'nonilliard' : 57, 
@@ -76,6 +76,7 @@ class NumberParser:
     
     COMMA = ['virgule', 'point']
 
+    #il y a des redondances (pourquoi ?)
     NUMBER_WORDS = list(DIGITS.keys()) \
                    + list(NUMBERS.keys()) \
                    + list(OTHER_NUMBERS.keys()) \
@@ -84,6 +85,12 @@ class NumberParser:
                    + list(SAFE_DOZENS.keys()) \
                    + COMMA \
                    + ['et']
+
+    AUTONOMOUS_NUMBER_WORDS = list(DIGITS.keys()) \
+                              + list(NUMBERS.keys()) \
+                              + list(OTHER_NUMBERS.keys()) \
+                              + OTHERS \
+                              + list(SAFE_DOZENS.keys())
     
     def __getattr__(self, p):
         if p == 'words':

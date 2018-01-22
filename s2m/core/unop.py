@@ -50,13 +50,13 @@ class UnaryOperator(Formula):
             raise AttributeError
 
     def __eq__(self, other):
-	
+
         if other and isinstance(other, UnaryOperator):
             return other.o == self.__o and other.r == self.__r
         return False
 
     def __hash__(self):
-        
+
         return hash(self.__o) ^ hash(self.__r)
 
     def count_brackets(self):
@@ -120,7 +120,7 @@ class UnaryOperator(Formula):
 
         # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
-            return UnaryOperator(words[0], words[1])
+            return UnaryOperator(*words)
 
         unary_operator_complex = ('unaryoperator',
                                   '$unaryoperator-operator %f',
@@ -135,7 +135,7 @@ class UnaryOperator(Formula):
         """
         Generates a random instance of UnaryOperator.
         """
-        o = random.choice(list(cls.__OPERATORS.keys()))        
+        o = random.choice(list(cls.__OPERATORS.keys()))
         if r == None:
             r = Formula.generate_random(depth=depth-1)
         return UnaryOperator(o, r)

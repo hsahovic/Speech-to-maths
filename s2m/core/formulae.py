@@ -82,10 +82,10 @@ class Formula(metaclass=ABCMeta):
     def evaluation(self):
 
         return evaluator(self)
-        
+
     @classmethod
     def generate_random(cls, depth=5):
-        
+
         from s2m.core.binop import BinaryOperator
         from s2m.core.unop import UnaryOperator
         from s2m.core.number import Number
@@ -94,8 +94,12 @@ class Formula(metaclass=ABCMeta):
 
         subclasses = [UnaryOperator, BinaryOperator, BrackettedBlock]
         subclasses_nodepth = [Number, Variable]
-        
+
         if depth <= 0:
             return random.choice(subclasses_nodepth).generate_random()
         else:
             return random.choice(subclasses).generate_random(depth=depth-1)
+
+    @classmethod
+    def transcription(self):
+        pass

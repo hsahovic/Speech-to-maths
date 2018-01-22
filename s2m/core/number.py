@@ -82,28 +82,56 @@ class Number(Formula):
     @classmethod
     def teach(cls, parser):
 
+        def build_word_string(words):
+
+            word_string = []
+            for word in words:
+                if isinstance(word, Number):
+                    word_string.append(word.n)
+                elif type(word) is str:
+                    word_string.append(word)
+                else:
+                    raise TypeError('Words in list should be Number or str, not %r' % type(word))
+            return word_string
+        
+        def number_expand(words):
+
+            word_string = build_word_string(words)
+            try:
+                return Number(' '.join(word_string))
+            except ValueError:
+                return word_string
+
+        def number_expand_final(words):
+
+            word_string = build_word_string(words)
+            return Number(' '.join(word_string))
+            
         def number_reduce(word):
-            if word in NumberParser.NUMBER_WORDS:
-                try:
-                    return Token('number', [Number(word)])
-                except:
-                    return Token('number', [word])
-            else:
-                return None
+            try:
+                return Number(word)
+            except ValueError:
+                return word
 
-        def number_expand(tok1, tok2):
-            if tok1.tag == tok2.tag == 'number':
-                try:
-                    new_formula = tok1.formula + tok2.formula
-                    new_number = map(lambda a: a if type(a) == str else a.n, new_formula)
-                    return Token('number', [Number(' '.join(new_number))])
-                except:
-                    return Token('number', new_formula)
-            else:
-                return None
+        parser.add_complex_rule('number-prefix',
+                                '$number-prefix $number-prefix',
+                                number_expand,
+                                False)
 
-        parser.add_reduce(number_reduce)
-        parser.add_expand(number_expand)
+        parser.add_complex_rule('number',
+                                '$number-prefix $number-prefix',
+                                number_expand_final,
+                                True)
+
+        parser.add_easy_reduce('number-prefix/reduce',
+                               {x: x for x in NumberParser.NUMBER_WORDS},
+                               number_reduce,
+                               False)
+
+        parser.add_easy_reduce('number/reduce',
+                               {x: x for x in NumberParser.AUTONOMOUS_NUMBER_WORDS},
+                               number_reduce,
+                               True)
 
         number_jsgf = os.path.join('s2m', 'core', 'sphinx', 'number.jsgf')
         parser.sphinx_config.import_file(number_jsgf)
