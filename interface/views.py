@@ -92,6 +92,7 @@ def delete_account(request):
 @login_required
 def document(request, address):
     doc = get_document(request, address=address)
+    text = doc.content
     if doc:
         if doc.is_in_trash:
             return redirect("error_400")

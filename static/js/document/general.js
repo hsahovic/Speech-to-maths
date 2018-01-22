@@ -111,37 +111,6 @@ window.addEventListener("keydown", function (event) {
   }, true);
 
 
-// Affiche/cache la preview en MathJax et Cache/affiche la zone de saisie
-
-function preview(id1, id2, id3)
-{
-    var str = getValText(id3);
-    document.getElementById(id2).innerHTML = str;
-    if(document.getElementById(id1).style.display=="none")
-    {
-        document.getElementById(id1).style.display="block";
-        document.getElementById(id2).style.display="none";
-    }
-    else
-    {
-        document.getElementById(id1).style.display="none";
-        document.getElementById(id2).style.display="block";
-    }
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    return true;
-}
-// Gère le contenu à afficher dans la div pour MathJax
-function getValText(id)
-{
-    var str = document.getElementById(id).value;
-    str = str.replace( /\r?\n/g, "<br>" );
-    str = str.replace("\\begin{center}", "<span style='text-align:center'>").replace("\\end{center}", "</span>");
-    str = str.replace("\\begin{flushleft}", "<span>").replace("\\end{flushleft}", "</span>");
-    str = str.replace("\\begin{flushright}", "<span style='float:right'>").replace("\\end{flushright}", "</span>");
-    str = str.replace("\\begin{document}", "<span>\\begin{</span><span class='additional-data' style='font-weight:bold'>document</span>}").replace("\\end{document}", "<span>\\end{</span><span class='additional-data' style='font-weight:bold'>document</span>}");
-    return str;
-}
-
 var changeHappened = false;
 var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
 manageQueueButtonsStyle();

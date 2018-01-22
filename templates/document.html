@@ -5,6 +5,7 @@
 {% block head %} {% endblock %}
 {% block nav %} {% endblock %}
 {% block content %} 
+
 <div class = "top-bar">
 	<a href = "{% url "documents" %}">
 		<h3> 
@@ -44,7 +45,7 @@
 		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
 	</div><!--
- --><div class = "text-editor-button-group" preview('divtext', 'divmat', 'textArea')>
+ --><div class = "text-editor-button-group" >
 		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
@@ -65,11 +66,13 @@
 
 <div class = "doc-content">
 
-	<div class = "text-container" id="divtext" style="display:block">
-		<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)" onblur="preview('divtext', 'divmat', 'textArea')" style = "font-size: 16px;">{{ doc.content }}</textarea>
+	
+	
+	<!--<div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'textArea', 0)" style="display:block; height: 76vh">
 	</div>
+	-->
 
-	<div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh">
+	<div class = "text-container" id="divmat" style="display:block;">
 	</div>
 
 </div>
@@ -110,14 +113,21 @@ MathJax.Hub.Config({
 });
 </script>
 
+
 <script> 
 	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
-	var documentSaveLink = "{% url 'save_document' %}"
+	var documentSaveLink = "{% url 'save_document' %}";
 	var docID = {{ doc.id }};
+	var docTXT = "{{ doc.content | linebreaksbr | escapejs }}";
 </script>
 <script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
+<script src = "{% static 'js/document/elementMatjax.js' %}"> </script>
 <script src = "{% static 'js/document/contentModification.js' %}"> </script>
 <script src = "{% static 'js/document/general.js' %}"> </script>
+<script src = "{% static 'js/document/divElement.js' %}"> </script>
 <script src = "{% static 'js/manageRecording.js' %}"> </script>
+
+<script> ecrireTxt("divmat", docTXT, 0);</script>
+
 {% endblock %}
