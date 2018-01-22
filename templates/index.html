@@ -16,26 +16,51 @@
 
 <section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
-	<h1 id = "equipe"> Nous </h1>
-	<img src = "{% static "img/haris.jpg" %}"> 
-	<p> Nous sommes 7 étudiants de l’Ecole Polytechnique, promotion X 2016, actuellement en deuxième année du cycle ingénieur (équivalent à une année de M1).Notre groupe présente une bonne diversité de profils (élèves français et internationaux, issus de l’uni ou de classes préparatoires).Notre groupe s’est formé à l’occasion du Projet Scientifique Collectif, un des incontournables de notre année à l’X. L’objectif du PSC est double : il s’agit d’une part de nous encourager à innover dans un domaine scientifique de notre choix, et d’autre part de découvrir et de pratiquer les bons comportements de gestion de projet en équipe.Nous bénéficions pour cela de l’expérience des chercheurs, enseignants et cadres de l’Ecole Polytechnique.</p>
+		<h1 id = "equipe"> Nous </h1>
+		<p> 7 étudiants de l’Ecole Polytechnique réunis autour d'un projet commun.</p> 
+		<p> Issus de plusieurs fillières - française et internationale, classes préparatoires et universités - notre groupe s’est formé à l’occasion du Projet Scientifique Collectif, un des incontournables de la deuxième année à l’X. L’objectif du PSC est double : nous encourager à innover dans un domaine scientifique de pointe, et apprendre par la pratique la gestion de projet en équipe. </p>
+		<p> Nous bénéficions pour cela de l’expérience des chercheurs, enseignants et cadres de l’Ecole Polytechnique.</p>
+
+		<h2> Equipe back</h2>
+		<div class = "jumbo-section-container">
+			<div class = "jumbo-section-sub-4"><img src = "{% static "img/baptiste.jpg" %}"></div><!--
+		 --><div class = "jumbo-section-sub-4"><img src = "{% static "img/lois.jpg" %}"></div><!--
+		 --><div class = "jumbo-section-sub-4"><img src = "{% static "img/françois.jpg" %}"></div><!--
+		 --><div class = "jumbo-section-sub-4"><img src = "{% static "img/garance.jpg" %}"></div>
+		 	<br>
+		 	<br>
+			<div class = "jumbo-section-sub-4">Baptiste</div><!--
+		 --><div class = "jumbo-section-sub-4">Loïs</div><!--
+		 --><div class = "jumbo-section-sub-4">François</div><!--
+		 --><div class = "jumbo-section-sub-4">Garance</div>
+		</div>
+
+		<h2> Equipe front</h2>
+		<div class = "jumbo-section-container">
+			<div class = "jumbo-section-sub-3"><img src = "{% static "img/haris.jpg" %}"></div><!--
+		 --><div class = "jumbo-section-sub-3"><img src = "{% static "img/fabrice.jpg" %}"></div><!--
+		 --><div class = "jumbo-section-sub-3"><img src = "{% static "img/yolene.jpg" %}"></div>
+		 	<br>
+		 	<br>
+		 	<div class = "jumbo-section-sub-3">Haris</div><!--
+		 --><div class = "jumbo-section-sub-3">Fabrice</div><!--
+		 --><div class = "jumbo-section-sub-3">Yolène</div>
+		</div>
 	</div>
 </section>
 
 <section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
 		<h1 id = "techno"> Notre technologie </h1>
-		<p> 
-			Nous combinons plusieurs technologies de pointe pour fournir à nos utilisateurs la meilleure experience possible. <br>
-			La transcription audio est basée sur <a href = "https://cmusphinx.github.io/">CMUSphinx</a> puis parsée par une version optimisée de <a href = "https://fr.wikipedia.org/wiki/Algorithme_de_Cocke-Younger-Kasami"> l'algorithme de Cocke-Younger-Kasami</a> pour en proposer des équivalents en LaTeX. <br>
-			Cette base est complétée par plusieurs couches de Machine Learning pour offrir à nous utlisateurs les résultats les plus pertinents, et par une interface web pensée pour proposer l'UX la plus intuitive possible.
-		</p>
-		<div class = "jumbo-section-sub-2-container">
+		<p> Plusieurs technologies de pointe pour fournir à nos utilisateurs la meilleure experience possible. </p>
+		<p> Au coeur de notre projet se trouvent deux composantes centrales : la reconnaissance vocale, basée sur <a href = "https://cmusphinx.github.io/">CMUSphinx</a> puis parsée par une version optimisée de <a href = "https://fr.wikipedia.org/wiki/Algorithme_de_Cocke-Younger-Kasami"> l'algorithme de Cocke-Younger-Kasami</a> pour la transcription LaTeX, et une structure web basée sur <a href="https://www.djangoproject.com/">Django</a> offrant facilité de développement, de déploiement et experience utilisateur optimale. </p>
+		<p>	Cette base est complétée par plusieurs couches de Machine Learning pour offrir à nous utlisateurs les résultats les plus pertinents, et par un travail de design pour proposer l'UX la plus intuitive possible. </p>
+		<div class = "jumbo-section-container">
 			<div class = "jumbo-section-sub-2">
 				<a href="https://www.djangoproject.com/"><img src="{% static "img/django-logo.png" %}"></a>
 			</div><!--
 		 --><div class = "jumbo-section-sub-2">
-				<a href="https://cmusphinx.github.io/"><span style='font-family: "Merriweather","PT Serif",Georgia,"Times New Roman",serif;color: #84172d;'>CMUSphinx</span></a>
+				<a href="https://cmusphinx.github.io/"><span style='font-family: "Merriweather","PT Serif",Georgia,"Times New Roman",serif;color: #84172d;font-size:2.4em;'>CMUSphinx</span></a>
 			</div>
 		</div>
 	</div>	
@@ -44,11 +69,11 @@
 <section class = "jumbo-section jumbo-section-alternate-colors">
 	<div class = "centered-content"> 
 	<h1 id = "lx"> D'où venons nous ? </h1>
-	<p> L'École polytechnique, fréquemment appelée Polytechnique et surnommée en France l'« X », est une école d'ingénieurs française fondée en 1794 sous le nom d'École centrale des travaux publics et militarisée en 1804 par Napoléon Ier. À l'origine située à Paris, l'école est à Palaiseau depuis 1976, cœur du pôle technologique Paris-Saclay. Elle a le statut d'établissement public à caractère scientifique, culturel et professionnel (EPSCP-GE), constitue une grande école militaire placée sous la tutelle du ministère de la Défense et est membre fondateur de l'université Paris-Saclay. Elle est connue principalement pour sa formation d'ingénieurs, dont les élèves et anciens élèves sont appelés « polytechniciens ».<br>
-		
-		L'École assure depuis sa création la formation d'ingénieurs, recrutés chaque année par un concours d'admission parmi les plus anciens et les plus difficiles de ceux que préparent les élèves de classes préparatoires, mais aussi par le biais d'admissions parallèles pour les universitaires. L'École décerne également le diplôme de docteur de l'École polytechnique depuis 1985 et forme des élèves de masters depuis 2005. En majorité, les polytechniciens intègrent les entreprises, privées ou publiques, en France comme à l'international, entrent dans les grands corps de l'État, civils ou militaires, ou s'engagent dans la recherche.
-		<br>
-		Jouissant d'un grand prestige dans l'enseignement supérieur en France, l'École polytechnique est souvent associée à la sélectivité, à l'excellence académique, mais aussi à l'élitisme et à la technocratie qui sont sources de critiques depuis sa création. Dans l'imaginaire populaire l'École est associée à certains symboles comme l'uniforme des élèves ou le bicorne.</p>
+	<p> L'École polytechnique, souvent appelée Polytechnique ou "l'X", est une école d'ingénieurs française fondée en 1794, militarisée en 1804 par Napoléon Ier, et située à Palaiseau depuis 1976. </p>
+	<p> Elle est connue principalement pour sa formation d'ingénieurs, dont les élèves et anciens élèves sont appelés « polytechniciens ».<br>
+	<p> L'École assure depuis sa création la formation d'ingénieurs recrutés par un concours d'admission parmi les plus anciens et les plus difficiles de ceux que préparent les élèves de classes préparatoires, mais aussi par le biais d'admissions parallèles pour les universitaires. </p>
+	<p> Jouissant d'un grand prestige dans l'enseignement supérieur en France, l'École polytechnique est souvent associée à la sélectivité, à l'excellence académique, mais aussi à l'élitisme et à la technocratie qui sont sources de critiques depuis sa création. Dans l'imaginaire populaire l'École est associée à certains symboles comme l'uniforme des élèves ou le bicorne. </p>
+	<p> <a href = "https://fr.wikipedia.org/wiki/%C3%89cole_polytechnique_(France)"> En savoir plus </a></p>
 	</div>
 </section>
 

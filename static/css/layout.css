@@ -228,16 +228,41 @@ input {
     background-color: black;
 }
 
-.jumbo-section-sub-2 {
+
+
+.jumbo-section-sub-2, .jumbo-section-sub-3, .jumbo-section-sub-4 {
     display : inline-block;
-    width: 40%;
     border-radius: 1em;
-    margin : 2.5%;
-    padding: 2.5%;
     text-align: center;
-    font-size: 2.4em;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 1.5em;
     vertical-align: middle;
 }
-.jumbo-section-sub-2 img {
-    max-width: 80%;
+
+.jumbo-section-sub-2{
+    width: 40%;
+    margin : 0 2.5%;
+    padding: 0 2.5%;
 }
+
+.jumbo-section-sub-3{
+    width: 21%;
+    margin : 0 3.1%;
+    padding: 0 3%;
+}
+
+.jumbo-section-sub-4{
+    width: 21%;
+    margin : 0 1%;
+    padding: 0 1%;
+}
+
+
+.jumbo-section-sub-2 img, .jumbo-section-sub-3 img, .jumbo-section-sub-4 img {
+    max-width: 100%;
+}
+
+.jumbo-section-container {
+    margin : 2em 0;
+}
+
