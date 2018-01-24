@@ -5,6 +5,7 @@ from s2m.core.bwoq import BoundedWriteOnlyQueue
 from s2m.core.formulae import Formula
 
 from functools import reduce
+from re import match
 #Priority queue implementation by Daniel Stutzbach
 from heapdict import heapdict
 
@@ -18,7 +19,6 @@ class Parser:
 
         self.__expands = {}
         self.__reduces = {}
-        self.__aux = {}
         self.__rule_names = []
         self.__descriptors = {'%f'}
         self.__expression_descriptors = set()
@@ -66,8 +66,6 @@ class Parser:
             self.__expression_descriptors.add(_unslash('$' + name))
 
     def add_easy_reduce(self, name, d, f, is_expression=False):
-
-        import s2m.core.parser_lambdas as parser_lambdas
 
         self._validate_name(name, is_expression)
 
@@ -201,7 +199,7 @@ class Parser:
             nearest[word] = - delete_cost
         return nearest
     
-    def _known(self, words, desc, C, G, nearest, l, i):
+    def _known(self, desc, C, G, nearest, l, i):
 
         if desc in self.__expands:
             for k in range(0, l):
@@ -229,6 +227,11 @@ class Parser:
 
     def myers(self, s):
 
+        #Ajout d'un curseur en fin de chaîne
+        placeholder = self.__PlaceHolder()
+        placeholder_name = placeholder.transcription()
+        s += ' ' + placeholder_name
+        
         words = s.split(' ')
         N = len(words)
 
@@ -247,12 +250,12 @@ class Parser:
         #Initialisation de nearest
         nearest = [ [self._nearest(words, l, i) for i in range(N+1-l)]
                     for l in range(N+1) ]
-        
+
         for l in range(0, N+1):
             for i in range(0, N-l+1):
                 heap = heapdict()
                 for desc in self.__descriptors:
-                    heap[desc] = self._known(words, desc, C, G, nearest, l, i)
+                    heap[desc] = self._known(desc, C, G, nearest, l, i)
                 while heap:
                     desc, _ = heap.popitem()
                     if desc in self.__expands:
@@ -276,14 +279,8 @@ class Parser:
                             C['%f'][l][i][formula] = score
                         C['%f'][l][i].prune()
 
-        if self.__PlaceHolder:
-            if C['%f'][N][0].min_value() > 0.:
-                placeholder = self.__PlaceHolder()
-                placeholder_name = placeholder.transcription()
-                if words[-1] != placeholder_name:
-                    s += ' ' + placeholder_name
-                    new_parses = self.myers(s)
-                    if new_parses[0][1] == 0.:
-                        return new_parses
-
-        return C['%f'][N][0].sorted_list()
+        if C['%f'][N-1][0].min_value() > 0. \
+           and C['%f'][N][0].min_value() == 0.:
+            return C['%f'][N][0].sorted_list()
+        else:
+            return C['%f'][N-1][0].sorted_list()

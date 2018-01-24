@@ -3,7 +3,7 @@ from math import ceil
 from s2m.core.prefix_dict import PrefixDict
 from s2m.core.phone_string import PhoneString
 from s2m.core.phones_map import PhonesMap
-
+from s2m.core.utils import _issilence
 
 class ProximityDict(PrefixDict, PhonesMap):
 
@@ -33,6 +33,8 @@ class ProximityDict(PrefixDict, PhonesMap):
             self.load_map(map)
 
     def word_delete_cost(self, word):
+        if _issilence(word):
+            return 0.
         if word in self.__memodc:
             return self.__memodc[word]
         pronunciations = self.get_reverse(word)
@@ -43,6 +45,8 @@ class ProximityDict(PrefixDict, PhonesMap):
         return current_min
         
     def find_nearest(self, word, max_count=10):
+        if _issilence(word):
+            return []
         if word in self.__memo:
             return self.__memo[word]
         pronunciations = self.get_reverse(word)
