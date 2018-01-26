@@ -54,3 +54,5 @@ s2m/file_analysis/file.ogg
 *.pyc
 s2m/core/sphinx/s2m.jsgf
 *.pyc
+*.sqlite3
+s2m/core/sphinx/s2m.jsgf

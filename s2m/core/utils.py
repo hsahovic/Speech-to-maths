@@ -145,3 +145,9 @@ def _unslash(s):
 def _unlist(l):
 
     return tuple(l) if type(l) is list else l
+
+
+def _issilence(s):
+
+    silence_regex = re.compile(r'^<[\w\-]+>$')
+    return silence_regex.match(s) is not None

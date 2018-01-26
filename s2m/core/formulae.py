@@ -40,16 +40,6 @@ class Formula(metaclass=ABCMeta):
     def count_brackets(self):
         pass
 
-    def natural_bracketting_index(self):
-        """Donne la proportion de blocs parentheses dans le code LaTeX
-           parmi l'ensemble des blocs generes"""
-
-        brackets = self.count_brackets()
-        if brackets[0] == brackets[1] == 0:
-            return 1.
-        else:
-            return float(brackets[0]) / (brackets[0] + brackets[1])
-
     @abstractmethod
     def a_similarity(self, f):
         pass
