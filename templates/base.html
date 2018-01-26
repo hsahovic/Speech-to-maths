@@ -32,10 +32,10 @@
 		{% block nav %}
 		<nav class = "main-nav">
 			<ul>
-				<a href = "{% url "index" %}"><li> Speech to Maths</li></a> 
-				<a href = "{% url "index" %}#techno"><li> Notre technologie</li></a>
-				<a href = "{% url "index" %}#equipe"><li> Qui sommes-nous ?</li></a>
-				<a href="mailto:contact@s2m.io?subject=Question"> Contact </a> 
+				<li><a href = "{% url "index" %}"> Speech to Maths</a> </li><!--
+			 --><li><a href = "{% url "index" %}#techno"> Notre technologie</a></li><!--
+			 --><li><a href = "{% url "index" %}#equipe"> Qui sommes-nous ?</a></li><!--
+			 --><li><a href="mailto:contact@s2m.io?subject=Question"> Contact </a> </li>
 			</ul>
 			
 			{% if user.is_authenticated %}
@@ -43,20 +43,15 @@
 				<ul>
 					<li> 
 						<a href = "{% url "account" %}">
-							<strong> {{ user.username }} </strong> 
-						</a> 
-					</li>
-					<li> 
-						<a href = "{% url "documents" %}">
-							<i class="fa fa-list" aria-hidden="true"> </i> &nbsp; 
-							Documents 
-						</a> 
-					</li>
-					<li> 
-						<a href = "{% url "log_out" %}">
-							<i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; 
-							Déconnexion 
-						</a> 
+							<strong> {{ user.username }} </strong></a> 
+					</li><!--
+				 --><li> 
+						<a href = "{% url "documents" %}"><i class="fa fa-list" aria-hidden="true"> </i> &nbsp; 
+							Documents</a> 
+					</li><!--
+				 --><li> 
+						<a href = "{% url "log_out" %}"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; 
+							Déconnexion</a> 
 					</li>
 				</ul>
 			</span>
@@ -81,7 +76,6 @@
 			
 			{% endif %}
 		</nav>
-		<div class = "nav_filler"> &nbsp; </div>
 		{% endblock %}
 			
 		{% block content %}{% endblock %}

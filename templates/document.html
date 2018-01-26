@@ -31,14 +31,7 @@
 	</span>
 </div>	
 
-<div class = "top-bar-filler"> 
-	<button type="submit"> 
-			<i class="fa fa-file-o" aria-hidden="true"></i> &nbsp;
-	</button>
-</div>
-
-<div
- class = "tool-bar"> 
+<div class = "tool-bar"> 
 	<div class = "text-editor-button-group">
 		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
@@ -62,27 +55,25 @@
 	</div>	
 </div>
 
-<div class = "doc-content">
 
-	<div class = "text-container" id="divtext" style="display:block">
+	{% comment %} <div class = "text-container" id="divtext" style="display:block">
 		<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)" onblur="preview('divtext', 'divmat', 'textArea')" style = "font-size: 16px;">{{ doc.content }}</textarea>
-	</div>
+	</div> {% endcomment %}
 
-	<!-- <div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh"> -->
-	</div>
-
-</div>
+	<!-- <div class = "text-container" id="divmat" title = "Cliquez pour modifier" onclick="preview('divtext', 'divmat', 'textArea')" style="display:none; height: 76vh"></div>-->
+	
+	<div id = "latext-area" class = "latext-area"></div>
 
 {% if doc.pdf %}
-<div class = "doc-content">
-	<h3> PDF </h3>
-	<iframe src="{{ doc.pdf.url }}" width="1200" height="600" align="middle"></iframe>
-</div>
+<h3> PDF </h3>
+<iframe src="{{ doc.pdf.url }}" width="1200" height="1200" align="middle"></iframe>
 {% endif %}
 
 <div id="responseDisplay" class = "audio-display"> </div>
 
 {% csrf_token %}
+
+<span id = "hidden-origin" style = "display:none">"{{ doc.content }}"</span>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
 MathJax.Hub.Config({
@@ -110,17 +101,17 @@ MathJax.Hub.Config({
   }
 });
 </script>
-
+<script src = "{% static 'js/document/contentModification.js' %}"> </script>
+<script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
+<script src = "{% static 'js/document/audioContentManager.js' %}"> </script>
+<script src = "{% static 'js/document/general.js' %}"> </script>
+<script src = "{% static 'js/document/latextArea.js' %}"> </script>
+<script src = "{% static 'js/manageRecording.js' %}"> </script>
+<script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script> 
 	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
 	var documentSaveLink = "{% url 'save_document' %}"
 	var docID = {{ doc.id }};
+	var latextArea = new LatextArea("latext-area", "hidden-origin");
 </script>
-<script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
-<script src = "{% static 'js/document/contentModification.js' %}"> </script>
-<script src = "{% static 'js/audioContentManager.js' %}"> </script>
-<script src = "{% static 'js/document/contentStateManager.js' %}"> </script>
-<script src = "{% static 'js/document/audioContentManager.js' %}"> </script>
-<script src = "{% static 'js/document/general.js' %}"> </script>
-<script src = "{% static 'js/manageRecording.js' %}"> </script>
 {% endblock %}

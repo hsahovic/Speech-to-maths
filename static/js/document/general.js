@@ -25,7 +25,7 @@ function manageContentChange(ajaxDelay) {
 		setTimeout(function () {
 			communicationIndicatorManager.addRequest();
 			changeHappened = false;
-            var data = { "docID": docID, "newContent": document.getElementsByName("content")[0].value };
+            var data = { "docID": docID, "newContent": latextArea.text };
             contentStateManager.newState(data.newContent);
 			data = JSON.stringify(data);
 			formData.append("data", data);
@@ -147,5 +147,6 @@ function startRecording() {
 }
 
 var changeHappened = false;
-var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
-manageQueueButtonsStyle();
+// Reactivate this
+// var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
+// manageQueueButtonsStyle();

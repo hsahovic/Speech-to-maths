@@ -7,8 +7,8 @@ html, body {
 nav {
     min-width: 1024px;
     width: 100%;
-    position: fixed;
-    padding: 1em;
+    position: sticky;
+    /* padding: 1em; */
     z-index: 1;
 }
 
@@ -28,13 +28,11 @@ article form ul {
 }
 
 .main-nav li {
-    margin: 0 .8em;
+    display: inline-block;
+    padding: 1em;
 }
-
-.main-nav li,
 .main-nav ul {
     display: inline;
-    padding: 0;
 }
 
 article form ul {
@@ -95,7 +93,7 @@ input {
 }
 
 .top-bar {
-    position: fixed;
+    position: sticky;
     z-index: 1;
     width: 100%;
     min-width: 1024px;
@@ -143,7 +141,7 @@ input {
     width: 50%;  
 }
 
-.doc-content {
+/* .doc-content {
     padding: 10vh;
     min-height: 80vh;
 }
@@ -154,7 +152,7 @@ input {
     margin: 0;
     border: 0;
     resize: vertical;
-}
+} */
 
 .text-container {
     padding: 2vh;
@@ -205,7 +203,7 @@ input {
 }
 
 .tool-bar {
-    position: fixed;
+    /* position: fixed; */
     width : 100%;
     border-bottom : 2px solid #e6e6e6;
 }
@@ -227,8 +225,6 @@ input {
     z-index: 777;
     background-color: black;
 }
-
-
 
 .jumbo-section-sub-2, .jumbo-section-sub-3, .jumbo-section-sub-4 {
     display : inline-block;
@@ -266,3 +262,14 @@ input {
     margin : 2em 0;
 }
 
+.round-img img {
+    border-radius: 50%;
+}
+
+.latext-area {
+    text-align: left;
+    background-color: white;
+    margin : 1em;
+    padding : 1em;
+    border-radius: 1em;
+}
