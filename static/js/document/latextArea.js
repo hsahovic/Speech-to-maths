@@ -94,7 +94,6 @@ class InputElement extends LatextAreaElement {
         super(latextArea,text);
         this.DOM = document.createElement("textArea");
         this.DOM.value = text;
-        this.DOM.style.height = '1em';
         this.DOM.onblur = this.blured.bind(this);
         this.DOM.oninput = this.resize.bind(this);
     }

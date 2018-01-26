@@ -2,33 +2,33 @@
 
 grammar speech-to-math-v0;
 
-public <expression> = cinquante | vingt | charlie | <bigoperator-operator> <bigoperator-from> <expressionalias> <bigoperator-of> <expressionalias> | octante | deux | huit | seize | zéro | cent | yankee | <expressionalias> <binaryoperator-operator> <expressionalias> | alpha | zulu | treize | nonante | <bigoperator-operator> <bigoperator-of> <expressionalias> | un | entre parenthèse <expressionalias> | bravo | onze | xray | ouvrez la parenthèse <expressionalias> fermez la parenthèse | six | quinze | douze | uniform | <expressionalias> au carré | un blanc | <number-prefix> <number-prefix> | echo | quatorze | quatre | trente | septante | blanc | delta | curseur | quarante | trois | <unaryoperator-operator> <expressionalias> | <bigoperator-operator> <bigoperator-from> <expressionalias> à <expressionalias> <bigoperator-of> <expressionalias> | sept | <number> | quelque chose | neuf | dix | soixante | mille | cinq;
+public <expression> = neuf | <expressionalias> au carré | <bigoperator-operator> <bigoperator-of> <expressionalias> | seize | blanc | vingt | octante | quatre | trente | echo | mille | un blanc | deux | six | ouvrez la parenthèse <expressionalias> fermez la parenthèse | quelque chose | dix | soixante | sept | quarante | <unaryoperator-operator> <expressionalias> | un | yankee | onze | quatorze | delta | zéro | cinquante | <number> | douze | charlie | treize | <expressionalias> <binaryoperator-operator> <expressionalias> | cinq | entre parenthèse <expressionalias> | uniform | xray | bravo | <bigoperator-operator> <bigoperator-from> <expressionalias> <bigoperator-of> <expressionalias> | curseur | cent | <bigoperator-operator> <bigoperator-from> <expressionalias> à <expressionalias> <bigoperator-of> <expressionalias> | alpha | trois | huit | <number-prefix> <number-prefix> | septante | nonante | quinze | zulu;
 
 <expressionalias> = <expression>;
 
 <number-prefix> = <number-prefix> <number-prefix>;
 
-<number-prefix/reduce> = cinquante | vingt | nonillion | septillion | octante | deux | huit | octillion | seize | point | zéro | cent | million | quadrilliard | nonilliard | treize | décilliard | nonante | un | décillion | trilliard | onze | et | milliard | six | quinze | douze | trillion | octilliard | quintilliard | quintillion | quatorze | quatre | billiard | billion | trente | septante | quadrillion | sextillion | quarante | trois | virgule | sextilliard | septilliard | sept | neuf | dix | soixante | mille | cinq;
+<number-prefix/reduce> = neuf | seize | trillion | vingt | billion | octante | quatre | trente | mille | deux | six | nonillion | quadrillion | dix | quintilliard | soixante | sept | décillion | quarante | virgule | sextilliard | quintillion | un | onze | sextillion | septilliard | point | quatorze | zéro | octilliard | cinquante | douze | billiard | treize | million | cinq | milliard | nonilliard | décilliard | octillion | quadrilliard | cent | trois | huit | septante | nonante | et | quinze | trilliard | septillion;
 
-<number> = <lt999999> | zéro;
+<number> = zéro | <lt999999>;
 
-<safedigit> = six | trois | deux | sept | huit | quatre | neuf | cinq;
+<safedigit> = neuf | deux | sept | cinq | trois | huit | quatre | six;
 
-<digit> = un | <safedigit>;
+<digit> = <safedigit> | un;
 
-<safedozen> = cinquante | vingt | nonante | quarante | octante | trente | septante;
+<safedozen> = quarante | vingt | octante | septante | nonante | trente | cinquante;
 
-<gt12lt19> = quinze | dix huit | douze | dix sept | treize | quatorze | seize | dix neuf;
+<gt12lt19> = douze | seize | treize | dix huit | dix neuf | quinze | dix sept | quatorze;
 
 <gt11lt19> = <gt12lt19> | onze;
 
-<lt99> = quatre vingt dix | <digit> | <safedozen> et un | soixante <safedigit> | quatre vingt un | soixante et un | quatre vingt <safedigit> | <safedozen> <safedigit> | soixante et onze | soixante <gt12lt19> | quatre vingt onze | soixante dix | quatre vingt | <gt11lt19> | quatre vingt <gt12lt19>;
+<lt99> = <safedozen> <safedigit> | quatre vingt dix | <digit> | quatre vingt un | quatre vingt <safedigit> | quatre vingt <gt12lt19> | soixante dix | soixante et onze | <safedozen> et un | <gt11lt19> | soixante <gt12lt19> | quatre vingt onze | quatre vingt | soixante et un | soixante <safedigit>;
 
 <lt999> = [ [<safedigit>] cent ] <lt99>;
 
 <lt999999> = [ [<lt999>] mille ] <lt999>;
 
-<powers> = quadrillion | trillion | octilliard | nonillion | nonilliard | quintilliard | sextillion | décilliard | sextilliard | septillion | décillion | quintillion | septilliard | trilliard | octillion | billion | million | milliard | quadrilliard;
+<powers> = nonillion | nonilliard | quadrillion | quintilliard | octillion | million | trillion | quadrilliard | décillion | billion | milliard | sextilliard | quintillion | septilliard | sextillion | trilliard | décilliard | octilliard | septillion;
 
 <gt999999> = <lt999> <powers> [<gt999999>];
 
@@ -38,16 +38,16 @@ public <expression> = cinquante | vingt | charlie | <bigoperator-operator> <bigo
 
 <suite> = <integers> [<suite>];
 
-<comma> = virgule | point;
+<comma> = point | virgule;
 
 <integers> = <gt999999> [<lt999999>] | <lt999999>;
 
-<binaryoperator-operator> = inclus dans | sur | environ égal à | plus | de | supérieur à | puissance | inférieur à | vectoriel | rond | contient | équivaut à | plus ou moins | égal | divisé par | moins ou plus | différent de | fois | moins;
+<binaryoperator-operator> = différent de | égal | plus ou moins | moins | fois | puissance | de | rond | plus | équivaut à | inclus dans | sur | supérieur à | divisé par | environ égal à | vectoriel | inférieur à | moins ou plus | contient;
 
-<unaryoperator-operator> = racine carré de | valeur absolu de | racine cubique de | racine de | moins;
+<unaryoperator-operator> = valeur absolu de | racine cubique de | moins | racine de | racine carré de;
 
-<bigoperator-operator> = intersection | intégrale | union | produit | somme;
+<bigoperator-operator> = somme | union | intersection | produit | intégrale;
 
-<bigoperator-from> = pour | de | sur;
+<bigoperator-from> = de | sur | pour;
 
-<bigoperator-of> = des | de;
+<bigoperator-of> = de | des;
