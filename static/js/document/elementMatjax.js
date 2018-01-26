@@ -23,6 +23,7 @@ class ElementHTML extends ElementDocument {
         }
     }
 
+    
 }
 
 /* Classe qui gère le contenu d'un élément Mathjax*/

@@ -20,7 +20,7 @@ class LatextArea {
     }
 
     generateDOM() {
-        for (children of this.parent.children) {
+        for (let children of this.parent.children) {
             children.remove();
         }
         for (let element of this.elements) {
@@ -36,7 +36,14 @@ class LatextArea {
         return str;
     }
 
-    // methode replace à implementer
+    replace(elementSource, elementFinal) {
+        for (var i in this.elements) {
+            if (this.elements[i]===elementSource) {
+                this.elements[i]=elementFinal;
+            }
+        }
+        this.generateDOM();
+    }
     // permet de remplacer un element par un autre :
         // 1) Dans la liste d'elements de textArea
         // 2) Dans le DOM
@@ -58,7 +65,7 @@ class LatextAreaElement {
 
 class NewLineElement extends LatextAreaElement {
 
-    constructor(latextAreat) {
+    constructor(latextArea) {
         super(latextArea,'\n');
         this.DOM = document.createElement('br');
     }
@@ -75,9 +82,31 @@ class TextElement extends LatextAreaElement {
     }
 
     selected () {
-        console.log("Clicked on ", this.textContent);
+        var elementInput = new InputElement(this.latextArea, this.textContent);
+        this.latextArea.replace(this, elementInput);
     }
 
 }
 
-// créer InputElement
+class InputElement extends LatextAreaElement {
+
+    constructor(latextArea, text) {
+        super(latextArea,text);
+        this.DOM = document.createElement("textArea");
+        this.DOM.value = text;
+        this.DOM.style.height = '1em';
+        this.DOM.onblur = this.blured.bind(this);
+        this.DOM.oninput = this.resize.bind(this);
+    }
+
+    blured () {
+        var elementText = new TextElement(this.latextArea, this.DOM.value);
+        this.latextArea.replace(this, elementText);
+    }
+
+    resize () {
+        this.DOM.style.height = '1em';
+        this.DOM.style.height = this.DOM.scrollHeight + "px";
+    }
+
+}
