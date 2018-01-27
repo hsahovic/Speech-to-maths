@@ -66,9 +66,9 @@ class Number(Formula):
 
         return merge_lists([], head=1.)
 
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
 
-        return repr(self.__val), 0
+        return repr(self.__val), next_placeholder, 0
 
     def latex(self):
 
@@ -78,6 +78,10 @@ class Number(Formula):
 
         np = NumberParser()
         return np.transcribe(self.val)
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        return next_placeholder
 
     @classmethod
     def teach(cls, parser):

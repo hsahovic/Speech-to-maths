@@ -32,10 +32,10 @@ class BrackettedBlock(Formula):
 
         return hash(self.__b)
 
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
 
-        b_tex, b_level = self.__b._latex()
-        return self.brackets_model(b_level+1) % b_tex, b_level+1
+        b_tex, next_placeholder, b_level = self.__b._latex(next_placeholder)
+        return self.brackets_model(b_level+1) % b_tex, next_placeholder, b_level+1
 
     def latex(self):
 
@@ -58,6 +58,17 @@ class BrackettedBlock(Formula):
 
         return 'ouvrez la parenthèse %s fermez la parenthèse' \
                % self.__b.transcription()
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        from s2m.core.placeholder import PlaceHolder
+        
+        if isinstance(self.__b, PlaceHolder) \
+           and next_placeholder == placeholder_id:
+            self.__b = formula
+            return 0
+        else:
+            return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder)
 
     @classmethod
     def teach(cls, parser):

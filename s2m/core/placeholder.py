@@ -8,6 +8,15 @@ class PlaceHolder(Formula):
                          'un blanc',
                          'quelque chose']
 
+    PLACEHOLDER_COLORS = ['blue',
+                          'red',
+                          'orange',
+                          'olive',
+                          'brown',
+                          'darkgray',
+                          'purple',
+                          'violet']
+
     def __getattr__(self, p):
 
         if p == 'priority':
@@ -23,8 +32,13 @@ class PlaceHolder(Formula):
     def __hash__(self):
         return hash('PlaceHolder')
 
-    def _latex(self):
-        return "\\square", 0
+    def _latex(self, next_placeholder=1, show_id=True):
+        if show_id:
+            return "{\\color{%s} \\underset{%r}{\\underbrace{\\square}}}" \
+                   % (self.PLACEHOLDER_COLORS[next_placeholder % len(self.PLACEHOLDER_COLORS)],
+                      next_placeholder), next_placeholder + 1, 0
+        else:
+            return "\\square", next_placeholder + 1, 0
 
     def latex(self):
         return self._latex()[0]
@@ -43,6 +57,9 @@ class PlaceHolder(Formula):
 
     def transcription(self):
         return 'curseur'
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+        return next_placeholder + 1
 
     @classmethod
     def teach(cls, parser):

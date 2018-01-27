@@ -4,10 +4,12 @@ from django.core.files import File
 
 from s2m.settings import MEDIA_ROOT
 from s2m.core.utils import generate_random_word
+from s2m.core.formula import Formula
 
 import os
 import subprocess
 import uuid
+import pickle
 
 
 class Utilisateur(User):
@@ -52,7 +54,21 @@ class Document(models.Model):
         subprocess.call(["rm", path + ".log"])
         subprocess.call(["rm", path + ".aux"])
 
+class ElementaryFormula(models.Model)
 
+    def validate_formula(self, value):
+        try:
+            obj = value.loads(value)
+        except UnpicklingError:
+            return False
+        else:
+            return isinstance(obj, Formula)
+
+    document = models.ForeignKey('Document',on_delete=models.CASCADE, realted_names='elementary_formulae')
+    creation_date = models.DateField(auto_now_add=True)
+    formula = models.CharField(validators=[validate_formula])
+    count = models.IntegerField(default=1)
+        
 class TrainingSample(models.Model):
 
     audio = models.FileField(upload_to="training_data")

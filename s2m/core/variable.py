@@ -118,9 +118,9 @@ class Variable(Formula):
 
         return merge_lists([], head=1.)
 
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
 
-        return self.__v, 0
+        return self.__v, next_placeholder, 0
 
     def latex(self):
 
@@ -135,6 +135,10 @@ class Variable(Formula):
         else:
             raise ValueError('Transcription for variable name %r is not defined.'
                              % self.__v)
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        return next_placeholder
 
     @classmethod
     def teach(cls, parser):

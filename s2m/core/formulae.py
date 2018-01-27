@@ -29,7 +29,7 @@ class Formula(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
         pass
 
     @abstractmethod
@@ -72,6 +72,9 @@ class Formula(metaclass=ABCMeta):
     def evaluation(self):
 
         return evaluator(self)
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+        pass
 
     @classmethod
     def generate_random(cls, depth=5):

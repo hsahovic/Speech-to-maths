@@ -108,7 +108,7 @@ class BinaryOperator(Formula):
            parentheses dans le code LaTeX genere"""
 
         y, n = 0, 0
-
+        
         if self.__l.priority < self.priority \
            and not self.nobrackets:
             n += 1
@@ -174,26 +174,26 @@ class BinaryOperator(Formula):
             return merge_lists([child.d_symmetry() for child in children],
                                head=avg_similarity)
 
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
 
         if self.__l.priority < self.priority \
            and not self.nobrackets:
-            l_content, l_level = self.__l._latex()
+            l_content, next_placeholder, l_level = self.__l._latex(next_placeholder)
             l_level += 1
             l_tex = self.brackets_model(l_level) % l_content
         else:
-            l_tex, l_level = self.__l._latex()
+            l_tex, next_placeholder, l_level = self.__l._latex(next_placeholder)
 
         if (self.__r.priority < self.priority
                 or (self.__r.priority == self.priority and self.weak)) \
                 and not self.nobrackets:
-            r_content, r_level = self.__r._latex()
+            r_content, next_placeholder, r_level = self.__r._latex(next_placeholder)
             r_level += 1
             r_tex = self.brackets_model(r_level) % r_content
         else:
-            r_tex, r_level = self.__r._latex()
+            r_tex, next_placeholder, r_level = self.__r._latex(next_placeholder)
 
-        return self.latex_model % (l_tex, r_tex), max(l_level, r_level)
+        return self.latex_model % (l_tex, r_tex), next_placeholder, max(l_level, r_level)
 
     def latex(self):
         """Genere le code LaTeX correspondant a self"""
@@ -209,6 +209,30 @@ class BinaryOperator(Formula):
             return '%s %s %s' % (self.__l.transcription(),
                                  self.__OPERATORS_REVERSE[self.__o],
                                  self.__r.transcription())
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        from s2m.core.placeholder import PlaceHolder
+        
+        if isinstance(self.__l, PlaceHolder) \
+           and next_placeholder == placeholder_id:
+            self.__l = formula
+            return 0
+        else:
+            next_placeholder = self.__l.replace_placeholder(formula, placeholder_id, next_placeholder)
+
+        if next_placeholder == 0:
+            return 0
+
+        print(next_placeholder)
+
+        if isinstance(self.__r, PlaceHolder) \
+             and next_placeholder == placeholder_id:
+            self.__r = formula
+            return 0
+        else:
+            return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder)
+
     @classmethod
     def teach(cls, parser):
 

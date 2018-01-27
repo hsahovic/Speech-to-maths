@@ -87,17 +87,17 @@ class UnaryOperator(Formula):
 
         return self.__r.d_symmetry()
 
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
 
         if self.__r.priority < self.priority \
            and not self.nobrackets:
-            r_content, r_level = self.__r._latex()
+            r_content, next_placeholder, r_level = self.__r._latex(next_placeholder)
             r_level += 1
             r_tex = self.brackets_model(r_level) % r_content
         else:
-            r_tex, r_level = self.__r._latex()
+            r_tex, next_placeholder, r_level = self.__r._latex(next_placeholder)
 
-        return self.latex_model % r_tex, r_level
+        return self.latex_model % r_tex, next_placeholder, r_level
 
     def latex(self):
 
@@ -109,6 +109,17 @@ class UnaryOperator(Formula):
             return 'racine de %s' % self.__r.transcription()
         else:
             return self.__OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        from s2m.core.placeholder import PlaceHolder
+        
+        if isinstance(self.__r, PlaceHolder) \
+           and next_placeholder == placeholder_id:
+            self.__r = formula
+            return 0
+        else:
+            return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder)
 
     @classmethod
     def teach(cls, parser):

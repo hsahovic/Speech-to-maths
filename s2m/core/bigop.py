@@ -68,23 +68,23 @@ class BigOperator(Formula):
     def __hash__(self):
         return reduce(lambda a, b: a ^ hash(b), self.__fl, 0)
 
-    def _latex(self):
+    def _latex(self, next_placeholder=1):
         if self.operator_type == 'SUM':
             c_tex, c_level = '', 0
             d_tex, d_level = '', 0
             u_tex, u_level = '', 0
             if len(self.__fl) == 1:
-                c_tex, c_level = self.__fl[0]._latex()
+                c_tex, next_placeholder, c_level = self.__fl[0]._latex(next_placeholder)
             if len(self.__fl) == 2:
-                c_tex, c_level = self.__fl[1]._latex()
-                d_tex, d_level = self.__fl[0]._latex()
+                c_tex, next_placeholder, c_level = self.__fl[1]._latex(next_placeholder)
+                d_tex, next_placeholder, d_level = self.__fl[0]._latex(next_placeholder)
             if len(self.__fl) == 3:
-                c_tex, c_level = self.__fl[2]._latex()
-                d_tex, d_level = self.__fl[0]._latex()
-                u_tex, u_level = self.__fl[1]._latex()
-            return self.latex_model % (d_tex, u_tex, c_tex), c_level
+                c_tex, next_placeholder, c_level = self.__fl[2]._latex(next_placeholder)
+                d_tex, next_placeholder, d_level = self.__fl[0]._latex(next_placeholder)
+                u_tex, next_placeholder, u_level = self.__fl[1]._latex(next_placeholder)
+            return self.latex_model % (d_tex, u_tex, c_tex), next_placeholder, c_level
         else:
-            return '', 0
+            return '', next_placeholder, 0
 
     def latex(self):
         """Genere le code LaTeX correspondant a self"""
@@ -106,6 +106,23 @@ class BigOperator(Formula):
 
     def d_symmetry(self):
         return self.__fl[-1].d_symmetry()
+
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        from s2m.core.placeholder import PlaceHolder
+
+        for (i,f) in enumerate(self.__fl):
+            if isinstance(f, PlaceHolder) \
+               and next_placeholder == placeholder_id:
+                self.__fl[i] = formula
+                return 0
+            else:
+                next_placeholder = f.replace_placeholder(formula,
+                                                         placeholder_id,
+                                                         next_placeholder)
+                if next_placeholder == 0:
+                    return 0
+        return next_placeholder
 
     @classmethod
     def teach(cls, parser):
