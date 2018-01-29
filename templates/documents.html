@@ -7,38 +7,39 @@
 {% endblock %}
 {% block content %} 
 <div class = "top-bar">	
+	<div class = "top-bar-content">
+		<a href = "{% url "training" %}">
+			<h3>
+				<i class="fa fa-graduation-cap" aria-hidden="true"> </i> &nbsp; 
+				Entraîner le modèle
+			</h3>
+		</a> 
 
-	<a href = "{% url "training" %}">
-		<h3>
-			<i class="fa fa-graduation-cap" aria-hidden="true"> </i> &nbsp; 
-			Entraîner le modèle
+		<h3> 
+			<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
+			Documents 
 		</h3>
-	</a> 
+		<i class="fa fa-search" aria-hidden="true"></i>
+		<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(searchDocuments, 0)">
 
-	<h3> 
-		<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
-		Documents 
-	</h3>
-	<i class="fa fa-search" aria-hidden="true"></i>
-	<input type = "search" name = "search_docs" placeholder = "Recherche" onkeypress="setTimeout(searchDocuments, 0)">
-
-	<span class = "to-the-right">
-		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
-		<form id = "_delete" style = "display : none;" method = "POST">
-			{% csrf_token %}
-			<button type="submit"> 
-				<i class="fa fa-trash" aria-hidden="true"></i> &nbsp;
-				Supprimer
-				<input type = "hidden" value = "" id = "_delete-value" name = 'delete-value'>
-			</button> 
-		</form>	&nbsp;
-		<form action = "{% url "add_doc" %}">
-			<button type="submit"> 
-				<i class="fa fa-plus-square-o" aria-hidden="true"></i> &nbsp;
-				Nouveau document 
-			</button> 
-		</form>
-	</span>
+		<span class = "to-the-right">
+			<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+			<form id = "_delete" style = "display : none;" method = "POST">
+				{% csrf_token %}
+				<button type="submit"> 
+					<i class="fa fa-trash" aria-hidden="true"></i> &nbsp;
+					Supprimer
+					<input type = "hidden" value = "" id = "_delete-value" name = 'delete-value'>
+				</button> 
+			</form>	&nbsp;
+			<form action = "{% url "add_doc" %}">
+				<button type="submit"> 
+					<i class="fa fa-plus-square-o" aria-hidden="true"></i> &nbsp;
+					Nouveau document 
+				</button> 
+			</form>
+		</span>
+	</div>
 </div>
 
 <table class = "docs-table">

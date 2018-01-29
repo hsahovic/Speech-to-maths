@@ -11,7 +11,7 @@ def validate_email(instance):
     return email
 
 
-class InscriptionForm (forms.Form):
+class InscriptionForm(forms.Form):
     username = forms.CharField(max_length=150, label="Nom d'utilisateur")
     password = forms.CharField(
         widget=forms.PasswordInput, label="Mot de passe")

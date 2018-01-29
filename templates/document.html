@@ -6,29 +6,31 @@
 {% block nav %} {% endblock %}
 {% block content %} 
 <div class = "top-bar">
-	<a href = "{% url "documents" %}">
-		<h3> 
-			<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
-			Documents 
-		</h3>
-	</a>
-	<input type = "text" name = "titre" value = "{{ doc.title }}" form = "enregistrement">
-	<span class = "to-the-right">
-	
-		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
-	
-		<button id = "start_rec" onclick = "startRecording();">
-			<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
-			Commencer la dictée
-		</button>
-	
-		<button  id = "stop_rec" style = "display : none">
-			<i class="fa fa-volume-up blinking-icon" aria-hidden="true"></i> &nbsp;
-			Arrêter la dictée
-		</button>
-		&nbsp;
+	<div class = "top-bar-content">
+		<a href = "{% url "documents" %}">
+			<h3> 
+				<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
+				Documents 
+			</h3>
+		</a>
+		<input type = "text" name = "titre" value = "{{ doc.title }}" form = "enregistrement">
+		<span class = "to-the-right">
+		
+			<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+		
+			<button id = "start_rec" onclick = "startRecording();">
+				<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
+				Commencer la dictée
+			</button>
+		
+			<button  id = "stop_rec" style = "display : none">
+				<i class="fa fa-volume-up blinking-icon" aria-hidden="true"></i> &nbsp;
+				Arrêter la dictée
+			</button>
+			&nbsp;
 
-	</span>
+		</span>
+	</div>
 </div>	
 
 <div class = "tool-bar"> 
@@ -36,7 +38,7 @@
 		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
 	</div><!--
- --><div class = "text-editor-button-group" preview('divtext', 'divmat', 'textArea')>
+ --><div class = "text-editor-button-group">
 		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
@@ -73,7 +75,7 @@
 
 {% csrf_token %}
 
-<span id = "hidden-origin" style = "display:none">"{{ doc.content }}"</span>
+<span id = "hidden-origin" style = "display:none">{{ doc.content }}</span>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
 MathJax.Hub.Config({

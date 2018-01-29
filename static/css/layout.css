@@ -88,8 +88,12 @@ input {
 
 .top-bar,
 .top-bar-filler {
-    padding: 1em;
+    /* padding: 1em; */
     border-bottom: 1px white;
+}
+
+.top-bar-content {
+    padding: 1em;
 }
 
 .top-bar {
@@ -140,19 +144,6 @@ input {
 .docs-table th:first-child {
     width: 50%;  
 }
-
-/* .doc-content {
-    padding: 10vh;
-    min-height: 80vh;
-}
-
-.doc-content textarea {
-    height: 76vh;
-    width: 100%;
-    margin: 0;
-    border: 0;
-    resize: vertical;
-} */
 
 .text-container {
     padding: 2vh;
@@ -278,8 +269,12 @@ input {
     width: 100%;
     margin: 0;
     border: 0;
-    font-size: 16px;
     resize: none;
     height: 1em;
-    background-color: #eee;
+}
+
+.latext-element {
+    display: inline-block;
+    width : 100%;
+    min-height: 1em;
 }

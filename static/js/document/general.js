@@ -4,13 +4,9 @@ function audioResponseManager (response) {
 	}
 }
 
-function manageContentChange(ajaxDelay) {
+function manageContentChange(ajaxDelay = .5) {
 	// Gère la modification du contenu ; 
-	// Permet de donner une valeur par défaut à ajaxDelay
 
-	if (ajaxDelay == undefined) {
-		ajaxDelay = .5;
-	}
 	if (changeHappened); // Si le changement est déjà pris en compte, on ne fait rien
 	else { // Sinon, on indique qu'il est pris en compte et on programme une requête de maj pour le serveur
 		changeHappened = true;

@@ -4,7 +4,7 @@ from django.core.files import File
 
 from s2m.settings import MEDIA_ROOT
 from s2m.core.utils import generate_random_word
-from s2m.core.formula import Formula
+from s2m.core.formulae import Formula
 
 import os
 import subprocess
@@ -54,7 +54,7 @@ class Document(models.Model):
         subprocess.call(["rm", path + ".log"])
         subprocess.call(["rm", path + ".aux"])
 
-class ElementaryFormula(models.Model)
+class ElementaryFormula(models.Model):
 
     def validate_formula(self, value):
         try:
@@ -64,9 +64,10 @@ class ElementaryFormula(models.Model)
         else:
             return isinstance(obj, Formula)
 
-    document = models.ForeignKey('Document',on_delete=models.CASCADE, realted_names='elementary_formulae')
+    document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='elementary_formulae')
     creation_date = models.DateField(auto_now_add=True)
-    formula = models.CharField(validators=[validate_formula])
+    # Attribut max_length rajouté, il pourrait être opportun de transformer le char field en text field pour dépasser les 255 chars
+    formula = models.CharField(validators=[validate_formula], max_length = 255)
     count = models.IntegerField(default=1)
         
 class TrainingSample(models.Model):
