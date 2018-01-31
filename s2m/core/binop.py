@@ -48,11 +48,11 @@ class BinaryOperator(Formula):
                           'équivaut à': 'EQV',
                           'environ égal à': 'SEQ',
                           'de': 'EVL',
-                          }
+            }
 
     __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
-    def __init__(self, l, o, r):
+    def __init__(self, l, o, r, ll = False, lr = False):
 
         if o not in self.operators:
             raise ValueError('Unknown binary operator code : %r' % o)
@@ -63,7 +63,7 @@ class BinaryOperator(Formula):
             raise TypeError(
                 'RHS of binary operator must be a well-formed formula')
         else:
-            self.__l, self.__o, self.__r = l, o, r
+            self.__l, self.__o, self.__r, self.__light_left, self.__light_right = l, o, r, ll, lr
 
     def __getattr__(self, p):
 
@@ -73,8 +73,19 @@ class BinaryOperator(Formula):
             return self.__o
         elif p == 'r':
             return self.__r
+        elif p == 'left_priority':
+            if self.__light_left:
+                return 0
+            else:
+                return self.__OPERATORS[self.__o]['priority']
+        elif p == 'right_priority':
+            if self.__light_right:
+                return 0
+            else:
+                return self.__OPERATORS[self.__o]['priority']
         elif p == 'priority':
-            return self.__OPERATORS[self.__o]['priority']
+            if self.__left_priority != self.__right_priority:
+                raise ValueError("Priority undefined")
         elif p == 'associative':
             return self.__OPERATORS[self.__o]['associative']
         elif p == 'latex_model':
@@ -108,7 +119,7 @@ class BinaryOperator(Formula):
            parentheses dans le code LaTeX genere"""
 
         y, n = 0, 0
-        
+
         if self.__l.priority < self.priority \
            and not self.nobrackets:
             n += 1
@@ -213,7 +224,7 @@ class BinaryOperator(Formula):
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
 
         from s2m.core.placeholder import PlaceHolder
-        
+
         if isinstance(self.__l, PlaceHolder) \
            and next_placeholder == placeholder_id:
             self.__l = formula
@@ -257,6 +268,23 @@ class BinaryOperator(Formula):
                            '%f au carré',
                            squared_complex_expand,
                            True)
+
+        # Defines light left and light right operators for silences processing
+        def light_left_expand(formulae):
+            return BinaryOperator(*formulae, ll = True)
+
+        def light_right_expand(formulae):
+            return BinaryOperator(*formulae, lr = True)
+
+        binary_operator_light_left = ('binaryoperator/lightleft',
+                                '%f <*sil> $binaryoperator-operator %f',
+                                light_left_expand,
+                                True)
+
+        binary_operator_light_right = ('binaryoperator/lightright',
+                                '%f $binaryoperator-operator <*sil> %f',
+                                light_right_expand,
+                                True)
 
         parser.add_easy_reduce(*binary_operator_easy)
         parser.add_complex_rule(*binary_operator_complex)
