@@ -235,8 +235,6 @@ class BinaryOperator(Formula):
         if next_placeholder == 0:
             return 0
 
-        print(next_placeholder)
-
         if isinstance(self.__r, PlaceHolder) \
              and next_placeholder == placeholder_id:
             self.__r = formula

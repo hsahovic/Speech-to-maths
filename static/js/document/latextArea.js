@@ -3,6 +3,7 @@
 // Dans manage change, rebrancher ce qui manque sur les états des autres classes
 // Comment supprimer un saut de ligne
 // Recompiler math jax / ka tex ?
+// meilleure gestion de l'audio continu
 
 class LatextArea {
 
