@@ -2,13 +2,15 @@ from s2m.core.utils import _unlist
 
 class BoundedWriteOnlyQueue:
 
-    def __init__(self, comparator=None, size=5):
+    def __init__(self, comparator=None, size=5, args=None):
 
         self.__size = size
         self.__dict = []
         self.__keys = set()
         self.__min = float('inf')
         self.__comparator = comparator or (lambda x, y: x[1] > y[1])
+        self.__args = args or ()
+        self.__threshold = float('inf')
 
     def __setitem__(self, key, value):
 
@@ -29,7 +31,7 @@ class BoundedWriteOnlyQueue:
         if ukey in self.__keys:
             for i in range(len(self.__dict)):
                 if self.__dict[i][0] == key:
-                    if self.__comparator(self.__dict[i], item):
+                    if self.__comparator(self.__dict[i], item, *self.__args):
                         self.__dict[i] = item
                         self._travel_down(i)
                     return
@@ -39,7 +41,7 @@ class BoundedWriteOnlyQueue:
             self.__keys.add(ukey)
             self._travel_up(len(self.__dict) - 1)
 
-        elif self.__comparator(self.__dict[0], item):
+        elif self.__comparator(self.__dict[0], item, *self.__args):
 
             self.__keys.remove(_unlist(self.__dict[0][0]))
             self.__dict[0] = (key, value)
@@ -81,11 +83,11 @@ class BoundedWriteOnlyQueue:
 	
         if i * 2 >= len(self.__dict):
             return
-        elif self.__comparator(self.__dict[i * 2], self.__dict[i]):
+        elif self.__comparator(self.__dict[i * 2], self.__dict[i], *self.__args):
             self._exchange(i, i * 2)
             self._travel_down(i * 2)
         elif i * 2 + 1 < len(self.__dict) \
-        and self.__comparator(self.__dict[i * 2 + 1], self.__dict[i]):
+        and self.__comparator(self.__dict[i * 2 + 1], self.__dict[i], *self.__args):
             self._exchange(i, i * 2 + 1)
             self._travel_down(i * 2 + 1)
 
@@ -93,7 +95,7 @@ class BoundedWriteOnlyQueue:
 
         if i == 0:
             return
-        elif self.__comparator(self.__dict[i], self.__dict[i // 2]):
+        elif self.__comparator(self.__dict[i], self.__dict[i // 2], *self.__args):
             self._exchange(i, i // 2)
             self._travel_up(i // 2)
 
@@ -101,7 +103,12 @@ class BoundedWriteOnlyQueue:
 
         return self.__min
 
+    def set_threshold(self, value):
+
+        self.__threshold = value
+
     def will_be_rejected(self, value):
 
-        return len(self.__dict) == self.__size \
-            and value > self.__dict[0][1]
+        return (len(self.__dict) == self.__size \
+            and value > self.__dict[0][1]) \
+            or (value > self.__threshold)

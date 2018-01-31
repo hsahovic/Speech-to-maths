@@ -9,9 +9,7 @@ from re import match
 #Priority queue implementation by Daniel Stutzbach
 from heapdict import heapdict
 
-#temp
 from time import time
-#endtemp
 
 class Parser:
 
@@ -145,7 +143,7 @@ class Parser:
          
         self.__sphinx_config.add_complex_rule(name, s, is_expression)
 
-    def _compare(self, x, y):
+    def _compare(self, x, y, context_formula=None, placeholder_id=1):
 
         if x[1] > y[1]:
             return True
@@ -153,7 +151,7 @@ class Parser:
             return False
         elif len(x[0]) == 1 and len(y[0]) == 1 \
              and isinstance(x[0][0], Formula) and isinstance(y[0][0], Formula) \
-             and x[0][0].evaluation() < y[0][0].evaluation():
+        and x[0][0].evaluation(context_formula, placeholder_id) < y[0][0].evaluation(context_formula, placeholder_id):
             return True
         else:
             return False
@@ -208,7 +206,7 @@ class Parser:
                                   C[r_desc][l-k][i+k],
                                   C[desc][l][i],
                                   f)
-
+                    
         if desc in self.__reduces:
             for word, formula in self.__reduces[desc]:
                 hyp_score = self.proximity_dict.word_delete_cost(word) + G[i][l]
@@ -222,10 +220,14 @@ class Parser:
                     C[desc][l][i][ [formula] ] = hyp_score
 
         C[desc][l][i].prune()
-        
+
         return C[desc][l][i].min_value()
 
-    def myers(self, s):
+
+    def myers(self, s, context_formula=None, placeholder_id=1, threshold_factor=2, verbose=False):
+
+        if verbose:
+            _time = time()
 
         #Ajout d'un curseur en fin de chaîne
         placeholder = self.__PlaceHolder()
@@ -243,7 +245,8 @@ class Parser:
                 G[i].append(G[i][-1] + self.proximity_dict.word_delete_cost(words[j]))
 
         #Initialisation de C
-        C = { desc: [ [BoundedWriteOnlyQueue(comparator=self._compare)
+        C = { desc: [ [BoundedWriteOnlyQueue(comparator=self._compare,
+                                             args=(context_formula, placeholder_id))
                        for _1 in range(N+1-_2)] for _2 in range(N+1) ]
               for desc in self.__descriptors }
 
@@ -251,36 +254,73 @@ class Parser:
         nearest = [ [self._nearest(words, l, i) for i in range(N+1-l)]
                     for l in range(N+1) ]
 
+        if verbose:
+            print("Initializations took: %rs" % (time() - _time))
+            _time = time()
+            _time2 = 0
+            _time3 = 0
+
         for l in range(0, N+1):
             for i in range(0, N-l+1):
+                current_min = float('inf')
+                if verbose:
+                    _time2 -= time()
                 heap = heapdict()
                 for desc in self.__descriptors:
-                    heap[desc] = self._known(desc, C, G, nearest, l, i)
+                    C[desc][l][i].set_threshold(threshold_factor * current_min)
+                    score = self._known(desc, C, G, nearest, l, i)
+                    if desc in self.__expands:
+                        heap[desc] = score
+                    if score < current_min:
+                        current_min = score
+                if verbose:
+                    _time2 += time()
+                    _time3 -= time()
+                for desc in self.__expression_descriptors:
+                    for formula, score in C[desc][l][i]:
+                        C['%f'][l][i][formula] = score
+                    C['%f'][l][i].prune()
                 while heap:
                     desc, _ = heap.popitem()
-                    if desc in self.__expands:
-                        for key in heap:
-                            if key not in self.__expands:
-                                continue
-                            for (desc1, desc2), f in self.__expands[key]:
-                                if desc1 == desc or desc2 == desc:
-                                    self._combine(C[desc1][l][i],
-                                                  C[desc2][0][0],
-                                                  C[key][l][i],
-                                                  f)
-                                    self._combine(C[desc2][l][i],
-                                                  C[desc1][0][0],
-                                                  C[key][l][i],
-                                                  f)
-                                    C[key][l][i].prune()
-                                    heap[key] = C[key][l][i].min_value()
-                    if desc in self.__expression_descriptors and '%f' in heap:
+                    for key in heap:
+                        for (desc1, desc2), f in self.__expands[key]:
+                            if desc1 == desc or desc2 == desc:
+                                self._combine(C[desc1][l][i],
+                                              C[desc2][0][0],
+                                              C[key][l][i],
+                                              f)
+                                self._combine(C[desc2][l][i],
+                                              C[desc1][0][0],
+                                              C[key][l][i],
+                                              f)
+                                C[key][l][i].prune()
+                                heap[key] = C[key][l][i].min_value()
+                    if desc in self.__expression_descriptors:
                         for formula, score in C[desc][l][i]:
                             C['%f'][l][i][formula] = score
                         C['%f'][l][i].prune()
+                if verbose:
+                    _time3 += time()
+
+        if verbose:
+            print("Main procedure took: %rs" % (time() - _time))
+            print("... of which _known took: %rs" % _time2)
+            print("... and everything else: %rs" % _time3)
+            _time = time()
 
         if C['%f'][N-1][0].min_value() > 0. \
            and C['%f'][N][0].min_value() == 0.:
-            return C['%f'][N][0].sorted_list()
+            return_list = C['%f'][N][0].sorted_list()
         else:
-            return C['%f'][N-1][0].sorted_list()
+            return_list = C['%f'][N-1][0].sorted_list()
+
+        if verbose:
+            print("Output took: %rs" % (time() - _time))
+            
+        #if context_formula:
+            #does not work
+            #print(return_list[0][0][0].latex())
+            #return [([context_formula.replace_placeholder(f[0], placeholder_id)], v)
+            #        for (f,v) in return_list]
+        #else:
+        return return_list
