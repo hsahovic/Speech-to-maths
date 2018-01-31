@@ -90,13 +90,13 @@ class Variable(Formula):
             raise AttributeError
 
     def __eq__(self, other):
-	
+
         if other and isinstance(other, Variable):
             return other.v == self.__v
         return False
 
     def __hash__(self):
-        
+
         return hash(self.__v)
 
     def count_brackets(self):
@@ -106,7 +106,7 @@ class Variable(Formula):
     def a_similarity(self, other):
 
         from s2m.core.number import Number
-        
+
         if isinstance(other, Variable):
             return 1.
         elif isinstance(other, Number):
@@ -155,5 +155,5 @@ class Variable(Formula):
         """
         Generates a random variable(either greek or radio)
         """
-        
+
         return Variable(random.choice(list(cls.__GREEK_REVERSE.keys() | cls.__RADIO_ROMAN_REVERSE.keys())))
