@@ -31,15 +31,17 @@ class SphinxConfig:
         d'autres expressions ou variables existantes)
         Si is_expression==True, considérée aussi comme une description possible d'une <expression>
         """
+        l_set = set(w for w in l if w[0] != "[")
+        if l_set == set():
+            return
         if is_expression:
-            self.expressions |= set(l)
+            self.expressions |= l_set
+        # On reste vigilant à l'absence possible d'initialisation
+        elif name in self.rules:
+            self.rules[name] |= l_set
         else:
-            # On reste vigilant à l'absence possible d'initialisation
-            if name in self.rules:
-                self.rules[name] |= set(l)
-            else:
-                self.rules[name] = set(l)
-        self.d |= set(w for k in l for w in k.split(' '))
+            self.rules[name] = l_set
+        self.d |= set(w for k in l_set for w in k.split(' '))
 
     def add_complex_rule(self, name, descriptor, is_expression=False):
         """Traite et stocke UNE nouvelle règle À LA FOIS (avec un name éventuellement déjà existant)
@@ -55,7 +57,7 @@ class SphinxConfig:
                 rule.append("<expressionalias>")
             elif wrd[0] == "$":
                 rule.append("<%s>" % wrd[1:])
-            else:
+            elif wrd[0] != "[":
                 rule.append(wrd)
                 self.d.add(wrd)
         # ....qui ensuite est repassée en str et stockée dans le set approprié

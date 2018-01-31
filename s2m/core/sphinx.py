@@ -23,15 +23,15 @@ class Sphinx(Thread):
 
     def get_silence(self, duration):
         if duration < 0.25:
-            return '<veryshortsil>'
+            return '[veryshortsil]'
         elif duration < 0.5:
-            return '<shortsil>'
+            return '[shortsil]'
         elif duration < 1.5:
-            return '<sil>'
+            return '[sil]'
         elif duration < 3.:
-            return '<longsil>'
+            return '[longsil]'
         else:
-            return '<verylongsil>'
+            return '[verylongsil]'
 
     def get_segment_string(self, segments):
         segment_list = []

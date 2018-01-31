@@ -13,7 +13,6 @@
 
 from abc import ABCMeta, abstractmethod
 from s2m.core.number_parser import NumberParser
-from s2m.core.parser import Token
 from s2m.core.evaluator import evaluator
 
 import random

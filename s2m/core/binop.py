@@ -84,8 +84,7 @@ class BinaryOperator(Formula):
             else:
                 return self.__OPERATORS[self.__o]['priority']
         elif p == 'priority':
-            if self.__left_priority != self.__right_priority:
-                raise ValueError("Priority undefined")
+            return self.__OPERATORS[self.__o]['priority']
         elif p == 'associative':
             return self.__OPERATORS[self.__o]['associative']
         elif p == 'latex_model':
@@ -274,19 +273,22 @@ class BinaryOperator(Formula):
         def light_right_expand(formulae):
             return BinaryOperator(*formulae, lr = True)
 
+
         binary_operator_light_left = ('binaryoperator/lightleft',
-                                '%f <*sil> $binaryoperator-operator %f',
+                                '%f [sil] $binaryoperator-operator %f',
                                 light_left_expand,
                                 True)
 
         binary_operator_light_right = ('binaryoperator/lightright',
-                                '%f $binaryoperator-operator <*sil> %f',
+                                '%f $binaryoperator-operator [sil] %f',
                                 light_right_expand,
                                 True)
 
         parser.add_easy_reduce(*binary_operator_easy)
         parser.add_complex_rule(*binary_operator_complex)
         parser.add_complex_rule(*squared_complex)
+        parser.add_complex_rule(*binary_operator_light_left)
+        parser.add_complex_rule(*binary_operator_light_right)
 
     @classmethod
     def generate_random(cls, l=None, r=None, depth=1):

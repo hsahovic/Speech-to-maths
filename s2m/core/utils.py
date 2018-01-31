@@ -149,5 +149,5 @@ def _unlist(l):
 
 def _issilence(s):
 
-    silence_regex = re.compile(r'^<[\w\-]+>$')
+    silence_regex = re.compile(r'^\[[\w\-]+\]$')
     return silence_regex.match(s) is not None

@@ -1,7 +1,6 @@
 from s2m.core.formulae import Formula
 from s2m.core.variable import Variable
 from s2m.core.number_parser import NumberParser
-from s2m.core.parser import Token
 
 from s2m.core.utils import merge_lists
 
