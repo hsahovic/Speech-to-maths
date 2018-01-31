@@ -2,6 +2,7 @@
 
 grammar speech-to-math-v0;
 
+<<<<<<< Updated upstream
 public <expression> = douze | deux | charlie | <number> | cinq | quarante | quelque chose | mille | vingt | echo | huit | yankee | sept | blanc | curseur | xray | uniform | delta | seize | alpha | zéro | octante | cent | quinze | cinquante | septante | neuf | <expressionalias> <binaryoperator-operator> <expressionalias> | <expressionalias> au carré | <bigoperator-operator> <bigoperator-from> <expressionalias> à <expressionalias> <bigoperator-of> <expressionalias> | soixante | quatorze | <bigoperator-operator> <bigoperator-of> <expressionalias> | <number-prefix> <number-prefix> | <bigoperator-operator> <bigoperator-from> <expressionalias> <bigoperator-of> <expressionalias> | un | treize | ouvrez la parenthèse <expressionalias> fermez la parenthèse | onze | trois | zulu | nonante | trente | bravo | six | quatre | <unaryoperator-operator> <expressionalias> | un blanc | entre parenthèse <expressionalias> | dix;
 
 <comma> = virgule | point;
@@ -29,17 +30,55 @@ public <expression> = douze | deux | charlie | <number> | cinq | quarante | quel
 <bigoperator-operator> = somme | produit | union | intégrale | intersection;
 
 <expressionalias> = <expression>;
+=======
+public <expression> = trois | vingt | delta | nonante | <number-prefix> <number-prefix> | ouvrez la parenthèse <expressionalias> fermez la parenthèse | octante | quelque chose | trente | <expressionalias> <binaryoperator-operator> <expressionalias> | huit | <bigoperator-operator> <bigoperator-from> <expressionalias> <bigoperator-of> <expressionalias> | quatorze | <bigoperator-operator> <bigoperator-of> <expressionalias> | quarante | mille | <number> | septante | alpha | seize | deux | bravo | blanc | cent | charlie | douze | treize | yankee | entre parenthèse <expressionalias> | quinze | xray | <expressionalias> au carré | <unaryoperator-operator> <expressionalias> | echo | onze | un blanc | uniform | cinquante | sept | dix | cinq | zéro | six | <bigoperator-operator> <bigoperator-from> <expressionalias> à <expressionalias> <bigoperator-of> <expressionalias> | soixante | neuf | zulu | quatre | un | curseur;
+
+<powers> = quintilliard | quintillion | septillion | octilliard | nonilliard | décillion | million | quadrilliard | trilliard | décilliard | sextillion | nonillion | milliard | trillion | billion | septilliard | quadrillion | sextilliard | octillion;
+
+<numbers> = <integers> [<decimal>];
+
+<suite> = <integers> [<suite>];
+
+<number-prefix/reduce> = trois | vingt | billiard | septillion | nonante | octante | quadrilliard | décilliard | trente | huit | quatorze | quarante | mille | décillion | quintilliard | septante | seize | deux | cent | trilliard | nonillion | douze | treize | septilliard | sextilliard | octilliard | nonilliard | quinze | million | onze | milliard | trillion | cinquante | billion | virgule | sept | point | dix | et | cinq | zéro | quintillion | six | sextillion | soixante | neuf | quatre | un | octillion | quadrillion;
+
+<lt999999> = [ [<lt999>] mille ] <lt999>;
+
+<binaryoperator-operator> = supérieur à | puissance | vectoriel | équivaut à | plus ou moins | différent de | contient | moins ou plus | moins | plus | inférieur à | rond | sur | égal | inclus dans | de | environ égal à | divisé par | fois;
+
+<gt11lt19> = onze | <gt12lt19>;
+
+<number-prefix> = <number-prefix> <number-prefix>;
+
+<gt12lt19> = dix sept | seize | quinze | douze | treize | quatorze | dix huit | dix neuf;
+
+<expressionalias> = <expression>;
 
 <gt999999> = <lt999> <powers> [<gt999999>];
 
+<integers> = <gt999999> [<lt999999>] | <lt999999>;
+
+<digit> = un | <safedigit>;
+>>>>>>> Stashed changes
+
+<safedigit> = trois | deux | six | huit | neuf | sept | quatre | cinq;
+
+<<<<<<< Updated upstream
 <safedozen> = cinquante | septante | nonante | trente | quarante | vingt | octante;
 
 <safedigit> = sept | neuf | trois | deux | cinq | quatre | six | huit;
 
 <powers> = octilliard | nonilliard | quintilliard | septilliard | quintillion | trilliard | billion | octillion | quadrilliard | nonillion | décillion | décilliard | sextillion | trillion | sextilliard | milliard | quadrillion | million | septillion;
+=======
+<bigoperator-from> = de | sur | pour;
+
+<bigoperator-of> = de | des;
+
+<unaryoperator-operator> = racine carré de | racine de | valeur absolu de | moins | racine cubique de;
+>>>>>>> Stashed changes
 
 <number-prefix/reduce> = octilliard | douze | octillion | virgule | nonillion | quadrilliard | deux | cinq | quarante | mille | vingt | sextilliard | milliard | quadrillion | huit | sept | quintilliard | billion | sextillion | décillion | million | seize | septillion | zéro | nonilliard | neuf | cent | quinze | septante | cinquante | septilliard | trilliard | point | quintillion | soixante | quatorze | trillion | billiard | décilliard | un | treize | onze | trois | nonante | dix | trente | quatre | six | et | octante;
 
+<<<<<<< Updated upstream
 <bigoperator-from> = de | pour | sur;
 
 <number> = <lt999999> | zéro;
@@ -51,3 +90,16 @@ public <expression> = douze | deux | charlie | <number> | cinq | quarante | quel
 <decimal> = <comma> <suite>;
 
 <unaryoperator-operator> = moins | racine carré de | racine de | valeur absolu de | racine cubique de;
+=======
+<lt99> = soixante dix | quatre vingt un | quatre vingt | soixante <safedigit> | quatre vingt <safedigit> | soixante <gt12lt19> | quatre vingt onze | soixante et onze | <safedozen> <safedigit> | <gt11lt19> | quatre vingt <gt12lt19> | <digit> | <safedozen> et un | quatre vingt dix | soixante et un;
+
+<bigoperator-operator> = union | produit | somme | intersection | intégrale;
+
+<lt999> = [ [<safedigit>] cent ] <lt99>;
+
+<decimal> = <comma> <suite>;
+
+<number> = zéro | <lt999999>;
+
+<safedozen> = vingt | septante | nonante | octante | trente | cinquante | quarante;
+>>>>>>> Stashed changes

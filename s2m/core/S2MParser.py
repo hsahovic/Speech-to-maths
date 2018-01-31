@@ -34,9 +34,9 @@ class S2MParser():
         PlaceHolder.teach(self.__parser)
         self.__parser.sphinx_config.update_config_files()
 
-    def parse(self, w, formal=False):
+    def parse(self, w, formal=False, **args):
 
-        parses = self.__parser.myers(w)
+        parses = self.__parser.myers(w, **args)
         if formal:
             return parses
         else:
@@ -45,7 +45,7 @@ class S2MParser():
                 [(p[0][0].latex(), p[0][0].evaluation()) for p in parses
                  if isinstance(p[0][0], Formula)], key=lambda x: x[1], reverse=True)))
 
-    def __call__(self, w, formal=False):
-        return self.parse(w, formal=formal)
+    def __call__(self, w, **args):
+        return self.parse(w, **args)
 
 s2m_parser = S2MParser()
