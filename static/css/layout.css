@@ -279,3 +279,20 @@ input {
     min-height: 1em;
     cursor : text;
 }
+
+.audio-choice {
+    background-color: white;
+    border: 1px solid #09f;
+    padding : .3em 0;
+    border-radius: .3em;
+}
+
+.audio-choice span {
+    padding : 0 .3em;
+}
+
+.audio-choice span:hover {
+    background-color: #09f;
+    color : white;
+    cursor : pointer;
+}

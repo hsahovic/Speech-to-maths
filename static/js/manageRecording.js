@@ -44,8 +44,10 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 				if (maxLength && !manualStop) {
 					mediaRecorder.start();
 					setTimeout(function(){
-						// verifier validite ?
-						mediaRecorder.stop();
+						try {
+							mediaRecorder.stop();
+						}
+						catch (error) {}
 					}, maxLength);
 					mediaRecorder.onstop = stoppedRecorderManager;
 				}

@@ -1,10 +1,8 @@
 // TO DO
 //
 // Dans manage change, rebrancher ce qui manque sur les états des autres classes
-// Dans le passage input --> texte, voir comment insérer plusieurs lignes
 // Comment supprimer un saut de ligne
 // Recompiler math jax / ka tex ?
-// gérer proprement l'insertion d'input dans latextArea
 
 class LatextArea {
 
@@ -13,14 +11,28 @@ class LatextArea {
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
         this.elements = [];
+        this.illNextAudio = false;
         this.parse();
         this.generateDOM();
 
         // event bindings
+        document.getElementById("start_rec").onclick = () => {
+            sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
+        };
 
         // gestion du changement de contenu
         this.changed = false;
         this.AJAX_DELAY = .5;
+    }
+
+    get activeElement () {
+        for (let element of this.elements) {
+            if (element.DOM == document.activeElement) return element;
+        }
+        for (let i = this.elements.length -1 ; i >= 0; i--)
+            if (this.elements[i] instanceof TextElement || 
+                this.elements[i] instanceof InputElement)
+                    return this.elements[i];
     }
 
     get text() {
@@ -29,6 +41,21 @@ class LatextArea {
             str += element.text;
         }
         return str;
+    }
+
+    audioResponseManager (response){
+        if (this.killNextAudio) {
+            this.killNextAudio = false;
+            return;
+        }
+        if (response.instruction == "propose") {
+            if (this.audioResponseElement == undefined) {
+                this.audioResponseElement = 
+                new AudioResponseElement(this, response.content);
+            } 
+            else 
+                this.audioResponseElement.updateChoices(response.content);
+        }
     }
 
     generateDOM() {
@@ -135,6 +162,57 @@ class LatextAreaElement {
 
 }
 
+class AudioResponseElement extends LatextAreaElement {
+    
+    constructor (latextArea, choices, maxElements = 8) {
+        super(latextArea, '');
+        this.maxElements = maxElements;
+        this.updateChoices(choices);
+    }
+
+    build () {
+        let DOM = document.createElement('div');
+        DOM.className = "audio-choice";
+        for (let i=0; i < this.choices.length && i < this.maxElements; i++) {
+            let span = document.createElement('span');
+            span.onclick = () => {
+                this.choose(this.choices[i]);
+                this.destroy();
+            };
+            span.innerHTML = this.choices[i];
+            DOM.appendChild(span);
+            DOM.appendChild(document.createElement('br'));
+        }
+        DOM.style.position = "absolute";
+        let rect = this.latextArea.activeElement.DOM.getBoundingClientRect();
+        DOM.style.top = (rect.top + rect.height) + "px";
+        DOM.style.left = (rect.left)+ "px";
+        try {
+            this.DOM.remove();
+        }
+        catch (error) {}
+        this.DOM = DOM;
+        document.body.appendChild(this.DOM);
+    }
+
+    choose(choice) {
+        this.latextArea.activeElement.insert(choice);
+    }
+
+    destroy (){
+        this.DOM.remove();
+        this.latextArea.audioResponseManager = undefined;
+        this.latextArea.killNextAudio = true;
+        document.getElementById("stop_rec").click();
+    }
+
+    updateChoices (choices) {
+        this.choices = choices;
+        this.build();
+    }
+
+}
+
 class EmptyElement extends LatextAreaElement {
     constructor() {
         // initialisation
@@ -167,11 +245,17 @@ class InputElement extends LatextAreaElement {
         return this.DOM.value;
     }
 
+    insert (value) {
+        if (this.DOM.value != "" && this.DOM.value.substr(this.DOM.value.length - 1) != " ") {
+            value = " " + value;
+        }
+        this.DOM.value += value;
+    }
+
     resize() {
         this.DOM.style.height = '1em';
         this.DOM.style.height = this.DOM.scrollHeight + "px";
     }
-
 
     toTextElement() {
         if (this.DOM.value != "") {
@@ -218,6 +302,13 @@ class TextElement extends LatextAreaElement {
 
         // event bindings
         this.DOM.onclick = this.toInput.bind(this);
+    }
+
+    insert (value) {
+        if (this.DOM.innerText != "" && this.DOM.innerText.substr(this.DOM.innerText.length - 1) != " ") {
+            value = " " + value;
+        }
+        this.DOM.innerText += value;
     }
 
     toInput() {
