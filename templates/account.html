@@ -6,14 +6,16 @@
 {% block img_link %}{% static "img/woman_looking_at_the_stars.jpg" %}{% endblock %}
 {% block content %} 
 <div class = "top-bar">	
-	<h3> 
-		Mon compte &nbsp;
-		<i class="fa fa-user" aria-hidden="true"></i> &nbsp;
-		{{ user.username }}
-	</h3>
-	<span class = "to-the-right">	
-		<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
-	</span>
+	<div class = "top-bar-content">
+		<h3> 
+			Mon compte &nbsp;
+			<i class="fa fa-user" aria-hidden="true"></i> &nbsp;
+			{{ user.username }}
+		</h3>
+		<span class = "to-the-right">	
+			<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+		</span>
+	</div>
 </div>
 
 <div class = "centered-content">

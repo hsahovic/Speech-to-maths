@@ -179,10 +179,3 @@ def training(request):
 
     formule, text = generate_training_data()
     return render(request, 'training.html', locals())
-
-
-# A SUPPRIMER UNE FOIS COMMITE ET CHEZ TOUT LE MONDE
-# for doc in models.Document.objects.all():
-    # doc.address = uuid.uuid4()
-    # doc.save()
-#

@@ -62,7 +62,6 @@ input {
 .to-the-right {
     position: absolute;
     right: 0;
-    margin-right: 2em;
     padding-right: inherit;
 }
 
@@ -271,10 +270,12 @@ input {
     border: 0;
     resize: none;
     height: 1em;
+    font-family: 'Lato', sans-serif;
 }
 
 .latext-element {
     display: inline-block;
     width : 100%;
     min-height: 1em;
+    cursor : text;
 }

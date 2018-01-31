@@ -1,7 +1,6 @@
 // TO DO
 //
 // Dans manage change, rebrancher ce qui manque sur les états des autres classes
-// Dans replace, voir s'il y a moyen de faire plus intelligent
 // Dans le passage input --> texte, voir comment insérer plusieurs lignes
 // Comment supprimer un saut de ligne
 // Recompiler math jax / ka tex ?
@@ -18,10 +17,6 @@ class LatextArea {
         this.generateDOM();
 
         // event bindings
-        this.parent.ondblclick = () => {
-            this.elements.push(new InputElement(this, ""));
-            this.generateDOM();
-        };
 
         // gestion du changement de contenu
         this.changed = false;
@@ -37,27 +32,33 @@ class LatextArea {
     }
 
     generateDOM() {
+        if (this.elements.length == 0) {
+            this.elements.push(new TextElement(this, ""));
+        }
         for (let children of this.parent.children) {
             children.remove();
         }
         for (let element of this.elements) {
-            this.parent.appendChild(element.DOM);
+            if (element instanceof EmptyElement == false) {
+                this.parent.appendChild(element.DOM);
+            }
+
         }
     }
 
-    manageChange () {
+    manageChange() {
         if (!this.changed) {
             let cSRFToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
             let formData = new FormData;
             let request = new XMLHttpRequest();
-            
+
             this.changed = true;
 
             request.open("POST", documentSaveLink);
             request.setRequestHeader("X-CSRFToken", cSRFToken)
 
             setTimeout(function () {
-                let data = { "docID": docID, "newContent": this.text};
+                let data = { "docID": docID, "newContent": this.text };
 
                 this.changed = false;
 
@@ -83,14 +84,37 @@ class LatextArea {
             this.elements.push(textElement);
             this.elements.push(new NewLineElement(this));
         }
+        if (this.elements.length != 0)
+            this.elements.pop();
     }
 
-    replace(elementSource, elementFinal) {
-        for (let i in this.elements) {
-            if (this.elements[i] === elementSource) {
-                this.elements[i] = elementFinal;
-            }
+    replace(elementToReplace, newElements = undefined) {
+        /*
+            Replaces elementToReplace in this.elements
+            newElements can be either :
+                - undefined : in this case, elementsToReplace will just be deleted
+                - an instance of LatextAreaElement
+                - an array of instances of LatextAreaElement
+        */
+
+        let indexToReplace = this.elements.indexOf(elementToReplace);
+        let start = this.elements.slice(0, indexToReplace);
+        let end = this.elements.slice(indexToReplace + 1);
+
+        this.elements = [];
+        for (let element of start) this.elements.push(element);
+
+        if (newElements == undefined) {
+            /* Nothing happens */
         }
+        else if (newElements instanceof LatextAreaElement) {
+            this.elements.push(newElements);
+        }
+        else {
+            for (let element of newElements) this.elements.push(element);
+        }
+
+        for (let element of end) this.elements.push(element);
         // un peu couteux, voir s'il n'y a pas plus simple
         this.generateDOM();
     }
@@ -112,7 +136,7 @@ class LatextAreaElement {
 }
 
 class EmptyElement extends LatextAreaElement {
-    constructor () {
+    constructor() {
         // initialisation
         super(undefined, "");
     }
@@ -139,7 +163,7 @@ class InputElement extends LatextAreaElement {
         setTimeout(this.DOM.focus.bind(this.DOM), 0);
     }
 
-    get text () {
+    get text() {
         return this.DOM.value;
     }
 
@@ -151,12 +175,25 @@ class InputElement extends LatextAreaElement {
 
     toTextElement() {
         if (this.DOM.value != "") {
-            this.latextArea.replace(this, new TextElement(this.latextArea, this.DOM.value));
+            if (this.DOM.value.indexOf('\n') == -1)
+                this.latextArea.replace(this, new TextElement(this.latextArea, this.DOM.value));
+            else {
+                let values = this.DOM.value.split('\n');
+                let elements = [];
+                for (let value of values) {
+                    elements.push(new TextElement(this.latextArea, value));
+                    elements.push(new NewLineElement(this.latextArea));
+                }
+                if (elements.length != 0)
+                    elements.pop();
+                this.latextArea.replace(this, elements);
+            }
         }
         else {
-            this.latextArea.replace(this, new EmptyElement());
+            this.latextArea.replace(this);
+            // this.latextArea.replace(this, new EmptyElement());
         }
-        
+
     }
 
 }
