@@ -149,13 +149,13 @@ class InputElement extends LatextAreaElement {
         super(latextArea, text);
         this.DOM = document.createElement("textArea");
         this.DOM.value = text;
-
         // event bindings
         this.DOM.onblur = this.toTextElement.bind(this);
         this.DOM.oninput = () => {
             this.resize();
             this.latextArea.manageChange();
         };
+        this.DOM.onkeydown = this.mouvementHandler.bind(this);
 
         // auto resize when created
         setTimeout(this.resize.bind(this), 0);
@@ -194,6 +194,41 @@ class InputElement extends LatextAreaElement {
             // this.latextArea.replace(this, new EmptyElement());
         }
 
+    }
+
+    mouvementHandler(event) {
+        var positionCurseur = this.DOM.selectionStart;
+        var longueur = this.DOM.value.length;
+        var nbLines = (this.DOM.value.match(/\n/g)||[]).length + 1;
+        var currentLine = -1* ((this.DOM.value.substring(positionCurseur).match(/\n/g)||[]).length - nbLines);
+        if (event.keyCode == 37 && positionCurseur==0) {
+            let indexFocus = this.latextArea.elements.indexOf(this)-2;
+            if (indexFocus >= 0) {
+                this.latextArea.elements[indexFocus].toInput();
+                this.toTextElement();
+            }
+        }
+        if (event.keyCode == 39 && positionCurseur-longueur==0) {
+            let indexFocus = this.latextArea.elements.indexOf(this)+2;
+            if (indexFocus < this.latextArea.elements.length) {
+                this.latextArea.elements[indexFocus].toInput();
+                this.toTextElement();
+            }
+        }
+        if (event.keyCode == 38 && currentLine==1) {
+            let indexFocus = this.latextArea.elements.indexOf(this)-2;
+            if (indexFocus >= 0) {
+                this.latextArea.elements[indexFocus].toInput();
+                this.toTextElement();
+            }
+        }
+        if (event.keyCode == 40 && currentLine==nbLines) {
+            let indexFocus = this.latextArea.elements.indexOf(this)+2;
+            if (indexFocus < this.latextArea.elements.length) {
+                this.latextArea.elements[indexFocus].toInput();
+                this.toTextElement();
+            }
+        }
     }
 
 }
