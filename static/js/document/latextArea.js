@@ -12,7 +12,7 @@ class LatextArea {
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
         this.elements = [];
-        this.illNextAudio = false;
+        this.killNextAudio = false;
         this.parse();
         this.generateDOM();
 
@@ -147,6 +147,24 @@ class LatextArea {
         this.generateDOM();
     }
 
+    merge(previousElement, nextElement) {
+        let indexPrevious = this.elements.indexOf(previousElement);
+        let indexNext = this.elements.indexOf(nextElement);
+        let start = this.elements.slice(0, indexPrevious);
+        let end = this.elements.slice(indexNext + 1);
+
+        let mergedElement = new TextElement(this, previousElement.text + nextElement.text)
+
+        this.elements = [];
+        for (let element of start) this.elements.push(element);
+        this.elements.push(mergedElement);
+        for (let element of end) this.elements.push(element);
+
+        // un peu couteux, voir s'il n'y a pas plus simple
+        this.generateDOM();
+
+    }
+ 
 }
 
 class LatextAreaElement {
@@ -251,6 +269,7 @@ class InputElement extends LatextAreaElement {
             value = " " + value;
         }
         this.DOM.value += value;
+        this.latextArea.manageChange();
     }
 
     resize() {
@@ -286,32 +305,50 @@ class InputElement extends LatextAreaElement {
         var longueur = this.DOM.value.length;
         var nbLines = (this.DOM.value.match(/\n/g)||[]).length + 1;
         var currentLine = -1* ((this.DOM.value.substring(positionCurseur).match(/\n/g)||[]).length - nbLines);
-        if (event.keyCode == 37 && positionCurseur==0) {
+
+        // Gestion des touches (à réorganiser en switch à la fin)
+        if (event.keyCode == 37 && positionCurseur==0) {                    //flèche gauche
             let indexFocus = this.latextArea.elements.indexOf(this)-2;
             if (indexFocus >= 0) {
                 this.latextArea.elements[indexFocus].toInput();
+                var longueurFocus = this.latextArea.elements[indexFocus].DOM.value.length;
+                this.latextArea.elements[indexFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 39 && positionCurseur-longueur==0) {
+        if (event.keyCode == 39 && positionCurseur-longueur==0) {           //flèche droite
             let indexFocus = this.latextArea.elements.indexOf(this)+2;
             if (indexFocus < this.latextArea.elements.length) {
                 this.latextArea.elements[indexFocus].toInput();
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 38 && currentLine==1) {
+        if (event.keyCode == 38 && currentLine==1) {                        //flèche haut
             let indexFocus = this.latextArea.elements.indexOf(this)-2;
             if (indexFocus >= 0) {
                 this.latextArea.elements[indexFocus].toInput();
+                this.latextArea.elements[indexFocus].DOM.setSelectionRange(positionCurseur, positionCurseur);
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 40 && currentLine==nbLines) {
+        if (event.keyCode == 40 && currentLine==nbLines) {                  //flèche bas
             let indexFocus = this.latextArea.elements.indexOf(this)+2;
             if (indexFocus < this.latextArea.elements.length) {
                 this.latextArea.elements[indexFocus].toInput();
+                this.latextArea.elements[indexFocus].DOM.setSelectionRange(positionCurseur, positionCurseur);
                 this.toTextElement();
+            }
+        }
+        if (event.keyCode == 8 && positionCurseur==0) {                     //backspace
+            event.preventDefault();
+            let indexFocus = this.latextArea.elements.indexOf(this)-2;
+            let latext = this.latextArea;
+            let previousLength = latext.elements[indexFocus].text.length;
+            if (indexFocus >= 0) {
+                latext.merge(latext.elements[indexFocus], latext.elements[indexFocus+2]);
+                latext.elements[indexFocus].toInput();
+                latext.elements[indexFocus].DOM.setSelectionRange(previousLength, previousLength);
+                latext.generateDOM();
             }
         }
     }
@@ -323,6 +360,11 @@ class NewLineElement extends LatextAreaElement {
     constructor(latextArea) {
         super(latextArea, '\n');
         this.DOM = document.createElement('br');
+    }
+
+    toInput() {
+        let newElement = new InputElement(this.latextArea, '\n');
+        this.latextArea.replace(this, newElement);
     }
 
 }
@@ -345,6 +387,8 @@ class TextElement extends LatextAreaElement {
             value = " " + value;
         }
         this.DOM.innerText += value;
+        this.textContent += value;
+        this.latextArea.manageChange();
     }
 
     toInput() {
