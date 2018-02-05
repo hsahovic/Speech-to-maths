@@ -12,7 +12,7 @@ class LatextArea {
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
         this.elements = [];
-        this.illNextAudio = false;
+        this.killNextAudio = false;
         this.parse();
         this.generateDOM();
 
@@ -269,6 +269,7 @@ class InputElement extends LatextAreaElement {
             value = " " + value;
         }
         this.DOM.value += value;
+        this.latextArea.manageChange();
     }
 
     resize() {
@@ -386,6 +387,8 @@ class TextElement extends LatextAreaElement {
             value = " " + value;
         }
         this.DOM.innerText += value;
+        this.textContent += value;
+        this.latextArea.manageChange();
     }
 
     toInput() {
