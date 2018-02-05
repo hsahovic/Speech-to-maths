@@ -1,6 +1,7 @@
 absolu aa bb ss oo ll uu
 alpha aa ll ff aa
 au au
+beta bb ei tt aa
 billiard bb ii ll ii aa rr
 billiard(3) bb ii ll yy aa rr
 billion bb ii ll ii on
@@ -11,6 +12,7 @@ carré kk aa rr ei
 cent ss an
 cent(2) ss an tt
 charlie ch aa rr ll ii
+chi ch ii
 chose ch au zz
 chose(2) ch au zz ee
 cinq ss in
@@ -51,14 +53,19 @@ entre an tt rr
 entre(2) an tt rr ee
 environ an vv ii rr on
 environ(2) an vv ii rr on nn
+epsilon ei pp ss ii ll oo nn
 et ai
 et(2) ai tt
+eta ei tt aa
+eta(2) eu tt ei aa
 fermez ff ai rr mm ei
 fermez(2) ff ai rr mm ei zz
 fermez(3) ff ei rr mm ei
 fermez(4) ff ei rr mm ei zz
 fois ff ww aa
 fois(2) ff ww aa zz
+gamma gg aa mm aa
+grec gg rr ai kk
 huit uy ii
 huit(2) uy ii tt
 inclus in kk ll uu
@@ -67,13 +74,20 @@ inférieur in ff ai rr yy oe rr
 intersection in tt ai rr ss ai kk ss yy on
 intégrale in tt ai gg rr aa ll
 intégrale(2) in tt ai gg rr aa ll ee
+iota yy oo tt aa
+kappa kk aa pp aa
+kappa(2) kk aa pp pp aa
 la ll aa
+lambda ll an bb dd aa
+majuscule mm aa jj uu ss kk uu ll
+majuscule(2) mm aa jj uu ss kk uu ll ee
 mille mm ii ll
 mille(2) mm ii ll ee
 milliard mm ii ll yy aa rr
 million mm ii ll yy on
 moins mm ww in
 moins(2) mm ww in zz
+mu mm uu
 neuf nn eu ff
 neuf(2) nn oe ff
 nonante nn oo nn an tt
@@ -82,11 +96,13 @@ nonilliard nn oo nn ii ll ii aa rr
 nonilliard(2) nn oo nn ii ll yy aa rr
 nonillion nn oo nn ii ll ii on
 nonillion(2) nn oo nn ii ll yy on
+nu nn uu
 octante oo kk tt an tt
 octilliard oo kk tt ii ll ii aa rr
 octilliard(2) oo kk tt ii ll yy aa rr
 octillion oo kk tt ii ll ii on
 octillion(2) oo kk tt ii ll yy on
+omega oo mm ee gg aa
 onze on zz
 onze(2) on zz ee
 ou ou
@@ -95,6 +111,9 @@ ouvrez(2) ou vv rr ei zz
 par pp aa rr
 parenthèse pp aa rr an tt ai zz
 parenthèse(2) pp aa rr an tt ai zz ee
+phi ff ii
+pi pp ii
+pi(2) pp ii
 plus pp ll uu
 plus(2) pp ll uu zz
 plus(3) pp ll uu ss
@@ -103,6 +122,8 @@ point(2) pp ww in tt
 pour pp ou rr
 produit pp rr oo dd uy ii
 produit(2) pp rr oo dd uy ii tt
+psi pp ei ai ss ii
+psi(2) pp ss ii
 puissance pp uy ii ss an ss
 puissance(2) pp uy ii ss an ss ee
 quadrilliard kk ww aa dd rr ii ll ii aa rr
@@ -132,6 +153,7 @@ quinze(2) kk in zz ee
 quinze(3) kk in zz ei
 racine rr aa ss ii nn
 racine(2) rr aa ss ii nn ee
+rho rr oo
 rond rr on
 rond(2) rr on tt
 seize ss ai zz
@@ -146,6 +168,7 @@ sextilliard ss ai kk ss tt ii ll ii aa rr
 sextilliard(2) ss ai kk ss tt ii ll yy aa rr
 sextillion ss ai kk ss tt ii ll ii on
 sextillion(2) ss ai kk ss tt ii ll yy on
+sigma ss ii gg mm aa
 six ss ii
 six(2) ss ii ss
 six(3) ss ii zz
@@ -155,6 +178,9 @@ somme ss oo mm
 somme(2) ss oo mm ee
 supérieur ss uu pp ai rr yy oe rr
 sur ss uu rr
+tau tt au
+theta tt ei tt aa
+theta(2) tt ai tt aa
 treize tt rr ai zz
 treize(2) tt rr ai zz ee
 trente tt rr an tt
@@ -172,7 +198,10 @@ uniform uu nn ii ff oo rr mm
 uniform(2) yy ou nn ii ff oo rr mm
 union uu nn yy au nn
 union(2) uu nn yy on
+upsilon uu pp ss ii ll oo nn
 valeur vv aa ll oe rr
+variante vv aa rr yy an tt
+variante(2) vv aa rr yy an tt ee
 vectoriel vv ai kk tt oo rr yy ei ll
 vectoriel(2) vv ai kk tt oo rr ii ei ll
 vingt vv ii nn gg tt
@@ -180,11 +209,13 @@ vingt(2) vv in
 vingt(3) vv in tt
 virgule vv ii rr gg uu ll
 virgule(2) vv ii rr gg uu ll ee
+xi kk ss ii
 xray ii kk ss rr ai
 xray(2) ii kk ss rr ai yy
 xray(3) ai kk ss rr ai
 xray(4) ai kk ss rr ai yy
 yankee yy an kk ii
+zeta zz ei tt aa
 zulu zz ou ll ou
 zéro zz ai rr au
 zéro(2) zz ei rr au

@@ -66,9 +66,12 @@ def dec(x):
 
 def args_from_dict(d):
     # Doc string ?
-    return reduce(lambda x, y: '%s -%s %s' % (x, y[0], y[1]),
-                  d.items())
-
+    args = []
+    for (k, v) in d.items():
+        args.append("-" + k)
+        args.append(v)
+    return args
+        
 
 def ogg_to_wav(filename_ogg, filename_wav=None, delete_ogg=True):
     """
@@ -138,7 +141,7 @@ def norm2d(a):
 
 
 def _unslash(s):
-    unslash_regex = re.compile(r'^(\$[\w\-]+(?:(?:\/\w+)?\.\w+)?)(?:\/[\w\-]+)?$')
+    unslash_regex = re.compile(r'^(\$[\w\-]+(?:(?:\/\w+)*\.\w+)?)(?:\/[\w\-\.]+)?$')
     return unslash_regex.match(s).group(1)
 
 

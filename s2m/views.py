@@ -16,6 +16,7 @@ except RuntimeError as exc:
 
 from s2m.core.sphinx import sphinx
 from s2m.core.utils import ogg_to_wav
+from s2m.settings import MEDIA_ROOT
 from interface.models import TrainingSample
 from interface.views import get_user
 from interface.views_utils import save_file_from_request
@@ -25,7 +26,7 @@ from interface.views_utils import save_file_from_request
 def voice_analysis(request):
     try:
         filename_ogg = save_file_from_request(
-            request, "ogg", post_arg="file", file_path=os.path.join(settings.MEDIA_ROOT, 'file_analysis'))
+            request, "ogg", post_arg="file", file_path=os.path.join(MEDIA_ROOT, 'file_analysis'))
         filename_wav = ogg_to_wav(filename_ogg, delete_ogg=True)
         # nbest n'est pas lisible, je ne sais pas ce que c'est. Meilleur nom à utiliser.
         # nbest ---> API de Sphinx, renvoie les n meilleurs interprétations possibles du son lu
@@ -43,7 +44,8 @@ def voice_analysis(request):
                 except:
                     pass
                 i += 1
-        response = json.dumps({'instruction': 'propose', 'content': parses})
+        parses_content, parses_scores = zip(*parses)
+        response = json.dumps({'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
         return HttpResponse(response)
     except OSError:
         # Windows tests
@@ -52,8 +54,7 @@ def voice_analysis(request):
 
 @login_required
 def voice_training(request):
-    filename_ogg = save_file_from_request(
-        request, "ogg", post_arg="file", file_path=os.path.join(settings.MEDIA_ROOT, 'waiting_training_data'))
+    filename_ogg = save_file_from_request(request, "ogg", post_arg="file", file_path=".")
     conversion_bool = False
     filename = filename_ogg
     try:
@@ -69,5 +70,6 @@ def voice_training(request):
         sample.author = get_user(request)
         sample.text = request.POST['additionalData']
         sample.save()
+    os.remove(filename_wav)
     response = json.dumps({'instruction': 'reload'})
     return HttpResponse(response)

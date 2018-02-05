@@ -53,7 +53,7 @@ class Variable(Formula):
                       'delta majuscule': '\\Delta',
                       'delta majuscule variante': '\\varDelta',
                       'theta majuscule': '\\Theta',
-                      'theta majusucle variante': '\\varTheta',
+                      'theta majuscule variante': '\\varTheta',
                       'lambda majuscule': '\\Lambda',
                       'lambda majuscule variante': '\\varLambda',
                       'xi majuscule': '\\Xi',
@@ -61,7 +61,7 @@ class Variable(Formula):
                       'pi majuscule': '\\Pi',
                       'pi majuscule variante': '\\varPi',
                       'sigma majuscule': '\\Sigma',
-                      'siigma majuscule variante': '\\varSigma',
+                      'sigma majuscule variante': '\\varSigma',
                       'upsilon majuscule': '\\Upsilon',
                       'upsilon majuscule variante': '\\varUpsilon',
                       'phi majuscule': '\\Phi',
@@ -148,7 +148,13 @@ class Variable(Formula):
                                    lambda x: Variable(x),
                                    True)
 
+        greek_easy_reduce = ('variable/greek',
+                             Variable.__GREEK_PARSED,
+                             lambda x: Variable(x),
+                             True)
+
         parser.add_easy_reduce(*radio_roman_easy_reduce)
+        parser.add_easy_reduce(*greek_easy_reduce)
 
     @classmethod
     def generate_random(cls):

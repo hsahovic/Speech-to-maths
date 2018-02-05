@@ -5,9 +5,9 @@ import subprocess
 
 from threading import Thread
 
-from . import models
-from s2m.core.utils import args_from_dict, wav_from_ogg
-from sphinx.conf import settings
+from interface.models import TrainingSample
+from s2m.core.utils import args_from_dict
+from s2m import settings
 
 
 class SphinxTraining(Thread):
@@ -41,22 +41,25 @@ class SphinxTraining(Thread):
 
         # Extraction des ids et des transcriptions
         with open(fileids, 'w') as i, open(transcription, 'w') as t:
-            for sample in models.Sample.objects:
-                filename, _ = os.splitext(sample.audio.name)
-                i.write(filename + '\n')
-                t.write('<s>%s</s> (%s)\n' % (sample.text, filename))
+            for sample in TrainingSample.objects.all():
+                filepath, _ = os.path.splitext(sample.audio.name)
+                _, filename = os.path.split(filepath)
+                root_filepath = os.path.join(settings.MEDIA_ROOT, filepath)
+                i.write(root_filepath + '\n')
+                t.write('<s> %s </s> (%s)\n' % (sample.text, filename))
 
         # Génération des paramètres acoustiques
         fe_params = {'argfile': feat_params,
                      'samprate': '8000',
                      'c': fileids,
-                     'di': sound_dir,
-                     'do': sound_dir,
+                     'di': '.',
+                     'do': '.',
                      'ei': 'wav',
                      'eo': 'mfc',
+                     'nchans': '2',
                      'mswav': 'yes'}
         fe_args = args_from_dict(fe_params)
-        subprocess.call(['sphinx_fe', fe_args])
+        subprocess.call(['sphinx_fe'] + fe_args)
 
         # Création de mdef.txt
         subprocess.call(['pocketsphinx_mdef_convert',
@@ -77,7 +80,7 @@ class SphinxTraining(Thread):
                      'lsnfn': transcription,
                      'accumdir': training_dir}
         bw_args = args_from_dict(bw_params)
-        subprocess.call([bw, bw_args])
+        subprocess.call([bw] + bw_args)
 
         # Copie
         subprocess.call(['cp', '-a', fr_dir, fr_save_dir])
@@ -95,7 +98,7 @@ class SphinxTraining(Thread):
                             'mapmixwfn': os.path.join(fr_dir, 'mixture_weights'),
                             'maptmatfn': os.path.join(fr_dir, 'transition_matrices')}
         map_adapt_args = args_from_dict(map_adapt_params)
-        subprocess.call([map_adapt, map_adapt_args])
+        subprocess.call([map_adapt] + map_adapt_args)
 
         # Génération du fichier sendump
         mk_s2sendump_params = {'pocketsphinx': 'yes',
@@ -103,7 +106,7 @@ class SphinxTraining(Thread):
                                'mixwfn': os.path.join(fr_dir, 'mixture_weights'),
                                'sendumpfn': os.path.join(fr_dir, 'sendump')}
         mk_s2sendump_args = args_from_dict(mk_s2sendump_params)
-        subprocess.call([mk_s2sendump, mk_s2sendump_args])
+        subprocess.call([mk_s2sendump] + mk_s2sendump_args)
 
         # Suppression de mdef.txt
         os.remove(mdef_txt)
