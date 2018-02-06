@@ -3,74 +3,15 @@ from s2m.core.formulae import Formula
 from s2m.core.utils import reverse_dict
 from s2m.core.utils import merge_lists
 
+from s2m.core.constructions.variable import VariableConstructions
+
 import random
 
 class Variable(Formula):
 
-    __RADIO_ROMAN_PARSED = {'alpha': 'a',
-                            'bravo': 'b',
-                            'charlie': 'c',
-                            'delta': 'd',
-                            'echo': 'e',
-                            'uniform': 'u',
-                            'xray': 'x',
-                            'yankee': 'y',
-                            'zulu': 'z'}
-
+    __RADIO_ROMAN_PARSED = VariableConstructions.RADIO_ROMAN_PARSED
     __RADIO_ROMAN_REVERSE = reverse_dict(__RADIO_ROMAN_PARSED)
-
-    __GREEK_PARSED = {'alpha grec': '\\alpha',
-                      'beta': '\\beta',
-                      'gamma': '\\gamma',
-                      'delta grec': '\\delta',
-                      'epsilon': '\\varepsilon',
-                      'epsilon variante': '\\varepsilon',
-                      'zeta': '\\zeta',
-                      'eta': '\\eta',
-                      'theta': '\\theta',
-                      'theta variante': '\\vartheta',
-                      'iota': '\\iota',
-                      'kappa': '\\kappa',
-                      'lambda': '\\lambda',
-                      'mu': '\\mu',
-                      'nu': '\\nu',
-                      'xi': '\\xi',
-                      'pi': '\\pi',
-                      'pi variante': '\\varpi',
-                      'rho': '\\rho',
-                      'rho variante': '\\varrho',
-                      'sigma': '\\sigma',
-                      'sigma variante': '\\varsigma',
-                      'tau': '\\tau',
-                      'upsilon': '\\upsilon',
-                      'phi': '\\phi',
-                      'phi variante': '\\varphi',
-                      'chi': '\\chi',
-                      'psi': '\\psi',
-                      'omega': '\\omega',
-                      'gamma majuscule': '\\Gamma',
-                      'gamma majuscule variante': '\\varGamma',
-                      'delta majuscule': '\\Delta',
-                      'delta majuscule variante': '\\varDelta',
-                      'theta majuscule': '\\Theta',
-                      'theta majuscule variante': '\\varTheta',
-                      'lambda majuscule': '\\Lambda',
-                      'lambda majuscule variante': '\\varLambda',
-                      'xi majuscule': '\\Xi',
-                      'xi majuscule variante': '\\varXi',
-                      'pi majuscule': '\\Pi',
-                      'pi majuscule variante': '\\varPi',
-                      'sigma majuscule': '\\Sigma',
-                      'sigma majuscule variante': '\\varSigma',
-                      'upsilon majuscule': '\\Upsilon',
-                      'upsilon majuscule variante': '\\varUpsilon',
-                      'phi majuscule': '\\Phi',
-                      'phi majuscule variante': '\\varPhi',
-                      'psi majuscule': '\\Psi',
-                      'psi majuscule variante': '\\varPsi',
-                      'omega majuscule': '\\Omega',
-                      'omega majuscule variante': '\\varOmega',
-                      }
+    __GREEK_PARSED = VariableConstructions.GREEK_PARSED
     __GREEK_REVERSE = reverse_dict(__GREEK_PARSED)
 
     def __init__(self, v):

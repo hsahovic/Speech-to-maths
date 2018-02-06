@@ -5,23 +5,14 @@ from functools import reduce
 from s2m.core.formulae import Formula
 from s2m.core.utils import reverse_dict
 
+from s2m.core.constructions.bigop import BigOperatorConstructions
+
 import random
 
 class BigOperator(Formula):
 
-# Est-ce qu'on gère le contenu du BigOp ? Normalement oui ! 
-    __OPERATORS = {'ITG': {'latex': '\int_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
-                   'SUM': {'latex': '\sum_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM'},
-                   'PRO': {'latex': '\prod_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
-                   'ITR': {'latex': '\bigcap_{%s}^{%s} %s','priority': 2, 'type': 'SUM'},
-                   'UNI': {'latex': '\bigcup_{%s}^{%s} %s','priority': 1, 'type': 'SUM'}}
-
-    __OPERATORS_PARSED = {'intégrale': 'ITG',
-                          'somme': 'SUM',
-                          'produit': 'PRO',
-                          'intersection': 'ITR',
-                          'union': 'UNI'}
-
+    __OPERATORS = BigOperatorConstructions.OPERATORS
+    __OPERATORS_PARSED = BigOperatorConstructions.OPERATORS_PARSED
     __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
 
     def __init__(self, o, *args): ##EN CONSTRUCTION !! ## à adapter avec args  

@@ -7,7 +7,7 @@ from threading import Thread
 
 from interface.models import TrainingSample
 from s2m.core.utils import args_from_dict
-from s2m import settings
+from s2m.settings import MEDIA_ROOT
 
 
 class SphinxTraining(Thread):
@@ -17,10 +17,8 @@ class SphinxTraining(Thread):
 
     def run(self):
 
-        # Est ce que ça serait pas mieux de passer par la class TrainingData ? Ca nous permettrait de suivre le training progressivement
-
         # Échantillons
-        training_dir = os.path.join(settings.MEDIA_ROOT, "training_data")
+        training_dir = os.path.join(MEDIA_ROOT, "training_data")
         fileids = os.path.join(training_dir, "s2m.fileids")
         transcription = os.path.join(training_dir, "s2m.transcription")
 
@@ -44,7 +42,7 @@ class SphinxTraining(Thread):
             for sample in TrainingSample.objects.all():
                 filepath, _ = os.path.splitext(sample.audio.name)
                 _, filename = os.path.split(filepath)
-                root_filepath = os.path.join(settings.MEDIA_ROOT, filepath)
+                root_filepath = os.path.join(MEDIA_ROOT, filepath)
                 i.write(root_filepath + '\n')
                 t.write('<s> %s </s> (%s)\n' % (sample.text, filename))
 
