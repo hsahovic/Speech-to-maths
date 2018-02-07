@@ -2,7 +2,6 @@
 //
 // Dans manage change, rebrancher ce qui manque sur les états des autres classes
 // Comment supprimer un saut de ligne
-// Recompiler math jax / ka tex ?
 // meilleure gestion de l'audio continu
 
 class LatextArea {
@@ -26,14 +25,14 @@ class LatextArea {
         this.AJAX_DELAY = .5;
     }
 
-    get activeElement () {
+    get activeElement() {
         for (let element of this.elements) {
             if (element.DOM == document.activeElement) return element;
         }
-        for (let i = this.elements.length -1 ; i >= 0; i--)
-            if (this.elements[i] instanceof TextElement || 
+        for (let i = this.elements.length - 1; i >= 0; i--)
+            if (this.elements[i] instanceof TextElement ||
                 this.elements[i] instanceof InputElement)
-                    return this.elements[i];
+                return this.elements[i];
     }
 
     get text() {
@@ -44,17 +43,17 @@ class LatextArea {
         return str;
     }
 
-    audioResponseManager (response){
+    audioResponseManager(response) {
         if (this.killNextAudio) {
             this.killNextAudio = false;
             return;
         }
         if (response.instruction == "propose") {
             if (this.audioResponseElement == undefined) {
-                this.audioResponseElement = 
-                new AudioResponseElement(this, response.content);
-            } 
-            else 
+                this.audioResponseElement =
+                    new AudioResponseElement(this, response.content);
+            }
+            else
                 this.audioResponseElement.updateChoices(response.content);
         }
     }
@@ -105,6 +104,23 @@ class LatextArea {
         }
     }
 
+    merge(firstElement, secondElement) {
+        let indexFirst = this.elements.indexOf(firstElement);
+        let indexSecond = this.elements.indexOf(secondElement);
+        let start = this.elements.slice(0, indexFirst);
+        let end = this.elements.slice(indexSecond + 1);
+
+        let mergedElement = new TextElement(this, firstElement.text + secondElement.text)
+
+        this.elements = [];
+        for (let element of start) this.elements.push(element);
+        this.elements.push(mergedElement);
+        for (let element of end) this.elements.push(element);
+
+        // un peu couteux, voir s'il n'y a pas plus simple
+        this.generateDOM();
+    }
+
     parse() {
         let contentByLine = this.textContent.split("\n");
         for (let line of contentByLine) {
@@ -147,24 +163,7 @@ class LatextArea {
         this.generateDOM();
     }
 
-    merge(previousElement, nextElement) {
-        let indexPrevious = this.elements.indexOf(previousElement);
-        let indexNext = this.elements.indexOf(nextElement);
-        let start = this.elements.slice(0, indexPrevious);
-        let end = this.elements.slice(indexNext + 1);
 
-        let mergedElement = new TextElement(this, previousElement.text + nextElement.text)
-
-        this.elements = [];
-        for (let element of start) this.elements.push(element);
-        this.elements.push(mergedElement);
-        for (let element of end) this.elements.push(element);
-
-        // un peu couteux, voir s'il n'y a pas plus simple
-        this.generateDOM();
-
-    }
- 
 }
 
 class LatextAreaElement {
@@ -182,17 +181,17 @@ class LatextAreaElement {
 }
 
 class AudioResponseElement extends LatextAreaElement {
-    
-    constructor (latextArea, choices, maxElements = 8) {
+
+    constructor(latextArea, choices, maxElements = 8) {
         super(latextArea, '');
         this.maxElements = maxElements;
         this.updateChoices(choices);
     }
 
-    build () {
+    build() {
         let DOM = document.createElement('div');
         DOM.className = "audio-choice";
-        for (let i=0; i < this.choices.length && i < this.maxElements; i++) {
+        for (let i = 0; i < this.choices.length && i < this.maxElements; i++) {
             let span = document.createElement('span');
             span.onclick = () => {
                 this.choose(this.choices[i]);
@@ -205,11 +204,11 @@ class AudioResponseElement extends LatextAreaElement {
         DOM.style.position = "absolute";
         let rect = this.latextArea.activeElement.DOM.getBoundingClientRect();
         DOM.style.top = (rect.top + rect.height) + "px";
-        DOM.style.left = (rect.left)+ "px";
+        DOM.style.left = (rect.left) + "px";
         try {
             this.DOM.remove();
         }
-        catch (error) {}
+        catch (error) { }
         this.DOM = DOM;
         document.body.appendChild(this.DOM);
     }
@@ -218,14 +217,14 @@ class AudioResponseElement extends LatextAreaElement {
         this.latextArea.activeElement.insert(choice);
     }
 
-    destroy (){
+    destroy() {
         this.DOM.remove();
         this.latextArea.audioResponseManager = undefined;
         this.latextArea.killNextAudio = true;
         document.getElementById("stop_rec").click();
     }
 
-    updateChoices (choices) {
+    updateChoices(choices) {
         this.choices = choices;
         this.build();
     }
@@ -264,7 +263,7 @@ class InputElement extends LatextAreaElement {
         return this.DOM.value;
     }
 
-    insert (value) {
+    insert(value) {
         if (this.DOM.value != "" && this.DOM.value.substr(this.DOM.value.length - 1) != " ") {
             value = " " + value;
         }
@@ -295,20 +294,20 @@ class InputElement extends LatextAreaElement {
         }
         else {
             this.latextArea.replace(this);
-            // this.latextArea.replace(this, new EmptyElement());
         }
+        MathJax.Hub.Typeset();
 
     }
 
     mouvementHandler(event) {
         var positionCurseur = this.DOM.selectionStart;
         var longueur = this.DOM.value.length;
-        var nbLines = (this.DOM.value.match(/\n/g)||[]).length + 1;
-        var currentLine = -1* ((this.DOM.value.substring(positionCurseur).match(/\n/g)||[]).length - nbLines);
+        var nbLines = (this.DOM.value.match(/\n/g) || []).length + 1;
+        var currentLine = -1 * ((this.DOM.value.substring(positionCurseur).match(/\n/g) || []).length - nbLines);
 
         // Gestion des touches (à réorganiser en switch à la fin)
-        if (event.keyCode == 37 && positionCurseur==0) {                    //flèche gauche
-            let indexFocus = this.latextArea.elements.indexOf(this)-2;
+        if (event.keyCode == 37 && positionCurseur == 0) {                    //flèche gauche
+            let indexFocus = this.latextArea.elements.indexOf(this) - 2;
             if (indexFocus >= 0) {
                 this.latextArea.elements[indexFocus].toInput();
                 var longueurFocus = this.latextArea.elements[indexFocus].DOM.value.length;
@@ -316,36 +315,36 @@ class InputElement extends LatextAreaElement {
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 39 && positionCurseur-longueur==0) {           //flèche droite
-            let indexFocus = this.latextArea.elements.indexOf(this)+2;
+        if (event.keyCode == 39 && positionCurseur - longueur == 0) {           //flèche droite
+            let indexFocus = this.latextArea.elements.indexOf(this) + 2;
             if (indexFocus < this.latextArea.elements.length) {
                 this.latextArea.elements[indexFocus].toInput();
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 38 && currentLine==1) {                        //flèche haut
-            let indexFocus = this.latextArea.elements.indexOf(this)-2;
+        if (event.keyCode == 38 && currentLine == 1) {                        //flèche haut
+            let indexFocus = this.latextArea.elements.indexOf(this) - 2;
             if (indexFocus >= 0) {
                 this.latextArea.elements[indexFocus].toInput();
                 this.latextArea.elements[indexFocus].DOM.setSelectionRange(positionCurseur, positionCurseur);
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 40 && currentLine==nbLines) {                  //flèche bas
-            let indexFocus = this.latextArea.elements.indexOf(this)+2;
+        if (event.keyCode == 40 && currentLine == nbLines) {                  //flèche bas
+            let indexFocus = this.latextArea.elements.indexOf(this) + 2;
             if (indexFocus < this.latextArea.elements.length) {
                 this.latextArea.elements[indexFocus].toInput();
                 this.latextArea.elements[indexFocus].DOM.setSelectionRange(positionCurseur, positionCurseur);
                 this.toTextElement();
             }
         }
-        if (event.keyCode == 8 && positionCurseur==0) {                     //backspace
+        if (event.keyCode == 8 && positionCurseur == 0) {                     //backspace
             event.preventDefault();
-            let indexFocus = this.latextArea.elements.indexOf(this)-2;
+            let indexFocus = this.latextArea.elements.indexOf(this) - 2;
             let latext = this.latextArea;
             let previousLength = latext.elements[indexFocus].text.length;
             if (indexFocus >= 0) {
-                latext.merge(latext.elements[indexFocus], latext.elements[indexFocus+2]);
+                latext.merge(latext.elements[indexFocus], latext.elements[indexFocus + 2]);
                 latext.elements[indexFocus].toInput();
                 latext.elements[indexFocus].DOM.setSelectionRange(previousLength, previousLength);
                 latext.generateDOM();
@@ -382,7 +381,7 @@ class TextElement extends LatextAreaElement {
         this.DOM.onclick = this.toInput.bind(this);
     }
 
-    insert (value) {
+    insert(value) {
         if (this.DOM.innerText != "" && this.DOM.innerText.substr(this.DOM.innerText.length - 1) != " ") {
             value = " " + value;
         }
