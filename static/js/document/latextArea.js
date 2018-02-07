@@ -118,6 +118,8 @@ class LatextArea {
         for (let element of end) this.elements.push(element);
 
         // un peu couteux, voir s'il n'y a pas plus simple
+        firstElement.DOM.remove();
+        secondElement.DOM.remove();
         this.generateDOM();
     }
 
@@ -144,6 +146,7 @@ class LatextArea {
         let indexToReplace = this.elements.indexOf(elementToReplace);
         let start = this.elements.slice(0, indexToReplace);
         let end = this.elements.slice(indexToReplace + 1);
+        elementToReplace.DOM.remove();
 
         this.elements = [];
         for (let element of start) this.elements.push(element);
@@ -160,6 +163,7 @@ class LatextArea {
 
         for (let element of end) this.elements.push(element);
         // un peu couteux, voir s'il n'y a pas plus simple
+
         this.generateDOM();
     }
 
@@ -277,7 +281,6 @@ class InputElement extends LatextAreaElement {
     }
 
     toTextElement() {
-        if (this.DOM.value != "") {
             if (this.DOM.value.indexOf('\n') == -1)
                 this.latextArea.replace(this, new TextElement(this.latextArea, this.DOM.value));
             else {
@@ -291,10 +294,6 @@ class InputElement extends LatextAreaElement {
                     elements.pop();
                 this.latextArea.replace(this, elements);
             }
-        }
-        else {
-            this.latextArea.replace(this);
-        }
         MathJax.Hub.Typeset();
 
     }
@@ -303,7 +302,7 @@ class InputElement extends LatextAreaElement {
         var positionCurseur = this.DOM.selectionStart;
         var longueur = this.DOM.value.length;
         var nbLines = (this.DOM.value.match(/\n/g) || []).length + 1;
-        var currentLine = -1 * ((this.DOM.value.substring(positionCurseur).match(/\n/g) || []).length - nbLines);
+        var currentLine = -1* ((this.DOM.value.substring(positionCurseur).match(/\n/g) || []).length - nbLines);
 
         // Gestion des touches (à réorganiser en switch à la fin)
         if (event.keyCode == 37 && positionCurseur == 0) {                    //flèche gauche
@@ -342,12 +341,11 @@ class InputElement extends LatextAreaElement {
             event.preventDefault();
             let indexFocus = this.latextArea.elements.indexOf(this) - 2;
             let latext = this.latextArea;
-            let previousLength = latext.elements[indexFocus].text.length;
             if (indexFocus >= 0) {
+                let previousLength = latext.elements[indexFocus].text.length;
                 latext.merge(latext.elements[indexFocus], latext.elements[indexFocus + 2]);
                 latext.elements[indexFocus].toInput();
                 latext.elements[indexFocus].DOM.setSelectionRange(previousLength, previousLength);
-                latext.generateDOM();
             }
         }
     }
@@ -365,6 +363,8 @@ class NewLineElement extends LatextAreaElement {
         let newElement = new InputElement(this.latextArea, '\n');
         this.latextArea.replace(this, newElement);
     }
+
+
 
 }
 
