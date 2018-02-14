@@ -19,7 +19,6 @@
 			<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 		
 			<button id = "start_rec">
-			<!-- <button id = "start_rec" onclick = "startRecording();"> -->
 				<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
 				Commencer la dictée
 			</button>
@@ -74,7 +73,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
-  jax: ["input/TeX","input/MathML","input/AsciiMath","output/HTML-CSS","output/NativeMML"],
+  jax: ["input/TeX","output/PreviewHTML", "output/NativeMML","output/SVG","output/HTML-CSS"],
   extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js"],
   tex2jax: {
   	inlineMath: [['$','$']],
@@ -88,13 +87,8 @@ MathJax.Hub.Config({
     noErrors: {
     	inlineDelimiters: ["$","$"],
     	multiLine: false,
-    	style: {
-      	"font-size": "normal",
-      	"border": "",
-      	"align":  "left",
-    	}
     },
-  }
+  },
 });
 </script>
 <script src = "{% static 'js/document/contentModification.js' %}"> </script>
