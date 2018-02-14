@@ -5,8 +5,8 @@ from s2m.core.constructions.placeholder import PlaceHolderConstructions
 
 class PlaceHolder(Formula):
 
-    __PLACEHOLDER_NAMES = PlaceHolderConstructions.PLACEHOLDER_NAMES
-    __PLACEHOLDER_COLORS = PlaceHolderConstructions.PLACEHOLDER_COLORS
+    PLACEHOLDER_NAMES = PlaceHolderConstructions.PLACEHOLDER_NAMES
+    PLACEHOLDER_COLORS = PlaceHolderConstructions.PLACEHOLDER_COLORS
 
     def __getattr__(self, p):
 
@@ -26,7 +26,7 @@ class PlaceHolder(Formula):
     def _latex(self, next_placeholder=1, show_id=True):
         if show_id:
             return "{\\color{%s} \\underset{%r}{\\underbrace{\\square}}}" \
-                   % (self.__PLACEHOLDER_COLORS[next_placeholder % len(self.__PLACEHOLDER_COLORS)],
+                   % (self.PLACEHOLDER_COLORS[next_placeholder % len(self.PLACEHOLDER_COLORS)],
                       next_placeholder), next_placeholder + 1, 0
         else:
             return "\\square", next_placeholder + 1, 0
@@ -55,9 +55,10 @@ class PlaceHolder(Formula):
     @classmethod
     def teach(cls, parser):
         parser.add_easy_reduce('placeholder',
-                               {x: x for x in cls.__PLACEHOLDER_NAMES},
+                               {x: x for x in cls.PLACEHOLDER_NAMES},
                                lambda _: PlaceHolder(),
                                True)
+        PlaceHolderConstructions.teach(parser)
 
     @classmethod
     def generate_random(cls):

@@ -1,19 +1,14 @@
 from s2m.core.formulae import Formula
 from s2m.core.number import Number
 
-from s2m.core.utils import reverse_dict
 from s2m.core.utils import merge_lists
 
 from s2m.core.constructions.binop import BinaryOperatorConstructions
 
 import random
 
-class BinaryOperator(Formula):
+class BinaryOperator(Formula, BinaryOperatorConstructions):
 
-    __OPERATORS = BinaryOperatorConstructions.OPERATORS
-    __OPERATORS_PARSED = BinaryOperatorConstructions.OPERATORS_PARSED
-    __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
-    
     def __init__(self, l, o, r, ll = False, lr = False):
 
         if o not in self.operators:
@@ -39,24 +34,24 @@ class BinaryOperator(Formula):
             if self.__light_left:
                 return 0
             else:
-                return self.__OPERATORS[self.__o]['priority']
+                return self.OPERATORS[self.__o]['priority']
         elif p == 'right_priority':
             if self.__light_right:
                 return 0
             else:
-                return self.__OPERATORS[self.__o]['priority']
+                return self.OPERATORS[self.__o]['priority']
         elif p == 'priority':
-            return self.__OPERATORS[self.__o]['priority']
+            return self.OPERATORS[self.__o]['priority']
         elif p == 'associative':
-            return self.__OPERATORS[self.__o]['associative']
+            return self.OPERATORS[self.__o]['associative']
         elif p == 'latex_model':
-            return self.__OPERATORS[self.__o]['latex']
+            return self.OPERATORS[self.__o]['latex']
         elif p == 'weak':
-            return self.__OPERATORS[self.__o]['weak']
+            return self.OPERATORS[self.__o]['weak']
         elif p == 'nobrackets':
-            return self.__OPERATORS[self.__o]['nobrackets']
+            return self.OPERATORS[self.__o]['nobrackets']
         elif p == 'operators':
-            return self.__OPERATORS.keys()
+            return self.OPERATORS.keys()
         else:
             raise AttributeError
 
@@ -179,7 +174,7 @@ class BinaryOperator(Formula):
             return self.__l.transcription() + ' au carré'
         else:
             return '%s %s %s' % (self.__l.transcription(),
-                                 self.__OPERATORS_REVERSE[self.__o],
+                                 self.OPERATORS_REVERSE[self.__o],
                                  self.__r.transcription())
 
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
@@ -207,7 +202,7 @@ class BinaryOperator(Formula):
     def teach(cls, parser):
 
         binary_operator_easy = ('binaryoperator-operator',
-                                cls.__OPERATORS_PARSED,
+                                cls.OPERATORS_PARSED,
                                 lambda x: x)
 
         # Defines A op B -> BinaryOperator(A, op, B)
@@ -252,12 +247,14 @@ class BinaryOperator(Formula):
         parser.add_complex_rule(*binary_operator_light_left)
         parser.add_complex_rule(*binary_operator_light_right)
 
+        BinaryOperatorConstructions.teach(parser)
+
     @classmethod
     def generate_random(cls, l=None, r=None, depth=1):
         """
         Generates a random instance of BinaryOperator.
         """
-        o = random.choice(list(cls.__OPERATORS.keys()))
+        o = random.choice(list(cls.OPERATORS.keys()))
         if l == None:
             l = Formula.generate_random(depth=depth-1)
         if r == None:

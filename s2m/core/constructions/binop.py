@@ -1,4 +1,8 @@
-class BinaryOperatorConstructions:
+from s2m.core.constructions.construction import Construction
+
+from s2m.core.utils import reverse_dict
+
+class BinaryOperatorConstructions(Construction):
 
     OPERATORS = {'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
                  'NEQ': {'latex': '%s \\neq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
@@ -17,8 +21,7 @@ class BinaryOperatorConstructions:
                  'CMP': {'latex': '%s \\circ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                  'VEC': {'latex': '%s \\wedge %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                  'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False},
-                 'EVL': {'latex': '%s \\left( %s \\right)', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True},
-    }
+                 'EVL': {'latex': '%s \\left( %s \\right)', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True}}
 
     OPERATORS_PARSED = {'plus': 'ADD',
                         'moins': 'SUB',
@@ -38,7 +41,19 @@ class BinaryOperatorConstructions:
                         'contient': 'SPS',
                         'équivaut à': 'EQV',
                         'environ égal à': 'SEQ',
-                        'de': 'EVL',
-                    }
+                        'de': 'EVL'}
 
+    OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 
+    @classmethod
+    def generate_help(cls):
+        BLANK = ('\\bullet','\\bullet')
+        help = {}
+        for (k, v) in cls.OPERATORS.items():
+            n = cls.OPERATORS_REVERSE[k]
+            help[n] = {'name': n,
+                       'latex': v['latex'] % BLANK,
+                       'spelling': n,
+                       'example': 'lambda %s mu' % n,
+                       'example-latex': v['latex'] % ('\\lambda','\\mu')}
+        return help

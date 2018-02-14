@@ -5,11 +5,11 @@ from django.core.files import File
 from s2m.settings import MEDIA_ROOT
 from s2m.core.utils import generate_random_word
 from s2m.core.formulae import Formula
+from s2m.core.utils import is_pickled_formula, is_pickled_formula_list
 
 import os
 import subprocess
 import uuid
-import pickle
 
 
 class Utilisateur(User):
@@ -56,18 +56,9 @@ class Document(models.Model):
 
 class ElementaryFormula(models.Model):
 
-    def validate_formula(self, value):
-        try:
-            obj = value.loads(value)
-        except UnpicklingError:
-            return False
-        else:
-            return isinstance(obj, Formula)
-
     document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='elementary_formulae')
     creation_date = models.DateField(auto_now_add=True)
-    # Attribut max_length rajouté, il pourrait être opportun de transformer le char field en text field pour dépasser les 255 chars
-    formula = models.CharField(validators=[validate_formula], max_length = 255)
+    formula = models.TextField(validators=[is_pickled_formula])
     count = models.IntegerField(default=1)
         
 class TrainingSample(models.Model):
@@ -81,3 +72,46 @@ class TrainingSample(models.Model):
 
     def __str__(self):
         return self.text
+
+class PendingFormulae(models.Model):
+
+    token = models.CharField(max_length=12,unique=True)
+    document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='pending_formulae')
+    creation_date = models.DateField(auto_now_add=True)
+    formulae = models.TextField(validators=[is_pickled_formula_list])
+
+class SavedFormula(models.Model):
+
+    document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='saved_formulae')
+    creation_date = models.DateField(auto_now_add=True)
+    formula = models.TextField(validators=[is_pickled_formula])
+    count = models.IntegerField(default=1)
+    chosen = models.BooleanField(default=False)
+
+class Constant(models.Model):
+    
+    name = models.CharField(max_length=16)
+    value = models.FloatField()
+
+    class Meta:
+        abstract = True
+    
+class DocumentConstant(Constant):
+
+    document = models.ForeignKey(Document,
+                                 blank=True,
+                                 null=True,
+                                 on_delete=models.CASCADE,
+                                 related_name='constset')
+
+class UserConstant(Constant):
+
+    user = models.ForeignKey(Utilisateur,
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE,
+                             related_name='constset')
+
+class GeneralConstant(Constant):
+
+    pass

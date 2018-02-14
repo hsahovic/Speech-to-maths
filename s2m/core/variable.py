@@ -1,18 +1,12 @@
 from s2m.core.formulae import Formula
 
-from s2m.core.utils import reverse_dict
 from s2m.core.utils import merge_lists
 
 from s2m.core.constructions.variable import VariableConstructions
 
 import random
 
-class Variable(Formula):
-
-    __RADIO_ROMAN_PARSED = VariableConstructions.RADIO_ROMAN_PARSED
-    __RADIO_ROMAN_REVERSE = reverse_dict(__RADIO_ROMAN_PARSED)
-    __GREEK_PARSED = VariableConstructions.GREEK_PARSED
-    __GREEK_REVERSE = reverse_dict(__GREEK_PARSED)
+class Variable(Formula, VariableConstructions):
 
     def __init__(self, v):
 
@@ -69,10 +63,10 @@ class Variable(Formula):
 
     def transcription(self):
 
-        if self.__v in self.__RADIO_ROMAN_REVERSE:
-            return self.__RADIO_ROMAN_REVERSE[self.__v]
-        elif self.__v in self.__GREEK_REVERSE:
-            return self.__GREEK_REVERSE[self.__v]
+        if self.__v in self.RADIO_ROMAN_REVERSE:
+            return self.RADIO_ROMAN_REVERSE[self.__v]
+        elif self.__v in self.GREEK_REVERSE:
+            return self.GREEK_REVERSE[self.__v]
         else:
             raise ValueError('Transcription for variable name %r is not defined.'
                              % self.__v)
@@ -85,17 +79,19 @@ class Variable(Formula):
     def teach(cls, parser):
 
         radio_roman_easy_reduce = ('variable/radio-roman',
-                                   Variable.__RADIO_ROMAN_PARSED,
+                                   Variable.RADIO_ROMAN_PARSED,
                                    lambda x: Variable(x),
                                    True)
 
         greek_easy_reduce = ('variable/greek',
-                             Variable.__GREEK_PARSED,
+                             Variable.GREEK_PARSED,
                              lambda x: Variable(x),
                              True)
 
         parser.add_easy_reduce(*radio_roman_easy_reduce)
         parser.add_easy_reduce(*greek_easy_reduce)
+
+        VariableConstructions.teach(parser)
 
     @classmethod
     def generate_random(cls):
@@ -103,4 +99,4 @@ class Variable(Formula):
         Generates a random variable(either greek or radio)
         """
 
-        return Variable(random.choice(list(cls.__GREEK_REVERSE.keys() | cls.__RADIO_ROMAN_REVERSE.keys())))
+        return Variable(random.choice(list(cls.GREEK_REVERSE.keys() | cls.RADIO_ROMAN_REVERSE.keys())))

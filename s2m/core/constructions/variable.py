@@ -1,4 +1,8 @@
-class VariableConstructions:
+from s2m.core.constructions.construction import Construction
+
+from s2m.core.utils import reverse_dict
+
+class VariableConstructions(Construction):
 
     RADIO_ROMAN_PARSED = {'alpha': 'a',
                           'bravo': 'b',
@@ -9,6 +13,8 @@ class VariableConstructions:
                           'xray': 'x',
                           'yankee': 'y',
                           'zulu': 'z'}
+
+    RADIO_ROMAN_REVERSE = reverse_dict(RADIO_ROMAN_PARSED)
 
     GREEK_PARSED = {'alpha grec': '\\alpha',
                     'beta': '\\beta',
@@ -62,3 +68,18 @@ class VariableConstructions:
                     'omega majuscule': '\\Omega',
                     'omega majuscule variante': '\\varOmega',
                 }
+
+    GREEK_REVERSE = reverse_dict(GREEK_PARSED)
+
+    @classmethod
+    def generate_help(cls):
+        help = {}
+        for (k, v) in cls.RADIO_ROMAN_PARSED.items():
+            help[v] = {'name': v,
+                       'latex': v,
+                       'spelling': k}
+        for (k, v) in cls.GREEK_PARSED.items():
+            help[k] = {'name': k,
+                       'latex': v,
+                       'spelling': k}
+        return help

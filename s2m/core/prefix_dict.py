@@ -1,9 +1,10 @@
 class PrefixDict:
 
-    def __init__(self, d={}):
+    def __init__(self, d={}, reverse=True):
         self.__dict = {}
         self.__reverse_dict = {}
         self.__minlen = float('inf')
+        self.__reverse = reverse
         for k, v in d.items():
             self[k] = v
 
@@ -12,6 +13,8 @@ class PrefixDict:
         return self.__dict
 
     def _asReverseDict(self):
+        if not self.__reverse:
+            raise EnvironmentError('Cannot call _asReverseDict when flag reverse is set to false')
         return self.__reverse_dict
     ##End-Temp
     
@@ -43,9 +46,14 @@ class PrefixDict:
                 d = d[c]
             else:
                 return []
-        return sorted(PrefixDict.leaves(d, []))
+        if self.__reverse:
+            return sorted(PrefixDict.leaves(d, []))
+        else:
+            return PrefixDict.leaves(d, [])
 
     def get_reverse(self, value):
+        if not self.__reverse:
+            raise EnvironmentError('Cannot call get_reverse when flag reverse is set to false')
         if value in self.__reverse_dict:
             return self.__reverse_dict[value]
         else:
@@ -72,10 +80,11 @@ class PrefixDict:
                 d[c] = {}
                 d = d[c]
         d[None] = value
-        if value in self.__reverse_dict:
-            self.__reverse_dict[value].add(key)
-        else:
-            self.__reverse_dict[value] = {key}
+        if self.__reverse:
+            if value in self.__reverse_dict:
+                self.__reverse_dict[value].add(key)
+            else:
+                self.__reverse_dict[value] = {key}
         if len(key) < self.__minlen:
             self.__minlen = len(key)
 
@@ -104,11 +113,12 @@ class PrefixDict:
             PrefixDict._delitem(self.__dict, key)
         else:
             raise KeyError(key)
-        self.__reverse_dict[value].remove(key)
-        if not self.__reverse_dict[value]:
-            del self.__reverse_dict[value]
-        if len(key) == self.__minlen:
-            self.__minlen = PrefixDict._comp_minlen(self.__dict)
+        if self.__reverse:
+            self.__reverse_dict[value].remove(key)
+            if not self.__reverse_dict[value]:
+                del self.__reverse_dict[value]
+                if len(key) == self.__minlen:
+                    self.__minlen = PrefixDict._comp_minlen(self.__dict)
  
     def __contains__(self, item):
         d = self.__dict

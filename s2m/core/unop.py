@@ -1,17 +1,12 @@
 from s2m.core.formulae import Formula
 
-from s2m.core.utils import reverse_dict
 from s2m.core.utils import merge_lists
 
 from s2m.core.constructions.unop import UnaryOperatorConstructions
 
 import random
 
-class UnaryOperator(Formula):
-
-    __OPERATORS = UnaryOperatorConstructions.OPERATORS
-    __OPERATORS_PARSED = UnaryOperatorConstructions.OPERATORS_PARSED
-    __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
+class UnaryOperator(Formula, UnaryOperatorConstructions):
 
     def __init__(self, o, r):
 
@@ -30,13 +25,13 @@ class UnaryOperator(Formula):
         elif p == 'r':
             return self.__r
         elif p == 'priority':
-            return self.__OPERATORS[self.__o]['priority']
+            return self.OPERATORS[self.__o]['priority']
         elif p == 'latex_model':
-            return self.__OPERATORS[self.__o]['latex']
+            return self.OPERATORS[self.__o]['latex']
         elif p == 'nobrackets':
-            return self.__OPERATORS[self.__o]['nobrackets']
+            return self.OPERATORS[self.__o]['nobrackets']
         elif p == 'operators':
-            return self.__OPERATORS.keys()
+            return self.OPERATORS.keys()
         else:
             raise AttributeError
 
@@ -99,7 +94,7 @@ class UnaryOperator(Formula):
         if self.__o == 'SQR':
             return 'racine de %s' % self.__r.transcription()
         else:
-            return self.__OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
+            return self.OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
 
@@ -117,7 +112,7 @@ class UnaryOperator(Formula):
 
         # Recognizes unary operators
         unary_operator_easy = ('unaryoperator-operator',
-                               cls.__OPERATORS_PARSED,
+                               cls.OPERATORS_PARSED,
                                lambda x: x)
 
         # Defines op A -> UnaryOperator(op, A)
@@ -132,12 +127,14 @@ class UnaryOperator(Formula):
         parser.add_easy_reduce(*unary_operator_easy)
         parser.add_complex_rule(*unary_operator_complex)
 
+        UnaryOperatorConstructions.teach(parser)
+
     @classmethod
     def generate_random(cls, r=None, depth=1) :
         """
         Generates a random instance of UnaryOperator.
         """
-        o = random.choice(list(cls.__OPERATORS.keys()))
+        o = random.choice(list(cls.OPERATORS.keys()))
         if r == None:
             r = Formula.generate_random(depth=depth-1)
         return UnaryOperator(o, r)

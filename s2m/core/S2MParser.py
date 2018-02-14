@@ -15,6 +15,8 @@ from s2m.core.utils import normalize_scores
 from s2m.core.sphinx_config import SphinxConfig
 from s2m.core.proximity_dict import ProximityDict
 
+from s2m.core.S2MParser_utils import append_formulae
+
 import random
 
 class S2MParser():
@@ -34,16 +36,22 @@ class S2MParser():
         PlaceHolder.teach(self.__parser)
         self.__parser.sphinx_config.update_config_files()
 
-    def parse(self, w, formal=False, **args):
+    def help(self, s):
+        return self.__parser.help_dict.get_all(s)
+             
+    def parse(self, w, formal=False, document=None, **args):
 
         parses = self.__parser.myers(w, **args)
         if formal:
             return parses
         else:
-            #isinstance is a workaround
-            return normalize_scores(listset(sorted(
+            results = normalize_scores(listset(sorted(
                 [(p[0][0].latex(), p[0][0].evaluation()) for p in parses
-                 if isinstance(p[0][0], Formula)], key=lambda x: x[1], reverse=True)))
+                if isinstance(p[0][0], Formula)], key=lambda x: x[1], reverse=True)))
+            filtered_parses = [p for p in parses if isinstance(p[0][0], Formula)]
+            if document:
+                append_formulae(filtered_parses, document)
+            return results
 
     def __call__(self, w, **args):
         return self.parse(w, **args)

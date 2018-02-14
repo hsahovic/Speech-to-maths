@@ -7,6 +7,7 @@ import string
 
 import re
 import os
+import pickle
 
 
 def natural_log(x):
@@ -154,3 +155,26 @@ def _issilence(s):
 
     silence_regex = re.compile(r'^\[[\w\-]+\]$')
     return silence_regex.match(s) is not None
+
+
+def is_pickled_formula(self, value):
+    from s2m.core.formulae import Formula
+    try:
+        obj = pickle.loads(value)
+    except pickle.UnpicklingError:
+        return False
+    else:
+        return isinstance(obj, Formula)
+
+    
+def is_pickled_formula_list(self, value):
+    from s2m.core.formulae import Formula
+    try:
+        obj = pickle.loads(value)
+    except pickle.UnpicklingError:
+        return False
+    else:
+        if type(obj) == list:
+            return reduce(lambda x,y: x and isinstance(y, Formula), obj, True)
+        else:
+            return False

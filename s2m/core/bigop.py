@@ -3,22 +3,17 @@
 from functools import reduce
 
 from s2m.core.formulae import Formula
-from s2m.core.utils import reverse_dict
 
 from s2m.core.constructions.bigop import BigOperatorConstructions
 
 import random
 
-class BigOperator(Formula):
-
-    __OPERATORS = BigOperatorConstructions.OPERATORS
-    __OPERATORS_PARSED = BigOperatorConstructions.OPERATORS_PARSED
-    __OPERATORS_REVERSE = reverse_dict(__OPERATORS_PARSED)
+class BigOperator(Formula, BigOperatorConstructions):
 
     def __init__(self, o, *args): ##EN CONSTRUCTION !! ## à adapter avec args  
         if o not in self.operators:
             raise ValueError('Unknown big operator code : %r' % o)
-        if self.__OPERATORS[o]['type'] == 'SUM':
+        if self.OPERATORS[o]['type'] == 'SUM':
             if len(args) > 3 or len(args) == 0:
                 raise ValueError('Wrong amout of arguments for operator: %r' % len(args))    
         for form in args: 
@@ -34,15 +29,15 @@ class BigOperator(Formula):
         elif p == 'fl':
             return self.__fl
         elif p == 'priority':
-            return self.__OPERATORS[self.__o]['priority']
+            return self.OPERATORS[self.__o]['priority']
         elif p == 'latex_model':
-            return self.__OPERATORS[self.__o]['latex']
+            return self.OPERATORS[self.__o]['latex']
         elif p == 'operator_type':
-            return self.__OPERATORS[self.__o]['type']
+            return self.OPERATORS[self.__o]['type']
         elif p == 'arity':
             return len(self.__fl)
         elif p == 'operators':
-            return self.__OPERATORS.keys()
+            return self.OPERATORS.keys()
         else:
             raise AttributeError
 
@@ -119,7 +114,7 @@ class BigOperator(Formula):
     def teach(cls, parser):
 
         big_operator_easy = ('bigoperator-operator',
-                             cls.__OPERATORS_PARSED,
+                             cls.OPERATORS_PARSED,
                              lambda x: x)
 
         big_operator_from = ('bigoperator-from',
@@ -158,6 +153,8 @@ class BigOperator(Formula):
         parser.add_complex_rule(*big_operator_arity2_complex)
         parser.add_complex_rule(*big_operator_arity3_complex)
 
+        BigOperatorConstructions.teach(parser)
+
     def transcription(self):
         if self.operator_type == 'SUM':
             if self.__o == 'ITG':
@@ -165,16 +162,16 @@ class BigOperator(Formula):
             else:
                 connector = 'des'
             if len(self.__fl) == 1:
-                return '%s %s %s' % (self.__OPERATORS_REVERSE[self.__o],
+                return '%s %s %s' % (self.OPERATORS_REVERSE[self.__o],
                                      connector,
                                      self.__fl[0].transcription())
             elif len(self.__fl) == 2:
-                return '%s sur %s %s %s' % (self.__OPERATORS_REVERSE[self.__o],
+                return '%s sur %s %s %s' % (self.OPERATORS_REVERSE[self.__o],
                                             self.__fl[0].transcription(),
                                             connector,
                                             self.__fl[1].transcription())
             else:
-                return '%s de %s à %s %s %s' % (self.__OPERATORS_REVERSE[self.__o],
+                return '%s de %s à %s %s %s' % (self.OPERATORS_REVERSE[self.__o],
                                                 self.__fl[0].transcription(),
                                                 self.__fl[1].transcription(),
                                                 connector,

@@ -3,6 +3,7 @@ from s2m.core.version import *
 from s2m.core.utils import _unslash
 from s2m.core.bwoq import BoundedWriteOnlyQueue
 from s2m.core.formulae import Formula
+from s2m.core.prefix_dict import PrefixDict
 
 from functools import reduce
 from re import match
@@ -24,6 +25,7 @@ class Parser:
                                             S2M_GRAMMAR_VERSION,
                                             S2M_VERSION)
         self.__proximity_dict = proximity_dict
+        self.__help_dict = PrefixDict(reverse=False)
         self.__PlaceHolder = PlaceHolder
 
     def __getattr__(self, p):
@@ -32,6 +34,8 @@ class Parser:
             return self.__sphinx_config
         elif p == 'proximity_dict':
             return self.__proximity_dict
+        elif p == 'help_dict':
+            return self.__help_dict
         else:
             raise AttributeError
         
