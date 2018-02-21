@@ -7,7 +7,7 @@ import os
 import json
 import pickle
 
-#Beware! Always load s2m_parser before including everything else
+#Beware! Always load s2m_parser before including sphinx
 #so as to make sure config files are generated BEFORE sphinx is turned on
 try:
     from s2m.core.S2MParser import s2m_parser
@@ -20,7 +20,7 @@ from s2m.core.sphinx import sphinx
 from s2m.core.utils import ogg_to_wav
 from s2m.settings import MEDIA_ROOT
 from interface.models import TrainingSample
-from interface.models import ProposedFormulae
+from interface.models import PendingFormulae
 from interface.models import SavedFormula
 from interface.views import get_user
 from interface.views_utils import save_file_from_request
@@ -50,8 +50,11 @@ def voice_analysis(request):
                 except:
                     pass
                 i += 1
-        parses_content, parses_scores = zip(*parses)
-        response = json.dumps({'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
+        if parses == []:
+            response = json.dumps({'instruction': 'nop'})
+        else:
+            parses_content, parses_scores = zip(*parses)
+            response = json.dumps({'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
         return HttpResponse(response)
     except OSError:
         # Windows tests

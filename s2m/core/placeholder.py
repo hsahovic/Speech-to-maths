@@ -25,7 +25,7 @@ class PlaceHolder(Formula):
 
     def _latex(self, next_placeholder=1, show_id=True):
         if show_id:
-            return "{\\color{%s} \\underset{%r}{\\underbrace{\\square}}}" \
+            return "\\color{%s}{\\underset{%r}{\\underbrace{\\square}}}" \
                    % (self.PLACEHOLDER_COLORS[next_placeholder % len(self.PLACEHOLDER_COLORS)],
                       next_placeholder), next_placeholder + 1, 0
         else:
