@@ -110,6 +110,9 @@ class BigOperator(Formula, BigOperatorConstructions):
                     return 0
         return next_placeholder
 
+    def tree_depth(self):
+        return 1+max([(self.__fl)[i].tree_depth() for i in range (self.__fl).length()])
+
     @classmethod
     def teach(cls, parser):
 

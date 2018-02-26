@@ -198,6 +198,9 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
         else:
             return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder)
 
+    def tree_depth(self):
+        return 1+max(self.__r.tree_depth(),self.__l.tree_depth())
+    
     @classmethod
     def teach(cls, parser):
 

@@ -75,6 +75,9 @@ class Variable(Formula, VariableConstructions):
 
         return next_placeholder
 
+    def tree_depth(self):
+        return 1
+
     @classmethod
     def teach(cls, parser):
 

@@ -75,6 +75,10 @@ class Formula(metaclass=ABCMeta):
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
         pass
 
+    @abstractmethod
+    def tree_depth(self):
+        pass
+
     @classmethod
     def generate_random(cls, depth=5):
 
@@ -95,3 +99,5 @@ class Formula(metaclass=ABCMeta):
     @classmethod
     def transcription(self):
         pass
+
+   
