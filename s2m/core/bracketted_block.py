@@ -59,16 +59,9 @@ class BrackettedBlock(Formula):
         return 'ouvrez la parenthèse %s fermez la parenthèse' \
                % self.__b.transcription()
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
 
-        from s2m.core.placeholder import PlaceHolder
-        
-        if isinstance(self.__b, PlaceHolder) \
-           and next_placeholder == placeholder_id:
-            self.__b = formula
-            return 0
-        else:
-            return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder)
+        return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder, conservative)
 
     @classmethod
     def teach(cls, parser):

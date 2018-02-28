@@ -177,26 +177,20 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
                                  self.OPERATORS_REVERSE[self.__o],
                                  self.__r.transcription())
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
 
-        from s2m.core.placeholder import PlaceHolder
-
-        if isinstance(self.__l, PlaceHolder) \
-           and next_placeholder == placeholder_id:
-            self.__l = formula
-            return 0
-        else:
-            next_placeholder = self.__l.replace_placeholder(formula, placeholder_id, next_placeholder)
+        next_placeholder = self.__l.replace_placeholder(formula,
+                                                        placeholder_id,
+                                                        next_placeholder,
+                                                        conservative)
 
         if next_placeholder == 0:
             return 0
-
-        if isinstance(self.__r, PlaceHolder) \
-             and next_placeholder == placeholder_id:
-            self.__r = formula
-            return 0
         else:
-            return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder)
+            return self.__r.replace_placeholder(formula,
+                                                placeholder_id,
+                                                next_placeholder,
+                                                conservative)
 
     def tree_depth(self):
         return 1+max(self.__r.tree_depth(),self.__l.tree_depth())

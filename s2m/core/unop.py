@@ -96,16 +96,9 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         else:
             return self.OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
 
-        from s2m.core.placeholder import PlaceHolder
-        
-        if isinstance(self.__r, PlaceHolder) \
-           and next_placeholder == placeholder_id:
-            self.__r = formula
-            return 0
-        else:
-            return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder)
+        return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder, conservative)
 
     def tree_depth(self):
         return 1+self.__r.tree_depth()
