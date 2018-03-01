@@ -42,7 +42,7 @@ class PlaceHolder(Formula):
     def _latex(self, next_placeholder=1, show_id=True):
         if self.is_assigned:
             a, b, c = self.__b._latex()
-            return a, b + 1, c
+            return a, b, c
         else:
             if show_id:
                 return "\\color{%s}{\\underset{%r}{\\underbrace{\\square}}}" \
@@ -82,11 +82,12 @@ class PlaceHolder(Formula):
             return 'curseur'
 
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
-        if next_placeholder == placeholder_id:
+        if next_placeholder == placeholder_id \
+           and (conservative or not self.is_assigned):
             self.__b = formula
             return 0
         elif not conservative and self.is_assigned:
-            return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder, False)
+            return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder, conservative)
         else:
             return next_placeholder + 1
 
@@ -98,7 +99,8 @@ class PlaceHolder(Formula):
         parser.add_easy_reduce('placeholder',
                                {x: x for x in cls.PLACEHOLDER_NAMES},
                                lambda _: PlaceHolder(),
-                               True)
+                               True,
+                               no_pregen=True)
         PlaceHolderConstructions.teach(parser)
 
     @classmethod

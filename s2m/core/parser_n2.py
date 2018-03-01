@@ -66,8 +66,8 @@ class Parser:
             self.__rule_names.append(name)
         if is_expression:
             self.__expression_descriptors.add(_unslash('$' + name))
-
-    def add_easy_reduce(self, name, d, f, is_expression=False):
+            
+    def add_easy_reduce(self, name, d, f, is_expression=False, no_pregen=False):
 
         self._validate_name(name, is_expression)
 
@@ -80,7 +80,10 @@ class Parser:
             if len(words) == 0:
                 raise ValueError('String to be recognized by the parser must be non-empty.')
             elif len(words) == 1:
-                self.add_reduce(unslashed_name, key, f(val))
+                if no_pregen:
+                    self.add_reduce(unslashed_name, key, (f, val))
+                else:
+                    self.add_reduce(unslashed_name, key, f(val))
             elif len(words) == 2:
                 self.add_reduce('$%s/%r.0' % (name, k), words[0])
                 self.add_reduce('$%s/%r.1' % (name, k), words[1])
@@ -220,6 +223,9 @@ class Parser:
                         hyp_score = hyp_score2
                 if formula is None:
                     C[desc][l][i][ [] ] = hyp_score
+                elif type(formula) is tuple:
+                    func, val = formula
+                    C[desc][l][i][ [func(val)] ] = hyp_score
                 else:
                     C[desc][l][i][ [formula] ] = hyp_score
 
@@ -228,7 +234,7 @@ class Parser:
         return C[desc][l][i].min_value()
 
 
-    def myers(self, s, context_formula=None, placeholder_id=1, threshold_factor=2, verbose=False):
+    def myers(self, s, context_formula=None, placeholder_id=0, threshold_factor=2, verbose=False):
 
         if verbose:
             _time = time()
@@ -321,10 +327,4 @@ class Parser:
         if verbose:
             print("Output took: %rs" % (time() - _time))
             
-        #if context_formula:
-            #does not work
-            #print(return_list[0][0][0].latex())
-            #return [([context_formula.replace_placeholder(f[0], placeholder_id)], v)
-            #        for (f,v) in return_list]
-        #else:
         return return_list
