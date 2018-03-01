@@ -3,7 +3,7 @@ from s2m.core.number import Number
 
 from s2m.core.utils import merge_lists
 
-from s2m.core.constructions.binop import BinaryOperatorConstructions
+from s2m.core.constructions.binop_constructions import BinaryOperatorConstructions
 
 import random
 

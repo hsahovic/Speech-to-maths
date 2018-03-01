@@ -1,4 +1,4 @@
-from s2m.core.constructions.construction import Construction
+from s2m.core.constructions.constructions import Construction
 
 from s2m.core.utils import reverse_dict
 

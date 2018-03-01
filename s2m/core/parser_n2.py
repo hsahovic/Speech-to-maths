@@ -175,7 +175,11 @@ class Parser:
             return formulae
 
     def _combine(self, l_queue, r_queue, dest, f):
-        
+
+        min_score_hyp = l_queue.min_value() + r_queue.min_value()
+        if dest.will_be_rejected(min_score_hyp):
+            return
+
         for l_formula, l_score in l_queue:
             for r_formula, r_score in r_queue:
                 score_hyp = l_score + r_score
@@ -213,7 +217,7 @@ class Parser:
                                   C[r_desc][l-k][i+k],
                                   C[desc][l][i],
                                   f)
-                    
+
         if desc in self.__reduces:
             for word, formula in self.__reduces[desc]:
                 hyp_score = self.proximity_dict.word_delete_cost(word) + G[i][l]
@@ -230,7 +234,6 @@ class Parser:
                     C[desc][l][i][ [formula] ] = hyp_score
 
         C[desc][l][i].prune()
-
         return C[desc][l][i].min_value()
 
 
@@ -272,6 +275,7 @@ class Parser:
 
         for l in range(0, N+1):
             for i in range(0, N-l+1):
+                #print([[d.min_value() for d in c] for c in C['$brackettedblock/implicit.0t1']])
                 current_min = float('inf')
                 if verbose:
                     _time2 -= time()
@@ -326,5 +330,5 @@ class Parser:
 
         if verbose:
             print("Output took: %rs" % (time() - _time))
-            
+
         return return_list

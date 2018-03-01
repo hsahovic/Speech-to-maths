@@ -4,7 +4,7 @@ from functools import reduce
 
 from s2m.core.formulae import Formula
 
-from s2m.core.constructions.bigop import BigOperatorConstructions
+from s2m.core.constructions.bigop_constructions import BigOperatorConstructions
 
 import random
 

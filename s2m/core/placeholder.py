@@ -1,7 +1,7 @@
 from s2m.core.formulae import Formula
 from s2m.core.utils import merge_lists
 
-from s2m.core.constructions.placeholder import PlaceHolderConstructions
+from s2m.core.constructions.placeholder_constructions import PlaceHolderConstructions
 
 class PlaceHolder(Formula):
 

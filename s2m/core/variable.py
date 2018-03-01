@@ -2,7 +2,7 @@ from s2m.core.formulae import Formula
 
 from s2m.core.utils import merge_lists
 
-from s2m.core.constructions.variable import VariableConstructions
+from s2m.core.constructions.variable_constructions import VariableConstructions
 
 import random
 

@@ -2,7 +2,7 @@ from s2m.core.formulae import Formula
 
 from s2m.core.utils import merge_lists
 
-from s2m.core.constructions.unop import UnaryOperatorConstructions
+from s2m.core.constructions.unop_constructions import UnaryOperatorConstructions
 
 import random
 
@@ -111,6 +111,12 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
                                cls.OPERATORS_PARSED,
                                lambda x: x)
 
+        # Recognized unary operators without 'de'
+        unary_operator_term_easy = ('unaryoperator-term',
+                                    {k[:k.rfind(' ') if k.rfind(' ') >= 0 else len(k)]: v
+                                     for (k, v) in cls.OPERATORS_PARSED.items()},
+                                    lambda x: x)
+
         # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
             return UnaryOperator(*words)
@@ -120,8 +126,22 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
                                   unary_operator_complex_expand,
                                   True)
 
+        # Defines op A fin de op -> UnaryOperator(op, A)
+        def unary_operator_explicit_complex_expand(words):
+            if len(words) == 3 and words[0] == words[2]:
+                return UnaryOperator(*words[:2])
+            else:
+                raise Exception
+
+        unary_operator_explicit_complex = ('unaryoperator/explicit',
+                                           '$unaryoperator-operator %f fin de $unaryoperator-term',
+                                           unary_operator_explicit_complex_expand,
+                                           True)
+
+        parser.add_easy_reduce(*unary_operator_term_easy)
         parser.add_easy_reduce(*unary_operator_easy)
         parser.add_complex_rule(*unary_operator_complex)
+        parser.add_complex_rule(*unary_operator_explicit_complex)
 
         UnaryOperatorConstructions.teach(parser)
 
