@@ -62,6 +62,7 @@ fermez ff ai rr mm ei
 fermez(2) ff ai rr mm ei zz
 fermez(3) ff ei rr mm ei
 fermez(4) ff ei rr mm ei zz
+fin ff in
 fois ff ww aa
 fois(2) ff ww aa zz
 gamma gg aa mm aa
