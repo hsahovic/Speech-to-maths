@@ -39,7 +39,7 @@ class PlaceHolder(Formula):
         else:
             return hash('PlaceHolder')
 
-    def _latex(self, next_placeholder=1, show_id=True):
+    def _latex(self, next_placeholder=1, show_id=False):
         if self.is_assigned:
             a, b, c = self.__b._latex()
             return a, b, c

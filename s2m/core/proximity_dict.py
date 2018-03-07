@@ -1,8 +1,10 @@
 from math import ceil
+from queue import Queue
 
 from s2m.core.prefix_dict import PrefixDict
 from s2m.core.phone_string import PhoneString
 from s2m.core.phones_map import PhonesMap
+from s2m.core.bwoq import BoundedWriteOnlyQueue
 from s2m.core.utils import _issilence
 
 class ProximityDict(PrefixDict, PhonesMap):
@@ -10,6 +12,7 @@ class ProximityDict(PrefixDict, PhonesMap):
     INFTY = float('inf')
     __memo = {}
     __memodc = {}
+    __memosil = {}
 
     def _update_cost_pref(self, current_cost, current_prefs, current_min_cost, new_pref):
         if current_cost <= current_min_cost + self.MARGIN:
@@ -69,6 +72,29 @@ class ProximityDict(PrefixDict, PhonesMap):
                         key=lambda x:x[1])[:max_count]
         self.__memo[word] = output
         return output
+
+    #à supprimer ?
+
+    def _find_nearest_to_silence(self, queue, node, base_cost=0):
+        if queue.will_be_rejected(base_cost):
+            return
+        if node in self:
+            queue[self[node]] = base_cost
+        for syll in self.children(node):
+            new_node = node + PhoneString(syll)
+            new_cost = base_cost + self.delete_cost(syll)
+            self._find_nearest_to_silence(queue, new_node, new_cost)
+
+    def find_nearest_to_silence(self, max_count=30):
+        if self.__memosil:
+            return self.__memosil 
+        queue = BoundedWriteOnlyQueue(size=max_count)
+        self._find_nearest_to_silence(queue, PhoneString(''))
+        nearest = {a: b for (a,b) in queue.sorted_list()}
+        self.__memosil = nearest
+        return nearest
+
+    # à supprimer ? fin -> supprimer aussi le __memosil
 
     def find_nearest_by_pronunciation(self, word):
         word = PhoneString(word)
@@ -139,7 +165,6 @@ class ProximityDict(PrefixDict, PhonesMap):
                         new_pref = pref + PhoneString(next_syll)
                         current_min_cost = self._update_cost_pref(current_cost, current_prefs,
                                                                   current_min_cost, new_pref)
-                        
                 #Calcul de la distance obtenue par insertion du dernier élément
                 if k-j < v_len-2:
                     for pref, cost in v_nearest[k-j+1].items():
