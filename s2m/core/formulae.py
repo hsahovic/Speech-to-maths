@@ -78,6 +78,9 @@ class Formula(metaclass=ABCMeta):
     @abstractmethod
     def tree_depth(self):
         pass
+        "renvoie la profondeur (relativement aux feuilles) "
+        "à laquelle on se trouve (la racine est de profondeur maximale, "
+        "les feuilles sont de profondeur 1)."
 
     @classmethod
     def generate_random(cls, depth=5):
