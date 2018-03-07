@@ -204,13 +204,17 @@ class Parser:
     def _known(self, desc, C, G, nearest, l, i):
 
         if desc in self.__expands:
-            for k in range(0, l):
+            for k in range(0, l+1):# l ou l+1 ?
                 for (l_desc, r_desc), f in self.__expands[desc]:
                     self._combine(C[l_desc][k][i],
                                   C[r_desc][l-k][i+k],
                                   C[desc][l][i],
                                   f)
+<<<<<<< HEAD
                     
+=======
+        
+>>>>>>> origin/master
         if desc in self.__reduces:
             for word, formula in self.__reduces[desc]:
                 hyp_score = self.proximity_dict.word_delete_cost(word) + G[i][l]
@@ -227,8 +231,12 @@ class Parser:
 
         return C[desc][l][i].min_value()
 
+<<<<<<< HEAD
 
     def myers(self, s, context_formula=None, placeholder_id=1, threshold_factor=2, verbose=False):
+=======
+    def myers(self, s, context_formula=None, placeholder_id=0, threshold_factor=2, min_threshold=4, verbose=False):
+>>>>>>> origin/master
 
         if verbose:
             _time = time()
@@ -271,10 +279,9 @@ class Parser:
                     _time2 -= time()
                 heap = heapdict()
                 for desc in self.__descriptors:
-                    C[desc][l][i].set_threshold(threshold_factor * current_min)
+                    C[desc][l][i].set_threshold(max(min_threshold, threshold_factor * current_min))
                     score = self._known(desc, C, G, nearest, l, i)
-                    if desc in self.__expands:
-                        heap[desc] = score
+                    heap[desc] = score
                     if score < current_min:
                         current_min = score
                 if verbose:
@@ -284,9 +291,14 @@ class Parser:
                     for formula, score in C[desc][l][i]:
                         C['%f'][l][i][formula] = score
                     C['%f'][l][i].prune()
+                iter1, iter2 = self.__expands, heap
                 while heap:
                     desc, _ = heap.popitem()
-                    for key in heap:
+                    if len(heap) == len(self.__expands):
+                        iter1, iter2 = iter2, iter1
+                    for key in iter1:
+                        if key not in iter2:
+                            continue
                         for (desc1, desc2), f in self.__expands[key]:
                             if desc1 == desc or desc2 == desc:
                                 self._combine(C[desc1][l][i],
