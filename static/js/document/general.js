@@ -142,6 +142,25 @@ function startRecording() {
     var mediaRecorder = sendContinuousAudio(500, voiceAnalysisLink, true, audioContentManager.manageAJAXResponse);
 }
 
+function getHelp(id) {
+    let parent = document.getElementById(id);
+    let query = parent.value;
+    let formData = new FormData;
+    let request = new XMLHttpRequest();
+
+    request.open("POST", helpLink);
+    request.setRequestHeader("X-CSRFToken", document.querySelector("[name=csrfmiddlewaretoken]").value);
+    communicationIndicatorManager.addRequest();
+    formData.append("query", query);
+    request.send(formData);
+    request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+            communicationIndicatorManager.endRequest();
+            console.log("something !");
+        }
+    }
+}
+
 var changeHappened = false;
 // Reactivate this
 // var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);

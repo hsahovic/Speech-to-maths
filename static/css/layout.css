@@ -192,7 +192,6 @@ input {
 }
 
 .tool-bar {
-    /* position: fixed; */
     width : 100%;
     border-bottom : 2px solid #e6e6e6;
 }
@@ -294,4 +293,15 @@ input {
     background-color: #09f;
     color : white;
     cursor : pointer;
+}
+
+
+
+
+.help-input {
+    border-radius: .3;
+    background-color: #e6e6e6;
+    height: 100%;
+    width : 21em;
+    margin-top : .3em;
 }
