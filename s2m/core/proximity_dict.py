@@ -42,6 +42,7 @@ class ProximityDict(PrefixDict, PhonesMap):
         for pronunciation in pronunciations:
             current_min = min(sum([self.delete_cost(phone) for phone in pronunciation]),
                               current_min)
+        self.__memodc[word] = current_min
         return current_min
         
     def find_nearest(self, word, max_count=10):

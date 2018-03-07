@@ -78,7 +78,7 @@ class Number(Formula):
         np = NumberParser()
         return np.transcribe(self.val)
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
 
         return next_placeholder
 

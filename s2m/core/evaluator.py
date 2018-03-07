@@ -4,7 +4,7 @@ class Evaluator:
         #outputs a score for formula based on a tensorflow calculation
         #TEMPORARY workaround
         if context_formula:
-            context_formula.replace_placeholder(formula, placeholder_id)
+            context_formula.replace_placeholder(formula, placeholder_id, conservative=True)
         else:
             context_formula = formula
         count_brackets_v = self.h_count_brackets(context_formula)[0]
