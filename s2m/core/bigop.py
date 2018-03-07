@@ -4,7 +4,7 @@ from functools import reduce
 
 from s2m.core.formulae import Formula
 
-from s2m.core.constructions.bigop_constructions import BigOperatorConstructions
+from s2m.core.constructions.bigop import BigOperatorConstructions
 
 import random
 
@@ -93,12 +93,19 @@ class BigOperator(Formula, BigOperatorConstructions):
     def d_symmetry(self):
         return self.__fl[-1].d_symmetry()
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
+
+        from s2m.core.placeholder import PlaceHolder
+
         for (i,f) in enumerate(self.__fl):
+            if isinstance(f, PlaceHolder) \
+               and next_placeholder == placeholder_id:
+                self.__fl[i] = formula
+                return 0
+            else:
                 next_placeholder = f.replace_placeholder(formula,
                                                          placeholder_id,
-                                                         next_placeholder,
-                                                         conservative)
+                                                         next_placeholder)
                 if next_placeholder == 0:
                     return 0
         return next_placeholder

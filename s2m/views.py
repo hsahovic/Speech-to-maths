@@ -30,44 +30,26 @@ from interface.views_utils import get_document
 @login_required
 def voice_analysis(request):
     try:
-        # Chargement du fichier son
         filename_ogg = save_file_from_request(
             request, "ogg", post_arg="file", file_path=os.path.join(MEDIA_ROOT, 'file_analysis'))
         filename_wav = ogg_to_wav(filename_ogg, delete_ogg=True)
-        # Chargement de la formule de contexte (si présente)
-        context_formula, placeholder_id = None, 0
-        if 'context_formula' in request.POST \
-           and 'placeholder_id' in request.POST:
-            context_formula_id = request.POST['context_formula']
-            placeholder_id = request.POST['placeholder_id']
-            context_formula_object = SavedFormula.objects.get(id=context_formula_id)
-            if context_formula_object:
-                context_formula = json.loads(context_formula_object.formula)
-        # Conversion du son en texte (Sphinx)
+        # nbest n'est pas lisible, je ne sais pas ce que c'est. Meilleur nom à utiliser.
+        # nbest ---> API de Sphinx, renvoie les n meilleurs interprétations possibles du son lu
         text, nbest = sphinx.to_text(filename_wav)
         os.remove(filename_wav)
-        # Récupération du document
         document = get_document(request)
         # a supprimer une fois le dev fini sur cette sequence
         print(text, nbest)
-        # Analyse syntaxique
         try:
-            parses = s2m_parser(text,
-                                document=document,
-                                context_formula=context_formula,
-                                placeholder_id=placeholder_id)
+            parses = s2m_parser(text, document=document)
         except:
             i = 0
             while not parses and i < len(nbest):
                 try:
-                    parses = s2m_parser(nbest[i],
-                                        document=document,
-                                        context_formula=context_formula,
-                                        placeholder_id=placeholder_id)
+                    parses = s2m_parser(nbest[i])
                 except:
                     pass
                 i += 1
-        # Renvoi de la réponse
         if parses == []:
             response = json.dumps({'instruction': 'nop'})
         else:
@@ -122,14 +104,12 @@ def validate_choice(request):
                 if saved_formula:
                     saved_formula.count += 1
                     saved_formula.save()
-                    return HttpResponse(saved_formula.id)
                 else:
                     formula_db = SavedFormula.objects.create()
                     formula_db.document = pending.document
                     formula_db.formula = pickled_formula
                     formula_db.chosen = (i == choice)
                     formula_db.save()
-                    return HttpResponse(formula_db.id)
     else:
         raise ValueError('There are no pending formulae under token %r' % token)
 

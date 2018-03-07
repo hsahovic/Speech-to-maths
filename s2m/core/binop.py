@@ -3,7 +3,7 @@ from s2m.core.number import Number
 
 from s2m.core.utils import merge_lists
 
-from s2m.core.constructions.binop_constructions import BinaryOperatorConstructions
+from s2m.core.constructions.binop import BinaryOperatorConstructions
 
 import random
 
@@ -177,20 +177,26 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
                                  self.OPERATORS_REVERSE[self.__o],
                                  self.__r.transcription())
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
 
-        next_placeholder = self.__l.replace_placeholder(formula,
-                                                        placeholder_id,
-                                                        next_placeholder,
-                                                        conservative)
+        from s2m.core.placeholder import PlaceHolder
+
+        if isinstance(self.__l, PlaceHolder) \
+           and next_placeholder == placeholder_id:
+            self.__l = formula
+            return 0
+        else:
+            next_placeholder = self.__l.replace_placeholder(formula, placeholder_id, next_placeholder)
 
         if next_placeholder == 0:
             return 0
+
+        if isinstance(self.__r, PlaceHolder) \
+             and next_placeholder == placeholder_id:
+            self.__r = formula
+            return 0
         else:
-            return self.__r.replace_placeholder(formula,
-                                                placeholder_id,
-                                                next_placeholder,
-                                                conservative)
+            return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder)
 
     def tree_depth(self):
         return 1+max(self.__r.tree_depth(),self.__l.tree_depth())

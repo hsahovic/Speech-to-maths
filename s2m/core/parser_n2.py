@@ -66,8 +66,8 @@ class Parser:
             self.__rule_names.append(name)
         if is_expression:
             self.__expression_descriptors.add(_unslash('$' + name))
-            
-    def add_easy_reduce(self, name, d, f, is_expression=False, no_pregen=False):
+
+    def add_easy_reduce(self, name, d, f, is_expression=False):
 
         self._validate_name(name, is_expression)
 
@@ -80,10 +80,7 @@ class Parser:
             if len(words) == 0:
                 raise ValueError('String to be recognized by the parser must be non-empty.')
             elif len(words) == 1:
-                if no_pregen:
-                    self.add_reduce(unslashed_name, key, (f, val))
-                else:
-                    self.add_reduce(unslashed_name, key, f(val))
+                self.add_reduce(unslashed_name, key, f(val))
             elif len(words) == 2:
                 self.add_reduce('$%s/%r.0' % (name, k), words[0])
                 self.add_reduce('$%s/%r.1' % (name, k), words[1])
@@ -175,11 +172,7 @@ class Parser:
             return formulae
 
     def _combine(self, l_queue, r_queue, dest, f):
-
-        min_score_hyp = l_queue.min_value() + r_queue.min_value()
-        if dest.will_be_rejected(min_score_hyp):
-            return
-
+        
         for l_formula, l_score in l_queue:
             for r_formula, r_score in r_queue:
                 score_hyp = l_score + r_score
@@ -217,7 +210,7 @@ class Parser:
                                   C[r_desc][l-k][i+k],
                                   C[desc][l][i],
                                   f)
-
+                    
         if desc in self.__reduces:
             for word, formula in self.__reduces[desc]:
                 hyp_score = self.proximity_dict.word_delete_cost(word) + G[i][l]
@@ -227,17 +220,15 @@ class Parser:
                         hyp_score = hyp_score2
                 if formula is None:
                     C[desc][l][i][ [] ] = hyp_score
-                elif type(formula) is tuple:
-                    func, val = formula
-                    C[desc][l][i][ [func(val)] ] = hyp_score
                 else:
                     C[desc][l][i][ [formula] ] = hyp_score
 
         C[desc][l][i].prune()
+
         return C[desc][l][i].min_value()
 
 
-    def myers(self, s, context_formula=None, placeholder_id=0, threshold_factor=2, verbose=False):
+    def myers(self, s, context_formula=None, placeholder_id=1, threshold_factor=2, verbose=False):
 
         if verbose:
             _time = time()
@@ -275,7 +266,6 @@ class Parser:
 
         for l in range(0, N+1):
             for i in range(0, N-l+1):
-                #print([[d.min_value() for d in c] for c in C['$brackettedblock/implicit.0t1']])
                 current_min = float('inf')
                 if verbose:
                     _time2 -= time()
@@ -330,5 +320,11 @@ class Parser:
 
         if verbose:
             print("Output took: %rs" % (time() - _time))
-
+            
+        #if context_formula:
+            #does not work
+            #print(return_list[0][0][0].latex())
+            #return [([context_formula.replace_placeholder(f[0], placeholder_id)], v)
+            #        for (f,v) in return_list]
+        #else:
         return return_list

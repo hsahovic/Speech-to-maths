@@ -2,17 +2,11 @@ from s2m.core.utils import _unlist
 
 class BoundedWriteOnlyQueue:
 
-    #À faire:
-    #Enlever tous les [:2]
-    #Stocker les ukeys dans un **tableau** dédié parallèle à dict
-    #Corriger le passage stupide
-
     def __init__(self, comparator=None, size=5, args=None):
 
         self.__size = size
         self.__dict = []
-        self.__keys = {}
-        self.__ukeys = []
+        self.__keys = set()
         self.__min = float('inf')
         self.__comparator = comparator or (lambda x, y: x[1] > y[1])
         self.__args = args or ()
@@ -28,31 +22,30 @@ class BoundedWriteOnlyQueue:
 
         if value < self.__min:
             self.__min = value
-            
+
         if self.__dict == []:
             self.__dict.append(item)
-            self.__ukeys.append(ukey)
-            self.__keys[ukey] = 0
+            self.__keys.add(ukey)
             return
 
         if ukey in self.__keys:
-            index = self.__keys[ukey]
-            if self.__comparator(self.__dict[index], item, *self.__args):
-                self.__dict[index] = item
-                self._travel_down(index)
-            return
+            for i in range(len(self.__dict)):
+                if self.__dict[i][0] == key:
+                    if self.__comparator(self.__dict[i], item, *self.__args):
+                        self.__dict[i] = item
+                        self._travel_down(i)
+                    return
 
         if len(self.__dict) < self.__size:
-            self.__dict.append(item)
-            self.__ukeys.append(ukey)
-            self.__keys[ukey] = len(self.__dict) - 1
+            self.__dict.append((key, value))
+            self.__keys.add(ukey)
             self._travel_up(len(self.__dict) - 1)
 
         elif self.__comparator(self.__dict[0], item, *self.__args):
-            del self.__keys[self.__ukeys[0]]
-            self.__dict[0] = item
-            self.__ukeys[0] = ukey
-            self.__keys[ukey] = 0
+
+            self.__keys.remove(_unlist(self.__dict[0][0]))
+            self.__dict[0] = (key, value)
+            self.__keys.add(ukey)
             self._travel_down(0)
 
     def __iter__(self):
@@ -66,8 +59,7 @@ class BoundedWriteOnlyQueue:
     def clear(self):
 
         self.__dict = []
-        self.__keys = {}
-        self.__ukeys = []
+        self.__keys = set()
         self.__min = float('inf')
     
     def sorted_list(self):
@@ -77,19 +69,15 @@ class BoundedWriteOnlyQueue:
     def prune(self):
 
         if self.__min == 0:
-            while self.__dict[0][1] > 0:
-                self._exchange(0, len(self) - 1)
-                del self.__dict[-1]
-                del self.__keys[self.__ukeys[-1]]
-                del self.__ukeys[-1]
-                self._travel_down(0)
+            new_dict = list(filter(lambda x: x[1] <= self.__min,
+                                   self.__dict))
+            self.clear()
+            for k, v in new_dict:
+                self[k] = v
 
     def _exchange(self, i, j):
 
-        ukeyi, ukeyj = self.__ukeys[i], self.__ukeys[j]
-        self.__keys[ukeyi], self.__keys[ukeyj] = self.__keys[ukeyj], self.__keys[ukeyi]
         self.__dict[i], self.__dict[j] = self.__dict[j], self.__dict[i]
-        self.__ukeys[i], self.__ukeys[j] = self.__ukeys[j], self.__ukeys[i]
 
     def _travel_down(self, i):
 	
@@ -122,5 +110,5 @@ class BoundedWriteOnlyQueue:
     def will_be_rejected(self, value):
 
         return (len(self.__dict) == self.__size \
-                and value > self.__dict[0][1]) \
-               or (value > self.__threshold)
+            and value > self.__dict[0][1]) \
+            or (value > self.__threshold)

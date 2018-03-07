@@ -59,19 +59,22 @@ class BrackettedBlock(Formula):
         return 'ouvrez la parenthèse %s fermez la parenthèse' \
                % self.__b.transcription()
 
-    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
+    def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
 
-        return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder, conservative)
-
-    def tree_depth(self):
-
-        return 1 + self.__b.tree_depth()
+        from s2m.core.placeholder import PlaceHolder
+        
+        if isinstance(self.__b, PlaceHolder) \
+           and next_placeholder == placeholder_id:
+            self.__b = formula
+            return 0
+        else:
+            return self.__b.replace_placeholder(formula, placeholder_id, next_placeholder)
 
     @classmethod
     def teach(cls, parser):
 
         def bracketted_block_complex_expand(words):
-            return BrackettedBlock(words[0])            
+            return BrackettedBlock(words[0])
 
         bracketted_block_explicit_complex = ('brackettedblock/explicit',
                                              'ouvrez la parenthèse %f fermez la parenthèse',

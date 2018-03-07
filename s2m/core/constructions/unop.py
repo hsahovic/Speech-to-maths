@@ -1,4 +1,4 @@
-from s2m.core.constructions.constructions import Construction
+from s2m.core.constructions.construction import Construction
 
 from s2m.core.utils import reverse_dict
 
@@ -7,19 +7,13 @@ class UnaryOperatorConstructions(Construction):
     OPERATORS = {'NEG': {'latex': '-%s', 'priority': 4, 'nobrackets': False},
                  'SQR': {'latex': '\\sqrt{%s}', 'priority': 5, 'nobrackets': True},
                  '3SQ': {'latex': '\\sqrt[3]{%s}', 'priority': 5, 'nobrackets': True},
-                 'ABS': {'latex': '\\left| %s \\right|', 'priority': 5, 'nobrackets': True},
-                 'FAC': {'latex': '%s!', 'priority': 5, 'nobrackets': True},
-                 'CON': {'latex': '\overline{%s}', 'priority': 4, 'nobrackets': True},
-                 'FLO': {'latex': '\lfloor %s \rfloor', 'priority': 5, 'nobrackets': True}}
+                 'ABS': {'latex': '\\left| %s \\right|', 'priority': 5, 'nobrackets': True}}
 
     OPERATORS_PARSED = {'moins': 'NEG',
                         'racine de': 'SQR',
                         'racine carré de': 'SQR',
                         'racine cubique de': '3SQ',
-                        'valeur absolu de': 'ABS',
-                        'factorielle de': 'FAC',
-                        'conjugué de': 'CON',
-                        'partie entière de': 'FLO'}
+                        'valeur absolu de': 'ABS'}
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 
