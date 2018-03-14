@@ -104,7 +104,17 @@ class BigOperator(Formula, BigOperatorConstructions):
         return next_placeholder
 
     def tree_depth(self):
-        return 1+max([(self.__fl)[i].tree_depth() for i in range (self.__fl).length()])
+        return 1+max([self.__fl[i].tree_depth() for i in range (self.__fl).length()])
+
+     def extract_3tree(self):
+         temp_depth=self.tree_depth
+        if temp_depth==3:
+             return set(self)
+        elif temp_depth>3:
+            return self.__r.extract_3tree().union(self.__r.extract_3tree())
+        else:
+            return set()
+    
 
     @classmethod
     def teach(cls, parser):

@@ -82,6 +82,13 @@ class Formula(metaclass=ABCMeta):
         "à laquelle on se trouve (la racine est de profondeur maximale, "
         "les feuilles sont de profondeur 1)."
 
+    
+    @abstractmethod 
+    def extract_3tree(self):
+        pass
+        "renvoie l'ensemble des 3 arbres présents dans l'arbre synthaxique"
+
+    
     @classmethod
     def generate_random(cls, depth=5):
 

@@ -102,6 +102,15 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
 
     def tree_depth(self):
         return 1+self.__r.tree_depth()
+    
+     def extract_3tree(self):
+        temp_depth=self.tree_depth
+        if temp_depth==3:
+             return set(self)
+        elif temp_depth>3:
+            return return self.__r.extract_3tree()
+        else:
+            return set()
 
     @classmethod
     def teach(cls, parser):
