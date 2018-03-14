@@ -9,14 +9,10 @@ import pickle
 
 #Beware! Always load s2m_parser before including sphinx
 #so as to make sure config files are generated BEFORE sphinx is turned on
-from s2m.core.S2MParser import s2m_parser
-# try:
-#     from s2m.core.S2MParser import s2m_parser
-# except RuntimeError as exc:
-#     print("Echec de l'import de s2m_parser dans s2m/views.py ; ignoré par défaut. La reconnaissance vocale échouera.")
-# except TypeError as exc :
-#     print("Echec de l'import de s2m_parser dans s2m/views.py ; ignoré par défaut. La reconnaissance vocale échouera.")
-
+try:
+    from s2m.core.S2MParser import s2m_parser
+except RuntimeError as exc:
+    print("Echec de l'import de s2m_parser dans s2m/views.py ; ignoré par défaut. La reconnaissance vocale échouera.")
 
 import s2m.core.sphinx_training
 
@@ -140,7 +136,5 @@ def validate_choice(request):
     
 @login_required
 def help_construction(request):
-    print(request.POST['query'])
-    
-    response = json.dumps(s2m_parser.help(request.POST['query']))
+    response = json.dumps(s2m_parser.help(request.POST['string']))
     return HttpResponse(response)

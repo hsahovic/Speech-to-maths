@@ -194,6 +194,15 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
 
     def tree_depth(self):
         return 1+max(self.__r.tree_depth(),self.__l.tree_depth())
+
+    def extract_3tree(self):
+        temp_depth=self.tree_depth
+        if temp_depth==3:
+             return set(self)
+        elif temp_depth>3:
+            return self.__r.extract_3tree().union(self.__r.extract_3tree())
+        else:
+            return set()
     
     @classmethod
     def teach(cls, parser):
