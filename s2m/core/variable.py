@@ -6,6 +6,7 @@ from s2m.core.constructions.variable_constructions import VariableConstructions
 
 import random
 
+
 class Variable(Formula, VariableConstructions):
 
     def __init__(self, v):

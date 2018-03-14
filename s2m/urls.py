@@ -1,5 +1,4 @@
 """s2m URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
 Examples:
@@ -24,5 +23,6 @@ urlpatterns = [
     url(r'^admin', admin.site.urls),
     url(r'^ajax/voice_analysis/?$', views.voice_analysis, name = "voice_analysis"),
     url(r'^ajax/voice_training/?$', views.voice_training, name = "voice_training"),
+    url(r'^ajax/help', views.help_construction, name = "help-construction"),
     url(r'', include('interface.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
