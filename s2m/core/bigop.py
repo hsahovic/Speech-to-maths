@@ -111,7 +111,7 @@ class BigOperator(Formula, BigOperatorConstructions):
         if temp_depth==3:
              return set(self)
         elif temp_depth>3:
-            return self.__r.extract_3tree().union(self.__r.extract_3tree())
+            return set().union([self.__fl[i].extract_3tree() for i in range(self.__fl.lenght())])
         else:
             return set()
     
