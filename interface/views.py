@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 from django.http import Http404
 from django.shortcuts import render, redirect, HttpResponse, reverse
 
@@ -10,6 +11,7 @@ import json
 import uuid
 
 from s2m.core.formulae import Formula
+from s2m.core.s2m_training import s2m_training
 
 
 @login_required
@@ -20,6 +22,13 @@ def account(request):
     password_form = forms.ChangePasswordForm(request.user, None)
     suppression_form = forms.DeleteAccountForm(request.user, None)
     return render(request, 'account.html', locals())
+
+
+@login_required
+def log_out(request, **kwargs):
+    user = get_user(request)
+    s2m_training.schedule(user.s2m_model)
+    return auth_views.logout(request, **kwargs)
 
 
 @login_required
@@ -151,6 +160,7 @@ def save_document(request):
     doc.content = data["newContent"]
     # Regenere pdf ?
     doc.save()
+    s2m_training.schedule(doc.s2m_model)
     return HttpResponse(json.dumps({"result": True}))
 
 

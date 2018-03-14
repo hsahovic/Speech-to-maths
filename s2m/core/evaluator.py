@@ -1,3 +1,7 @@
+import numpy as np
+
+from django.apps import apps
+
 class Evaluator:
 
     def __call__(self, formula, context_formula=None, placeholder_id=1):
@@ -13,7 +17,30 @@ class Evaluator:
         symmetry_v = sum(s * w for s, w in zip(symmetry, WEIGHTS))
         result = (count_brackets_v + symmetry_v) / 2
         return result
-    
+
+    def evaluate(self, formula, document):
+        v_count_brackets = self.h_count_brackets(formula)
+        v_symmetry = self.h_symmetry(formula)
+        input_vector = np.array(v_count_brackets + v_symmetry)
+        user = document.author
+        system = apps.get_model('interface', 'S2MModel').objects.get(id=0)
+        result_document = self.evaluate_model(document, input_vector)
+        result_user = self.evaluate_model(user, input_vector)
+        result_system = self.evaluate_model(system, input_vector)
+        return (result_document + result_user + result_system) / 3
+
+    def evaluate_model(self, model, document):
+        #todo
+        return 0.
+
+    def create_empty_model(self):
+        #todo
+        return None
+
+    def train_model(self, model):
+        #todo
+        pass
+            
     ##Functions starting with h_ are heuristics
 
     #Formula -> [0,1]²

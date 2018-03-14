@@ -178,3 +178,7 @@ def is_pickled_formula_list(self, value):
             return reduce(lambda x,y: x and isinstance(y, Formula), obj, True)
         else:
             return False
+
+
+def print_important(s):
+    print('\033[1;34m' + s + '\033[0;0m')

@@ -6,7 +6,7 @@ import subprocess
 from threading import Thread
 
 from interface.models import TrainingSample
-from s2m.core.utils import args_from_dict
+from s2m.core.utils import args_from_dict, print_important
 from s2m.settings import MEDIA_ROOT
 
 
@@ -16,6 +16,8 @@ class SphinxTraining(Thread):
         Thread.__init__(self)
 
     def run(self):
+
+        print_important("Info! Thread sphinx_training started.") 
 
         # Échantillons
         training_dir = os.path.join(MEDIA_ROOT, "training_data")

@@ -6,17 +6,31 @@ from s2m.settings import MEDIA_ROOT
 from s2m.core.utils import generate_random_word
 from s2m.core.formulae import Formula
 from s2m.core.utils import is_pickled_formula, is_pickled_formula_list
+from s2m.core.evaluator import evaluator
 
 import os
 import subprocess
 import uuid
+import json
 
-
+class S2MModel(models.Model):
+    
+    json_model = models.TextField(default=
+                                  json.dumps(evaluator.create_empty_model()))
+    
 class Utilisateur(User):
 
+    s2m_model = models.OneToOneField(S2MModel, on_delete=models.CASCADE, null=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.json_model:
+            new_s2m_model = S2MModel()
+            new_s2m_model.save()
+            self.s2m_model = new_s2m_model
+        super().save(self, *args, **kwargs)
+        
     def __str__(self):
         return self.username
-
 
 class Document(models.Model):
 
@@ -28,6 +42,15 @@ class Document(models.Model):
     last_modification_date = models.DateField(auto_now=True)
     pdf = models.FileField(upload_to="latex_files/", default="")
     title = models.CharField(max_length=2048)
+
+    s2m_model = models.OneToOneField(S2MModel, on_delete=models.CASCADE, null=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.json_model:
+            new_s2m_model = S2MModel()
+            new_s2m_model.save()
+            self.s2m_model = new_s2m_model
+        super().save(self, *args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -87,31 +110,3 @@ class SavedFormula(models.Model):
     formula = models.TextField(validators=[is_pickled_formula])
     count = models.IntegerField(default=1)
     chosen = models.BooleanField(default=False)
-
-class Constant(models.Model):
-    
-    name = models.CharField(max_length=16)
-    value = models.FloatField()
-
-    class Meta:
-        abstract = True
-    
-class DocumentConstant(Constant):
-
-    document = models.ForeignKey(Document,
-                                 blank=True,
-                                 null=True,
-                                 on_delete=models.CASCADE,
-                                 related_name='constset')
-
-class UserConstant(Constant):
-
-    user = models.ForeignKey(Utilisateur,
-                             blank=True,
-                             null=True,
-                             on_delete=models.CASCADE,
-                             related_name='constset')
-
-class GeneralConstant(Constant):
-
-    pass

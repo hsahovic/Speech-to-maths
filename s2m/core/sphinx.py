@@ -1,7 +1,7 @@
 import os
 from threading import Thread
 from pocketsphinx import Pocketsphinx, AudioFile
-from s2m.core.utils import nobrackets
+from s2m.core.utils import nobrackets, print_important
 
 
 class Sphinx(Thread):
@@ -11,6 +11,7 @@ class Sphinx(Thread):
         self.ready = False
 
     def run(self):
+        print_important("Info! Thread sphinx started.") 
         self.config = {
             'verbose': True,
             'hmm': os.path.join('s2m', 'core', 'sphinx', 'fr'),

@@ -8,7 +8,9 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="index.html")),
     url(r'^index/?$', TemplateView.as_view(template_name="index.html"), name='index'),
 
-    url(r'^log-out/?$', auth_views.logout, {
+    #url(r'^log-out/?$', auth_views.logout, {
+        #'next_page': 'index'}, name='log_out'),
+    url(r'^log-out/?$', views.log_out, {
         'next_page': 'index'}, name='log_out'),
     url(r'^sign-in/?$', auth_views.login, {
         'template_name': 'sign-in.html'}, name='sign_in'),
