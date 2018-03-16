@@ -13,24 +13,28 @@ import subprocess
 import uuid
 import json
 
+
 class S2MModel(models.Model):
-    
-    json_model = models.TextField(default=
-                                  json.dumps(evaluator.create_empty_model()))
-    
+
+    json_model = models.TextField(
+        default=json.dumps(evaluator.create_empty_model()))
+
+
 class Utilisateur(User):
 
-    s2m_model = models.OneToOneField(S2MModel, on_delete=models.CASCADE, null=True)
-    
+    s2m_model = models.OneToOneField(
+        S2MModel, on_delete=models.CASCADE, null=True)
+
     def save(self, *args, **kwargs):
-        if not self.json_model:
-            new_s2m_model = S2MModel()
-            new_s2m_model.save()
-            self.s2m_model = new_s2m_model
+        # if not self.json_model:
+        #     new_s2m_model = S2MModel()
+        #     new_s2m_model.save()
+        #     self.s2m_model = new_s2m_model
         super().save(self, *args, **kwargs)
-        
+
     def __str__(self):
         return self.username
+
 
 class Document(models.Model):
 
@@ -43,13 +47,14 @@ class Document(models.Model):
     pdf = models.FileField(upload_to="latex_files/", default="")
     title = models.CharField(max_length=2048)
 
-    s2m_model = models.OneToOneField(S2MModel, on_delete=models.CASCADE, null=True)
-    
+    s2m_model = models.OneToOneField(
+        S2MModel, on_delete=models.CASCADE, null=True)
+
     def save(self, *args, **kwargs):
-        if not self.json_model:
-            new_s2m_model = S2MModel()
-            new_s2m_model.save()
-            self.s2m_model = new_s2m_model
+        # if not self.json_model:
+        #     new_s2m_model = S2MModel()
+        #     new_s2m_model.save()
+        #     self.s2m_model = new_s2m_model
         super().save(self, *args, **kwargs)
 
     def __str__(self):
@@ -77,13 +82,16 @@ class Document(models.Model):
         subprocess.call(["rm", path + ".log"])
         subprocess.call(["rm", path + ".aux"])
 
+
 class ElementaryFormula(models.Model):
 
-    document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='elementary_formulae')
+    document = models.ForeignKey(
+        'Document', on_delete=models.CASCADE, related_name='elementary_formulae')
     creation_date = models.DateField(auto_now_add=True)
     formula = models.TextField(validators=[is_pickled_formula])
     count = models.IntegerField(default=1)
-        
+
+
 class TrainingSample(models.Model):
 
     audio = models.FileField(upload_to="training_data")
@@ -96,16 +104,20 @@ class TrainingSample(models.Model):
     def __str__(self):
         return self.text
 
+
 class PendingFormulae(models.Model):
 
-    token = models.CharField(max_length=12,unique=True)
-    document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='pending_formulae')
+    token = models.CharField(max_length=12, unique=True)
+    document = models.ForeignKey(
+        'Document', on_delete=models.CASCADE, related_name='pending_formulae')
     creation_date = models.DateField(auto_now_add=True)
     formulae = models.TextField(validators=[is_pickled_formula_list])
 
+
 class SavedFormula(models.Model):
 
-    document = models.ForeignKey('Document',on_delete=models.CASCADE, related_name='saved_formulae')
+    document = models.ForeignKey(
+        'Document', on_delete=models.CASCADE, related_name='saved_formulae')
     creation_date = models.DateField(auto_now_add=True)
     formula = models.TextField(validators=[is_pickled_formula])
     count = models.IntegerField(default=1)
