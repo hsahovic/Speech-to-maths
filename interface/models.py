@@ -23,7 +23,7 @@ class Utilisateur(User):
     s2m_model = models.OneToOneField(S2MModel, on_delete=models.CASCADE, null=True)
     
     def save(self, *args, **kwargs):
-        if not self.json_model:
+        if not self.s2m_model:
             new_s2m_model = S2MModel()
             new_s2m_model.save()
             self.s2m_model = new_s2m_model
@@ -46,7 +46,7 @@ class Document(models.Model):
     s2m_model = models.OneToOneField(S2MModel, on_delete=models.CASCADE, null=True)
     
     def save(self, *args, **kwargs):
-        if not self.json_model:
+        if not self.s2m_model:
             new_s2m_model = S2MModel()
             new_s2m_model.save()
             self.s2m_model = new_s2m_model

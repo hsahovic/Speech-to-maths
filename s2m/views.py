@@ -142,4 +142,5 @@ def validate_choice(request):
 def help_construction(request):
     print(request.POST['query'])
     response = json.dumps(s2m_parser.help(request.POST['query']))
+    print(response)
     return HttpResponse(response)
