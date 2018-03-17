@@ -299,9 +299,34 @@ input {
 
 
 .help-input {
-    border-radius: .3;
+    border-radius: .3em;
     background-color: #e6e6e6;
     height: 100%;
     width : 21em;
-    margin-top : .3em;
+    margin : .3em;
+}
+
+#help-text-responses {
+    background-color: white;
+    border-radius: 0 0 .3em .3em;
+}
+.help-text-container {
+    padding : 0 .5em .5em .5em;
+}
+
+.help-text-header {
+    font-size: 1.3em;
+    color : #09f;
+}
+
+.help-text-latex-example {
+
+}
+
+.help-text-speech-example {
+
+}
+
+.help-text-speech {
+
 }

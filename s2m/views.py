@@ -140,7 +140,15 @@ def validate_choice(request):
     
 @login_required
 def help_construction(request):
+<<<<<<< HEAD
     print(request.POST['query'])
     response = json.dumps(s2m_parser.help(request.POST['query']))
     print(response)
     return HttpResponse(response)
+=======
+    if request.POST['query'] != "" :
+        response = json.dumps(s2m_parser.help(request.POST['query']))
+    else :
+        response = json.dumps([])
+    return HttpResponse(response)
+>>>>>>> ff28c4a8da2af63e56822673be937a1ab910da40
