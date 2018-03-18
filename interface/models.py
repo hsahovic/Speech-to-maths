@@ -26,10 +26,10 @@ class Utilisateur(User):
         S2MModel, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
-        # if not self.json_model:
-        #     new_s2m_model = S2MModel()
-        #     new_s2m_model.save()
-        #     self.s2m_model = new_s2m_model
+        if not self.s2m_model:
+            new_s2m_model = S2MModel()
+            new_s2m_model.save()
+            self.s2m_model = new_s2m_model
         super().save(self, *args, **kwargs)
 
     def __str__(self):
@@ -51,10 +51,10 @@ class Document(models.Model):
         S2MModel, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
-        # if not self.json_model:
-        #     new_s2m_model = S2MModel()
-        #     new_s2m_model.save()
-        #     self.s2m_model = new_s2m_model
+        if not self.s2m_model:
+            new_s2m_model = S2MModel()
+            new_s2m_model.save()
+            self.s2m_model = new_s2m_model
         super().save(self, *args, **kwargs)
 
     def __str__(self):
