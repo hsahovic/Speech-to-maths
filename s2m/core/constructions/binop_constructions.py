@@ -3,7 +3,7 @@ from s2m.core.constructions.constructions import Construction
 from s2m.core.utils import reverse_dict
 
 class BinaryOperatorConstructions(Construction):
-
+#Test
     OPERATORS = {'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
                  'NEQ': {'latex': '%s \\neq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                  'GEQ': {'latex': '%s \\geq %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
