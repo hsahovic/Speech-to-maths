@@ -138,8 +138,6 @@ function startRecording() {
     var mediaRecorder = sendContinuousAudio(500, voiceAnalysisLink, true, audioContentManager.manageAJAXResponse);
 }
 
-<<<<<<< HEAD
-=======
 function getHelp(id) {
     let parent = document.getElementById(id);
     let query = parent.value;
@@ -215,7 +213,6 @@ function getHelp(id) {
     }
 }
 
->>>>>>> 8f5a4c85635d556366224a7629f98c5e0eef8e4d
 var changeHappened = false;
 // Reactivate this
 // var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);

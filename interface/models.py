@@ -11,26 +11,18 @@ from s2m.core.evaluator import evaluator
 import os
 import subprocess
 import uuid
-import json
 
 
 class S2MModel(models.Model):
 
     json_model = models.TextField(
-        default=json.dumps(evaluator.create_empty_model()))
+        default=evaluator.create_empty_model().to_json())
 
 
 class Utilisateur(User):
 
     s2m_model = models.OneToOneField(
         S2MModel, on_delete=models.CASCADE, null=True)
-
-    def save(self, *args, **kwargs):
-        if not self.s2m_model:
-            new_s2m_model = S2MModel()
-            new_s2m_model.save()
-            self.s2m_model = new_s2m_model
-        super().save(self, *args, **kwargs)
 
     def __str__(self):
         return self.username
@@ -49,13 +41,6 @@ class Document(models.Model):
 
     s2m_model = models.OneToOneField(
         S2MModel, on_delete=models.CASCADE, null=True)
-
-    def save(self, *args, **kwargs):
-        if not self.s2m_model:
-            new_s2m_model = S2MModel()
-            new_s2m_model.save()
-            self.s2m_model = new_s2m_model
-        super().save(self, *args, **kwargs)
 
     def __str__(self):
         return self.title

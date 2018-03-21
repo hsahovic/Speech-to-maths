@@ -55,14 +55,10 @@
  --><div class = "text-editor-button-group">
 		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fa fa-table" aria-hidden="true"></i></button>
 	</div>	
-<<<<<<< HEAD
-=======
-
 	<span class = "to-the-right help-container" >
 		&nbsp; <i class="fa fa-question-circle" aria-hidden="true"> </i> 
 		<input class = "help-input" type = "text"  id = "help" name = "help" oninput = "getHelp('help')" placeholder = "Taper une formule ici pour obtenir de l'aide" form = "help">
 	</span>
->>>>>>> 8f5a4c85635d556366224a7629f98c5e0eef8e4d
 </div>
 
 	<div id = "latext-area" class = "latext-area"></div>
@@ -108,8 +104,9 @@ MathJax.Hub.Config({
 <script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script> 
 	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
-	var documentSaveLink = "{% url 'save_document' %}"
+	var documentSaveLink = "{% url 'save_document' %}";
 	var docID = {{ doc.id }};
 	var latextArea = new LatextArea("latext-area", "hidden-origin");
+	var helpLink = "{% url 'help_construction' %}";
 </script>
 {% endblock %}

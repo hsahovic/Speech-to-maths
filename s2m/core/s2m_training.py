@@ -16,16 +16,16 @@ class S2MTraining(Thread):
         if not system:
             system = S2MModel()
             system.id = 0
-            system.json_model = self.create_empty_model()
+            system.json_model = self.create_empty_model().to_json()
             system.save()
         import s2m.core.system_training_daemon
 
-    def schedule(self, job, force=False):
+    def schedule(self, job, no_obj=False, force=False):
         if force:
-            self.__queue.put(job)
+            self.__queue.put((job, no_obj))
         else:
             try:
-                self.__queue.put(job, timeout=2)
+                self.__queue.put((job, no_obj), timeout=2)
             except:
                 print("Warning! Training task scheduling timeout.")
 
@@ -33,7 +33,7 @@ class S2MTraining(Thread):
         print_important("Info! Thread s2m_training started.")
         system_training_enabled = False
         while True:
-            job = self.__queue.get()
+            job, no_obj = self.__queue.get()
             if not system_training_enabled:
                 try:
                     self.enable_system_training()
@@ -42,7 +42,7 @@ class S2MTraining(Thread):
                 else:
                     system_training_enabled = True
             try:
-                evaluator.train_model(job)
+                evaluator.train_model(job, no_obj=no_obj)
             except Exception as e:
                 print("Warning! While training S2M model, the following " \
                       "exception was raised: " + repr(e))

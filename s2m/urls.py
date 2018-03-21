@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^admin', admin.site.urls),
     url(r'^ajax/voice_analysis/?$', views.voice_analysis, name = "voice_analysis"),
     url(r'^ajax/voice_training/?$', views.voice_training, name = "voice_training"),
+    url(r'^ajax/help_construction/?$', views.help_construction, name = "help_construction"),
     url(r'', include('interface.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

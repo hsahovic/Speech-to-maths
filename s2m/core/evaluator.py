@@ -21,9 +21,7 @@ class Evaluator:
         return result
 
     def evaluate(self, formula, document):
-        v_count_brackets = self.h_count_brackets(formula)
-        v_symmetry = self.h_symmetry(formula)
-        input_vector = np.array(v_count_brackets + v_symmetry)
+        input_vector = self.h_all(formula)
         user = document.author
         system = apps.get_model('interface', 'S2MModel').objects.get(id=0)
         result_document = self.evaluate_model(document, input_vector)
@@ -31,13 +29,18 @@ class Evaluator:
         result_system = self.evaluate_model(system, input_vector)
         return (result_document + result_user + result_system) / 3
 
-    def evaluate_model(self, model, input_vector):
-        if len(input_vector.shape)==1:
-            input_vector.shape=(input_vector.shape[0],1)
-        self.model=model_from_json(model)
-        return self.model.predict(input_vector)
+    def evaluate_model(self, obj, input_vector):
+        if len(input_vector.shape) == 1:
+            input_vector.shape = (input_vector.shape[0],1)
+        if not obj.s2m_model:
+            model = apps.get_model('interface', 'S2MModel')()
+            model.save()
+            obj.s2m_model = model
+            obj.save()
+        else:
+            model = model_from_json(obj.s2m_model)
+        return model.predict(input_vector)
         
-
     def create_empty_model(self):
         model = Sequential()
         model.add(Dense(32, activation='relu', input_dim=9))
@@ -46,28 +49,40 @@ class Evaluator:
         model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['accuracy'])
-        self.model=model
-        pass
+        return model
 
-    def train_model(self, model):
-        ### to do : Data + label from docs
-        data=np.array([[np.random.randint(0,2) for i in range(8)] + [np.random.rand()] for j in range(1000)])
-        labels = np.random.randint(2, size=(1000, 1))
-        self.model.fit(data,labels,epoch=10,batch_size=32)
-        model.weights=self.model.to_json()
-        pass
+    def train_model(self, obj, no_obj=False):
+        saved_formulae = apps.get_model('interface', 'SavedFormula').objects.all()
+        data, labels = zip([(np.array(self.h_all(f.formula)), float(f.chosen)) for f in saved_formulae])
+        np_data, np_labels = np.array(data), np.array(labels)
+        if not no_obj and not obj.s2m_model:
+            model = apps.get_model('interface', 'S2MModel')()
+            model.save()
+            obj.s2m_model = model
+            obj.save()
+        elif no_obj:
+            model = obj
+        kmodel = model_from_json(model.json_model)
+        kmodel.fit(np_data, np_labels, epoch=10, batch_size=32)
+        model.json_model = kmodel.to_json()
+        model.save()
+
+    def h_all(self, formula):
+        v_count_brackets = self.h_count_brackets(formula)
+        v_symmetry = self.h_symmetry(formula)
+        v_all = np.array(v_count_brackets + v_symmetry)
+        return v_all
+
     ##Functions starting with h_ are heuristics
 
     #Formula -> [0,1]²
     def h_count_brackets(self, formula):
-
         y, n = formula.count_brackets()
         s = y + n
         return (y / s,) if s else (1.,)
 
     #Formula
     def h_symmetry(self, formula):
-        
         return tuple([e or 0. for e in formula.d_symmetry()])
 
 evaluator = Evaluator()

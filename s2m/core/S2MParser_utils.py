@@ -9,3 +9,4 @@ def append_formulae(self, formulae, document):
     formulae_db.formulae = pickle.dumps(formulae)
     formulae_db.document = document
     formulae_db.save()
+    return formulae_db.token

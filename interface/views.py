@@ -27,7 +27,7 @@ def account(request):
 @login_required
 def log_out(request, **kwargs):
     user = get_user(request)
-    s2m_training.schedule(user.s2m_model)
+    s2m_training.schedule(user)
     return auth_views.logout(request, **kwargs)
 
 
@@ -160,7 +160,7 @@ def save_document(request):
     doc.content = data["newContent"]
     # Regenere pdf ?
     doc.save()
-    s2m_training.schedule(doc.s2m_model)
+    s2m_training.schedule(doc)
     return HttpResponse(json.dumps({"result": True}))
 
 

@@ -94,7 +94,7 @@ class PlaceHolder(Formula):
     def tree_depth(self):
         return self.__b.tree_depth() if self.is_assigned else 1
 
-     def extract_3tree(self):
+    def extract_3tree(self):
         temp_depth=self.tree_depth
         if temp_depth==3:
              return set(self)
