@@ -85,6 +85,9 @@ class Number(Formula):
     def tree_depth(self):
         return 1
 
+    def extract_3tree(self):
+        return set()
+
     @classmethod
     def teach(cls, parser):
 

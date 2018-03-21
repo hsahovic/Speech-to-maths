@@ -93,16 +93,6 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder, conservative)
 
     def tree_depth(self):
-<<<<<<< HEAD
-        return 1+self.__r.tree_depth()
-    
-     def extract_3tree(self):
-        temp_depth=self.tree_depth
-        if temp_depth==3:
-             return set(self)
-        elif temp_depth>3:
-            return return self.__r.extract_3tree()
-=======
         return 1 + self.__r.tree_depth()
 
     def extract_3tree(self):
@@ -111,7 +101,6 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
             return set(self)
         elif temp_depth > 3:
             return self.__r.extract_3tree()
->>>>>>> 8f5a4c85635d556366224a7629f98c5e0eef8e4d
         else:
             return set()
 

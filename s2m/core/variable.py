@@ -79,6 +79,9 @@ class Variable(Formula, VariableConstructions):
     def tree_depth(self):
         return 1
 
+    def extract_3tree(self):
+        return set()
+
     @classmethod
     def teach(cls, parser):
 

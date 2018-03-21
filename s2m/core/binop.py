@@ -200,7 +200,7 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
         if temp_depth==3:
              return set(self)
         elif temp_depth>3:
-            return self.__r.extract_3tree().union(self.__r.extract_3tree())
+            return self.__r.extract_3tree().union(self.__l.extract_3tree())
         else:
             return set()
     
