@@ -6,10 +6,10 @@ from s2m.core.constructions.unop_constructions import UnaryOperatorConstructions
 
 import random
 
+
 class UnaryOperator(Formula, UnaryOperatorConstructions):
 
     def __init__(self, o, r):
-
         if o not in self.operators:
             raise ValueError('Unknown unary operator code : %r' % o)
         elif not issubclass(r.__class__, Formula):
@@ -19,7 +19,6 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
             self.__o, self.__r = o, r
 
     def __getattr__(self, p):
-
         if p == 'o':
             return self.__o
         elif p == 'r':
@@ -36,17 +35,14 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
             raise AttributeError
 
     def __eq__(self, other):
-
         if other and isinstance(other, UnaryOperator):
             return other.o == self.__o and other.r == self.__r
         return False
 
     def __hash__(self):
-
         return hash(self.__o) ^ hash(self.__r)
 
     def count_brackets(self):
-
         y, n = 0, 0
 
         if self.__r.priority < self.priority \
@@ -62,7 +58,6 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         return y, n
 
     def a_similarity(self, other):
-
         if isinstance(other, UnaryOperator) \
            and self.__o == other.o:
             return self.__r.a_similarity(other.r)
@@ -70,37 +65,35 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
             return 0.
 
     def d_symmetry(self):
-
         return self.__r.d_symmetry()
 
     def _latex(self, next_placeholder=1):
-
         if self.__r.priority < self.priority \
            and not self.nobrackets:
-            r_content, next_placeholder, r_level = self.__r._latex(next_placeholder)
+            r_content, next_placeholder, r_level = self.__r._latex(
+                next_placeholder)
             r_level += 1
             r_tex = self.brackets_model(r_level) % r_content
         else:
-            r_tex, next_placeholder, r_level = self.__r._latex(next_placeholder)
+            r_tex, next_placeholder, r_level = self.__r._latex(
+                next_placeholder)
 
         return self.latex_model % r_tex, next_placeholder, r_level
 
     def latex(self):
-
         return self._latex()[0]
 
     def transcription(self):
-
         if self.__o == 'SQR':
             return 'racine de %s' % self.__r.transcription()
         else:
             return self.OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
-
         return self.__r.replace_placeholder(formula, placeholder_id, next_placeholder, conservative)
 
     def tree_depth(self):
+<<<<<<< HEAD
         return 1+self.__r.tree_depth()
     
      def extract_3tree(self):
@@ -109,12 +102,21 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
              return set(self)
         elif temp_depth>3:
             return return self.__r.extract_3tree()
+=======
+        return 1 + self.__r.tree_depth()
+
+    def extract_3tree(self):
+        temp_depth = self.tree_depth
+        if temp_depth == 3:
+            return set(self)
+        elif temp_depth > 3:
+            return self.__r.extract_3tree()
+>>>>>>> 8f5a4c85635d556366224a7629f98c5e0eef8e4d
         else:
             return set()
 
     @classmethod
     def teach(cls, parser):
-
         # Recognizes unary operators
         unary_operator_easy = ('unaryoperator-operator',
                                cls.OPERATORS_PARSED,
@@ -129,7 +131,6 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
             return UnaryOperator(*words)
-
         unary_operator_complex = ('unaryoperator',
                                   '$unaryoperator-operator %f',
                                   unary_operator_complex_expand,
@@ -155,11 +156,11 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         UnaryOperatorConstructions.teach(parser)
 
     @classmethod
-    def generate_random(cls, r=None, depth=1) :
+    def generate_random(cls, r=None, depth=1):
         """
         Generates a random instance of UnaryOperator.
         """
         o = random.choice(list(cls.OPERATORS.keys()))
         if r == None:
-            r = Formula.generate_random(depth=depth-1)
+            r = Formula.generate_random(depth=depth - 1)
         return UnaryOperator(o, r)

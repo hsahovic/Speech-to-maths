@@ -1,5 +1,5 @@
 #### EN DÉVELOPPEMENT ####
-### 
+###
 from functools import reduce
 
 from s2m.core.formulae import Formula
@@ -8,20 +8,21 @@ from s2m.core.constructions.bigop_constructions import BigOperatorConstructions
 
 import random
 
+
 class BigOperator(Formula, BigOperatorConstructions):
 
-    def __init__(self, o, *args): ##EN CONSTRUCTION !! ## à adapter avec args  
+    def __init__(self, o, *args):  # EN CONSTRUCTION !! ## à adapter avec args
         if o not in self.operators:
             raise ValueError('Unknown big operator code : %r' % o)
         if self.OPERATORS[o]['type'] == 'SUM':
             if len(args) > 3 or len(args) == 0:
-                raise ValueError('Wrong amout of arguments for operator: %r' % len(args))    
-        for form in args: 
+                raise ValueError(
+                    'Wrong amout of arguments for operator: %r' % len(args))
+        for form in args:
             if not isinstance(form, Formula):
                 raise ValueError('Input not Formula: %r' % form)
         self.__fl = args
         self.__o = o
-            
 
     def __getattr__(self, p):
         if p == 'o':
@@ -42,14 +43,14 @@ class BigOperator(Formula, BigOperatorConstructions):
             raise AttributeError
 
     def __eq__(self, other):
-         if other and isinstance(other, BigOperator):
+        if other and isinstance(other, BigOperator):
             if other.o == self.__o and other.arity == self.arity:
                 for i, form in enumerate(self.__fl):
                     if form != other.fl[i]:
                         return False
                 else:
                     return True
-         return False
+        return False
 
     def __hash__(self):
         return reduce(lambda a, b: a ^ hash(b), self.__fl, 0)
@@ -60,14 +61,20 @@ class BigOperator(Formula, BigOperatorConstructions):
             d_tex, d_level = '', 0
             u_tex, u_level = '', 0
             if len(self.__fl) == 1:
-                c_tex, next_placeholder, c_level = self.__fl[0]._latex(next_placeholder)
+                c_tex, next_placeholder, c_level = self.__fl[0]._latex(
+                    next_placeholder)
             if len(self.__fl) == 2:
-                c_tex, next_placeholder, c_level = self.__fl[1]._latex(next_placeholder)
-                d_tex, next_placeholder, d_level = self.__fl[0]._latex(next_placeholder)
+                c_tex, next_placeholder, c_level = self.__fl[1]._latex(
+                    next_placeholder)
+                d_tex, next_placeholder, d_level = self.__fl[0]._latex(
+                    next_placeholder)
             if len(self.__fl) == 3:
-                c_tex, next_placeholder, c_level = self.__fl[2]._latex(next_placeholder)
-                d_tex, next_placeholder, d_level = self.__fl[0]._latex(next_placeholder)
-                u_tex, next_placeholder, u_level = self.__fl[1]._latex(next_placeholder)
+                c_tex, next_placeholder, c_level = self.__fl[2]._latex(
+                    next_placeholder)
+                d_tex, next_placeholder, d_level = self.__fl[0]._latex(
+                    next_placeholder)
+                u_tex, next_placeholder, u_level = self.__fl[1]._latex(
+                    next_placeholder)
             return self.latex_model % (d_tex, u_tex, c_tex), next_placeholder, c_level
         else:
             return '', next_placeholder, 0
@@ -86,7 +93,7 @@ class BigOperator(Formula, BigOperatorConstructions):
             s = 0
             for i in range(self.arity):
                 s += (self.__l(i)).a_similarity()
-            return s/len(self.__fl)
+            return s / len(self.__fl)
         else:
             return 0.
 
@@ -94,16 +101,17 @@ class BigOperator(Formula, BigOperatorConstructions):
         return self.__fl[-1].d_symmetry()
 
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1, conservative=False):
-        for (i,f) in enumerate(self.__fl):
-                next_placeholder = f.replace_placeholder(formula,
-                                                         placeholder_id,
-                                                         next_placeholder,
-                                                         conservative)
-                if next_placeholder == 0:
-                    return 0
+        for (i, f) in enumerate(self.__fl):
+            next_placeholder = f.replace_placeholder(formula,
+                                                     placeholder_id,
+                                                     next_placeholder,
+                                                     conservative)
+            if next_placeholder == 0:
+                return 0
         return next_placeholder
 
     def tree_depth(self):
+<<<<<<< HEAD
         return 1+max([self.__fl[i].tree_depth() for i in range (self.__fl).length()])
 
      def extract_3tree(self):
@@ -115,6 +123,18 @@ class BigOperator(Formula, BigOperatorConstructions):
         else:
             return set()
     
+=======
+        return 1 + max([self.__fl[i].tree_depth() for i in range(self.__fl).length()])
+
+    def extract_3tree(self):
+        temp_depth = self.tree_depth
+        if temp_depth == 3:
+            return set(self)
+        elif temp_depth > 3:
+            return self.__r.extract_3tree().union(self.__r.extract_3tree())
+        else:
+            return set()
+>>>>>>> 8f5a4c85635d556366224a7629f98c5e0eef8e4d
 
     @classmethod
     def teach(cls, parser):
@@ -182,4 +202,3 @@ class BigOperator(Formula, BigOperatorConstructions):
                                                 self.__fl[1].transcription(),
                                                 connector,
                                                 self.__fl[2].transcription())
-      

@@ -56,3 +56,4 @@ s2m/core/sphinx/s2m.jsgf
 *.pyc
 *.sqlite3
 s2m/core/sphinx/s2m.jsgf
+media/training_data/s2m.fileids
