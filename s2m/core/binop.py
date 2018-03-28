@@ -1,5 +1,6 @@
 from s2m.core.formulae import Formula
 from s2m.core.number import Number
+from s2m.core.multiset import Multiset
 
 from s2m.core.utils import merge_lists
 
@@ -143,7 +144,8 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
 
     def _latex(self, next_placeholder=1):
 
-        if self.__l.priority < self.priority \
+        if (self.__l.priority < self.priority
+                or (self.__l.priority == self.priority and not self.associative))\
            and not self.nobrackets:
             l_content, next_placeholder, l_level = self.__l._latex(next_placeholder)
             l_level += 1
@@ -193,16 +195,16 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
                                                 conservative)
 
     def tree_depth(self):
-        return 1+max(self.__r.tree_depth(),self.__l.tree_depth())
+        return 1 + max(self.__r.tree_depth(), self.__l.tree_depth())
 
     def extract_3tree(self):
-        temp_depth=self.tree_depth
-        if temp_depth==3:
-             return set(self)
-        elif temp_depth>3:
+        temp_depth = self.tree_depth()
+        if temp_depth == 3:
+             return Multiset([self])
+        elif temp_depth > 3:
             return self.__r.extract_3tree().union(self.__l.extract_3tree())
         else:
-            return set()
+            return Multiset()
     
     @classmethod
     def teach(cls, parser):

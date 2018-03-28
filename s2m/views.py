@@ -21,6 +21,7 @@ from s2m.core.utils import ogg_to_wav
 from s2m.settings import MEDIA_ROOT
 from interface.models import TrainingSample
 from interface.models import PendingFormulae
+from interface.models import ElementaryFormula
 from interface.models import SavedFormula
 from interface.views import get_user
 from interface.views_utils import save_file_from_request
@@ -47,32 +48,43 @@ def voice_analysis(request):
         text, nbest = sphinx.to_text(filename_wav)
         os.remove(filename_wav)
         # Récupération du document
-        document = get_document(request)
+        if 'document' in request.POST:
+            document = get_document(request, _id=int(request.POST['document']))
+        else:
+            document = None
         # a supprimer une fois le dev fini sur cette sequence
-        print(text, nbest)
+        print(text, nbest, document)
         # Analyse syntaxique
         try:
-            parses = s2m_parser(text,
-                                document=document,
-                                context_formula=context_formula,
-                                placeholder_id=placeholder_id)
+            parser_response = s2m_parser(text,
+                                         document=document,
+                                         context_formula=context_formula,
+                                         placeholder_id=placeholder_id)
         except:
             i = 0
             while not parses and i < len(nbest):
                 try:
-                    parses = s2m_parser(nbest[i],
-                                        document=document,
-                                        context_formula=context_formula,
-                                        placeholder_id=placeholder_id)
+                    parser_response = s2m_parser(nbest[i],
+                                                 document=document,
+                                                 context_formula=context_formula,
+                                                 placeholder_id=placeholder_id)
                 except:
                     pass
                 i += 1
         # Renvoi de la réponse
+        if document:
+            parses, token = parser_response
+        else:
+            parses = parser_response
+            token = ''
         if parses == []:
             response = json.dumps({'instruction': 'nop'})
         else:
             parses_content, parses_scores = zip(*parses)
-            response = json.dumps({'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
+            response = json.dumps({'instruction': 'propose',
+                                   'content': parses_content,
+                                   'scores': parses_scores,
+                                   'token': token})
         return HttpResponse(response)
     except OSError:
         # Windows tests
@@ -111,6 +123,7 @@ def validate_choice(request):
     token = request.POST['token']
     choice = request.POST['choice']
     pending = PendingFormulae.objects.get(token=token)
+    response = -1
     if pending:
         formulae = pickle.loads(pending.formulae)
         if choice >= len(formulae):
@@ -122,17 +135,32 @@ def validate_choice(request):
                 if saved_formula:
                     saved_formula.count += 1
                     saved_formula.save()
-                    return HttpResponse(saved_formula.id)
                 else:
-                    formula_db = SavedFormula.objects.create()
-                    formula_db.document = pending.document
-                    formula_db.formula = pickled_formula
-                    formula_db.chosen = (i == choice)
-                    formula_db.save()
-                    return HttpResponse(formula_db.id)
+                    saved_formula = SavedFormula.objects.create()
+                    saved_formula.document = pending.document
+                    saved_formula.formula = pickled_formula
+                    saved_formula.chosen = (i == choice)
+                    saved_formula.save()
+                if i == choice:
+                    new_elementary_formulae = formula.extract_3tree()
+                    for new_elementary_formula in new_elementary_formulae:
+                        pickled_new_elementary_formula = pickle.dumps(new_elementary_formula)
+                        elementary_formula = ElementaryFormula.objects.get(formula=pickled_new_elementary_formula,
+                                                                           document=pending.document)
+                        count = new_elementary_formulae.count(new_elementary_formula)
+                        if elementary_formula:
+                            elementary_formula.count += count
+                            elementary_formula.save()
+                        else:
+                            elementary_formula = ElementaryFormula.objects.create()
+                            elementary_formula.count = count
+                            elementary_formula.document = pending.document
+                            elementary_formula.formula = pickled_new_elementary_formula
+                            elementary_formula.save()
+                    response = saved_formula.id
     else:
         raise ValueError('There are no pending formulae under token %r' % token)
-
+    return HttpResponse(response)
     
 @login_required
 def help_construction(request):

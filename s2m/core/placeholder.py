@@ -1,5 +1,6 @@
 from s2m.core.formulae import Formula
 from s2m.core.utils import merge_lists
+from s2m.core.multiset import Multiset
 
 from s2m.core.constructions.placeholder_constructions import PlaceHolderConstructions
 
@@ -95,13 +96,13 @@ class PlaceHolder(Formula):
         return self.__b.tree_depth() if self.is_assigned else 1
 
     def extract_3tree(self):
-        temp_depth=self.tree_depth
-        if temp_depth==3:
-             return set(self)
-        elif temp_depth>3:
-            return set(self.__b)
+        temp_depth = self.tree_depth()
+        if temp_depth == 3:
+             return Multiset([self])
+        elif temp_depth > 3:
+            return self.__b.extract_3tree()
         else:
-            return set()
+            return Multiset()
 
     @classmethod
     def teach(cls, parser):

@@ -3,6 +3,7 @@
 from functools import reduce
 
 from s2m.core.formulae import Formula
+from s2m.core.multiset import Multiset
 
 from s2m.core.constructions.bigop_constructions import BigOperatorConstructions
 
@@ -111,16 +112,16 @@ class BigOperator(Formula, BigOperatorConstructions):
         return next_placeholder
 
     def tree_depth(self):
-        return 1+max([self.__fl[i].tree_depth() for i in range (self.__fl).length()])
+        return 1 + max([self.__fl[i].tree_depth() for i in range (self.__fl).length()])
 
     def extract_3tree(self):
-        temp_depth=self.tree_depth
-        if temp_depth==3:
-            return set(self)
-        elif temp_depth>3:
-            return set().union([self.__fl[i].extract_3tree() for i in range(self.__fl.lenght())])
+        temp_depth = self.tree_depth()
+        if temp_depth == 3:
+            return Multiset([self])
+        elif temp_depth > 3:
+            return Multiset().union(*[self.__fl[i].extract_3tree() for i in range(self.__fl.length())])
         else:
-            return set()
+            return Multiset()
     
 
     @classmethod

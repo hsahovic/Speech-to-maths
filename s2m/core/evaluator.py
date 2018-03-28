@@ -4,6 +4,8 @@ from keras.layers import Dense, Activation
 from keras.models import model_from_json
 from django.apps import apps
 
+import pickle
+
 class Evaluator:
 
     def __call__(self, formula, context_formula=None, placeholder_id=1):
@@ -75,14 +77,30 @@ class Evaluator:
 
     ##Functions starting with h_ are heuristics
 
-    #Formula -> [0,1]²
     def h_count_brackets(self, formula):
         y, n = formula.count_brackets()
         s = y + n
         return (y / s,) if s else (1.,)
 
-    #Formula
     def h_symmetry(self, formula):
         return tuple([e or 0. for e in formula.d_symmetry()])
+
+    def h_3tree(self, formula, obj, length=8):
+        #Prendre compte obj
+        model = apps.get_model('interface', 'ElementaryFormula')
+        elementary_formulae = formula.extract_3tree()
+        results = []
+        for elementary_formula in elementary_formulae:
+            pickled_elementary_formula = pickle.dumps(elementary_formula)
+            db_elementary_formula = model.objects.get(formula=pickled_elementary_formula)
+            doc_count = elementary_formulae.count(elementary_formula)
+            if db_elementary_formula:
+                db_count = db_elementary_formula.count
+            else:
+                db_count = 0
+            results.append( (doc_count, 1. - 1. / (1 + db_count)) )
+        results.sort(reverse=True)
+        return results[:length]
+            
 
 evaluator = Evaluator()

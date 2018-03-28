@@ -1,4 +1,5 @@
 from s2m.core.formulae import Formula
+from s2m.core.multiset import Multiset
 
 from s2m.core.utils import merge_lists
 
@@ -96,13 +97,13 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         return 1 + self.__r.tree_depth()
 
     def extract_3tree(self):
-        temp_depth = self.tree_depth
+        temp_depth = self.tree_depth()
         if temp_depth == 3:
-            return set(self)
+            return Multiset([self])
         elif temp_depth > 3:
             return self.__r.extract_3tree()
         else:
-            return set()
+            return Multiset()
 
     @classmethod
     def teach(cls, parser):

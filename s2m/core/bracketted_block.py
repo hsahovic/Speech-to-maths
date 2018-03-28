@@ -67,6 +67,10 @@ class BrackettedBlock(Formula):
 
         return 1 + self.__b.tree_depth()
 
+    def extract_3tree(self):
+
+        return self.__b.extract_3tree()
+
     @classmethod
     def teach(cls, parser):
 
