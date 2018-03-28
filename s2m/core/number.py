@@ -91,6 +91,10 @@ class Number(Formula):
 
         return Multiset()
 
+    def count_silsdepths(self):
+
+        return 0, 0
+
     @classmethod
     def teach(cls, parser):
 

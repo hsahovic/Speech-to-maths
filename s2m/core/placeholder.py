@@ -104,6 +104,12 @@ class PlaceHolder(Formula):
         else:
             return Multiset()
 
+    def count_silsdepths(self):
+        if self.is_assigned:
+            return self.__b.count_silsdepths()
+        else:
+            return 0, 0
+
     @classmethod
     def teach(cls, parser):
         parser.add_easy_reduce('placeholder',
