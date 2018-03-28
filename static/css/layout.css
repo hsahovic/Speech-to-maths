@@ -266,8 +266,9 @@ input {
 .latext-area textarea {
     width: 100%;
     margin: 0;
-    border: 0;
+    padding: 0;
     resize: none;
+    border : 0;
     height: 1em;
     font-family: 'Lato', sans-serif;
 }

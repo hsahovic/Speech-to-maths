@@ -50,6 +50,7 @@ class LatextArea {
         }
         if (response.instruction == "propose") {
             if (this.audioResponseElement == undefined) {
+                console.log(response);
                 this.audioResponseElement =
                     new AudioResponseElement(this, response.content);
             }
@@ -189,6 +190,7 @@ class AudioResponseElement extends LatextAreaElement {
     constructor(latextArea, choices, maxElements = 8) {
         super(latextArea, '');
         this.maxElements = maxElements;
+        console.log(choices);
         this.updateChoices(choices);
     }
 
@@ -199,6 +201,7 @@ class AudioResponseElement extends LatextAreaElement {
             let span = document.createElement('span');
             span.onclick = () => {
                 this.choose(this.choices[i]);
+                // TO DO ADD STUFF
                 this.destroy();
             };
             span.innerHTML = this.choices[i];

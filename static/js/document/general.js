@@ -205,7 +205,6 @@ function getHelp(id) {
 
                 DOM.appendChild(div);
             }
-            console.log(result);
             document.getElementsByTagName('body')[0].append(DOM);
             MathJax.Hub.Queue(["Typeset",MathJax.Hub,"help-text-responses"]);
             setTimeout(setPositions,0);
