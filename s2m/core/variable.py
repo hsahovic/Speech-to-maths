@@ -40,6 +40,10 @@ class Variable(Formula, VariableConstructions):
 
         return 0, 0
 
+    def count_silsdepths(self):
+
+        return 0, 0
+
     def a_similarity(self, other):
 
         from s2m.core.number import Number

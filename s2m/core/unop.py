@@ -58,6 +58,9 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
 
         return y, n
 
+    def count_silsdepths(self):
+        return self.__r.count_silsdepths()
+
     def a_similarity(self, other):
         if isinstance(other, UnaryOperator) \
            and self.__o == other.o:

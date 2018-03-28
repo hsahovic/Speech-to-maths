@@ -102,5 +102,9 @@ class Evaluator:
         results.sort(reverse=True)
         return results[:length]
             
+    def h_averagesildepth(self, formula):
+
+       depths, counts = formula.count_silsdepths()
+       return (depths/counts) if counts else 0
 
 evaluator = Evaluator()

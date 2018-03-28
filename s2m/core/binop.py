@@ -99,6 +99,22 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
 
         return y, n
 
+    def count_silsdepths(self):
+        count_sils = 0
+        sil_depths = 0
+        if self.__l != None:
+            sdl, csl = self.__l.count_silsdepths()
+            count_sils += csl
+            sil_depths += sdl
+        if self.__r != None:
+            sdr, csr = self.__r.count_silsdepths()
+            count_sils += csr
+            sil_depths += sdr
+        if self.__light_left or self.__light_right:
+            count_sils += 1
+            sil_depths += self.tree_depth()
+        return sil_depths, count_sils
+
     def flatten(self):
         """Liste les enfants de self dans la representation n-aire minimale"""
 

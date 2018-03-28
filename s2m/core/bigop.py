@@ -87,6 +87,9 @@ class BigOperator(Formula, BigOperatorConstructions):
     def count_brackets(self):
         return self.__fl[-1].count_brackets()
 
+    def count_silsdepths(self):
+        return self.__fl[-1].count_silsdepths()
+
     def a_similarity(self, other):
         if isinstance(other, BigOperator) \
            and self.__o == other.o \
