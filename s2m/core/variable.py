@@ -1,4 +1,5 @@
 from s2m.core.formulae import Formula
+from s2m.core.multiset import Multiset
 
 from s2m.core.utils import merge_lists
 
@@ -36,6 +37,10 @@ class Variable(Formula, VariableConstructions):
         return hash(self.__v)
 
     def count_brackets(self):
+
+        return 0, 0
+
+    def count_silsdepths(self):
 
         return 0, 0
 
@@ -80,7 +85,7 @@ class Variable(Formula, VariableConstructions):
         return 1
 
     def extract_3tree(self):
-        return set()
+        return Multiset()
 
     @classmethod
     def teach(cls, parser):

@@ -1,6 +1,7 @@
 from s2m.core.formulae import Formula
 from s2m.core.variable import Variable
 from s2m.core.number_parser import NumberParser
+from s2m.core.multiset import Multiset
 
 from s2m.core.utils import merge_lists
 
@@ -83,10 +84,16 @@ class Number(Formula):
         return next_placeholder
 
     def tree_depth(self):
+
         return 1
 
     def extract_3tree(self):
-        return set()
+
+        return Multiset()
+
+    def count_silsdepths(self):
+
+        return 0, 0
 
     @classmethod
     def teach(cls, parser):
