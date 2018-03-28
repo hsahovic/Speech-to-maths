@@ -264,16 +264,19 @@ input {
 }
 
 .latext-area textarea {
-    width: 100%;
+    display: inline;
     margin: 0;
     border: 0;
     resize: none;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: pre;
     height: 1em;
     font-family: 'Lato', sans-serif;
 }
 
 .latext-element {
-    display: inline-block;
+    display: inline;
     width : 100%;
     min-height: 1em;
     cursor : text;

@@ -26,19 +26,23 @@ class LatextArea {
     }
 
     get activeElement() {
-        for (let element of this.elements) {
-            if (element.DOM == document.activeElement) return element;
+        for (let line of this.elements) {
+            for (let element of line) {
+                if (element.DOM == document.activeElement) return element;
+            }
         }
         for (let i = this.elements.length - 1; i >= 0; i--)
-            if (this.elements[i] instanceof TextElement ||
-                this.elements[i] instanceof InputElement)
-                return this.elements[i];
+            for (let j = this.elements[i].length-1; j>=0; j--)
+            if (this.elements[i][j] instanceof TextElement ||
+                this.elements[i][j] instanceof InputElement)
+                return this.elements[i][j];
     }
 
     get text() {
         let str = '';
-        for (let element of this.elements) {
-            str += element.text;
+        for (let line of this.elements) {
+            for (let element of line)
+                str += element.text;
         }
         return str;
     }
@@ -60,16 +64,16 @@ class LatextArea {
 
     generateDOM() {
         if (this.elements.length == 0) {
-            this.elements.push(new TextElement(this, ""));
+            this.elements.push([new TextElement(this, "")]);
         }
         for (let children of this.parent.children) {
             children.remove();
         }
-        for (let element of this.elements) {
-            if (element instanceof EmptyElement == false) {
-                this.parent.appendChild(element.DOM);
-            }
-
+        for (let line of this.elements) {
+            for (let element of line)
+                if (element instanceof EmptyElement == false) {
+                    this.parent.appendChild(element.DOM);
+                }
         }
     }
 
@@ -105,17 +109,36 @@ class LatextArea {
     }
 
     merge(firstElement, secondElement) {
-        let indexFirst = this.elements.indexOf(firstElement);
-        let indexSecond = this.elements.indexOf(secondElement);
-        let start = this.elements.slice(0, indexFirst);
-        let end = this.elements.slice(indexSecond + 1);
+        let iFirst = this.findIndexes(firstElement)[0];
+        let jFirst = this.findIndexes(firstElement)[1];
+        let iSecond = this.findIndexes(secondElement)[0];
+        let jSecond = this.findIndexes(secondElement)[1];
+        if (iFirst!= iSecond) {
+            this.mergeLines(this.elements[iFirst], this.elements[iSecond]);
+        }
+        let start = this.elements.slice(0, iFirst);
+        let end = this.elements.slice(iSecond + 1);
 
-        let mergedElement = new TextElement(this, firstElement.text + secondElement.text)
+        let mergedElement = new TextElement(this, firstElement.text + secondElement.text);
+        let tmpMerge = [];
+        for (let j = 0; j < jFirst; j++) tmpMerge.push(this.elements[iFirst][j]);
+        tmpMerge.push(mergedElement);
+        for (let j = jFirst+2; j < this.elements[iFirst].length; j++) tmpMerge.push(this.elements[iFirst][j]);
 
+
+        let tmpLine = [];
         this.elements = [];
-        for (let element of start) this.elements.push(element);
-        this.elements.push(mergedElement);
-        for (let element of end) this.elements.push(element);
+        for (let line of start) {
+            for (let element of line) tmpLine.push(element);
+            this.elements.push(tmpLine);
+            tmpLine = [];
+        }
+        this.elements.push(tmpMerge);
+        for (let line of end) {
+            for (let element of line) tmpLine.push(element);
+            this.elements.push(tmpLine);
+            tmpLine = [];
+        }
 
         // un peu couteux, voir s'il n'y a pas plus simple
         firstElement.DOM.remove();
@@ -123,18 +146,50 @@ class LatextArea {
         this.generateDOM();
     }
 
+    mergeLines(firstLine, secondLine) {
+        let indexFirst = this.elements.indexOf(firstLine);
+        let indexSecond = this.elements.indexOf(secondLine);
+        let start = this.elements.slice(0, indexFirst + 1);
+        let end = this.elements.slice(indexSecond + 1);
+        let tmpLine = [];
+
+        this.elements = [];
+        for (let line of start) {
+            for (let element of line) tmpLine.push(element);
+            this.elements.push(tmpLine);
+            tmpLine = [];
+        }
+        for (let element of secondLine) this.elements[indexFirst].push(element)
+        for (let line of end) {
+            for (let element of line) tmpLine.push(element);
+            this.elements.push(tmpLine);
+            tmpLine = [];
+        }
+        for (let element of firstLine) element.DOM.remove();
+        for (let element of secondLine) element.DOM.remove();
+        this.generateDOM();
+    }
+
     parse() {
-        let contentByLine = this.textContent.split("\n");
+        let contentByLine = this.textContent.split(/\n/);
         for (let line of contentByLine) {
-            let textElement = new TextElement(this, line);
-            this.elements.push(textElement);
-            this.elements.push(new NewLineElement(this));
+            line = line.replace(/\$(.*)\$/, "{breaK}$&{breaK}");
+            let contentLine = line.split(/\{breaK\}/);
+            let textLine = [];
+            for (let elem of contentLine) {
+                let textElement = new TextElement(this, elem);
+                textLine.push(textElement);
+            }
+            this.elements.push(textLine);
+            this.elements.push([new NewLineElement(this)]);
         }
         if (this.elements.length != 0)
             this.elements.pop();
+        this.elements[0][0].toInput();
+        console.log(this.elements);
     }
 
-    replace(elementToReplace, newElements = undefined) {
+    replaceElement(elementToReplace, newElements = undefined) {
         /*
             Replaces elementToReplace in this.elements
             newElements can be either :
@@ -143,32 +198,76 @@ class LatextArea {
                 - an array of instances of LatextAreaElement
         */
 
-        let indexToReplace = this.elements.indexOf(elementToReplace);
-        let start = this.elements.slice(0, indexToReplace);
-        let end = this.elements.slice(indexToReplace + 1);
+        let iToReplace = this.findIndexes(elementToReplace)[0];
+        let jToReplace = this.findIndexes(elementToReplace)[1];
+        let newLine = this.elements[iToReplace];
+        let start = newLine.slice(0, jToReplace);
+        let end = newLine.slice(jToReplace + 1);
         elementToReplace.DOM.remove();
 
-        this.elements = [];
-        for (let element of start) this.elements.push(element);
-
+        newLine = [];
+        for (let element of start) newLine.push(element)
         if (newElements == undefined) {
             /* Nothing happens */
         }
         else if (newElements instanceof LatextAreaElement) {
-            this.elements.push(newElements);
+            newLine.push(newElements);
         }
         else {
-            for (let element of newElements) this.elements.push(element);
+            for (let element of newElements) newLine.push(element);
         }
+        for (let element of end) newLine.push(element);
 
-        for (let element of end) this.elements.push(element);
+        this.replaceLine(this.elements[iToReplace], newLine)
+
         // un peu couteux, voir s'il n'y a pas plus simple
-
         this.generateDOM();
     }
 
+    replaceLine(lineToReplace, newLines = undefined) {
+        /*
+            Replaces lineToReplace in this.elements
+            newLines can be either :
+                - undefined : in this case, linesToReplace will just be deleted
+                - an array of instances of LatextAreaElement
+                - multiple arrays of LatextAreaElement
+        */
+        let indexToReplace = this.elements.indexOf(lineToReplace);
+        let startLine = this.elements.slice(0, indexToReplace);
+        let endLine = this.elements.slice(indexToReplace + 1);
+        for (let element of lineToReplace) element.DOM.remove();
+
+        this.elements = [];
+        for (let line of startLine) this.elements.push(line);
+        if (newLines == undefined) {
+            /* Nothing happens */
+        }
+        else if (newLines[0] instanceof LatextAreaElement) {
+            this.elements.push(newLines);
+        }
+        else {
+            for (let line of newLines) this.elements.push(line);
+        }
+        for (let line of endLine) this.elements.push(line);
+        this.generateDOM();
+    }
+
+    findIndexes(element) {
+        let resi = -1;
+        let resj = -1;
+        for (let i = 0; i < this.elements.length; i++) {
+            for (let j = 0; j < this.elements[i].length; j++) {
+                if (element === this.elements[i][j]) {
+                    resi = i;
+                    resj = j;
+                }
+            }
+        }
+        return [resi, resj];
+    }
 
 }
+
 
 class LatextAreaElement {
 
@@ -183,6 +282,7 @@ class LatextAreaElement {
     }
 
 }
+
 
 class AudioResponseElement extends LatextAreaElement {
 
@@ -235,12 +335,16 @@ class AudioResponseElement extends LatextAreaElement {
 
 }
 
+
 class EmptyElement extends LatextAreaElement {
-    constructor() {
-        // initialisation
-        super(undefined, "");
+
+    constructor(latextArea) {
+        super(latextArea, '');
+        this.DOM = document.createElement('span');
+        this.DOM.innerHTML = "";
     }
 }
+
 
 class InputElement extends LatextAreaElement {
 
@@ -276,13 +380,15 @@ class InputElement extends LatextAreaElement {
     }
 
     resize() {
-        this.DOM.style.height = '1em';
+        //this.DOM.style.height = '1em';
         this.DOM.style.height = this.DOM.scrollHeight + "px";
+        this.DOM.style.width = '1px';
+        this.DOM.style.width = this.DOM.scrollWidth + "px";
     }
 
     toTextElement() {
             if (this.DOM.value.indexOf('\n') == -1)
-                this.latextArea.replace(this, new TextElement(this.latextArea, this.DOM.value));
+                this.latextArea.replaceElement(this, new TextElement(this.latextArea, this.DOM.value));
             else {
                 let values = this.DOM.value.split('\n');
                 let elements = [];
@@ -292,65 +398,109 @@ class InputElement extends LatextAreaElement {
                 }
                 if (elements.length != 0)
                     elements.pop();
-                this.latextArea.replace(this, elements);
+                this.latextArea.replaceElement(this, elements);
             }
         MathJax.Hub.Typeset();
 
     }
 
     mouvementHandler(event) {
+        var i = this.latextArea.findIndexes(this)[0];
+        var j = this.latextArea.findIndexes(this)[1];
         var positionCurseur = this.DOM.selectionStart;
+        var positionCurseurLine = positionCurseur;
+        for (let k = 0; k < j; k++) positionCurseurLine += this.latextArea.elements[i][k].textContent.length;
         var longueur = this.DOM.value.length;
         var nbLines = (this.DOM.value.match(/\n/g) || []).length + 1;
         var currentLine = -1* ((this.DOM.value.substring(positionCurseur).match(/\n/g) || []).length - nbLines);
 
+        var iToFocus = i;
+        var jToFocus = j;
+        var longueurFocus = 0;
+        var change = false;
+        var merge = false;
         // Gestion des touches (à réorganiser en switch à la fin)
-        if (event.keyCode == 37 && positionCurseur == 0) {                    //flèche gauche
-            let indexFocus = this.latextArea.elements.indexOf(this) - 2;
-            if (indexFocus >= 0) {
-                this.latextArea.elements[indexFocus].toInput();
-                var longueurFocus = this.latextArea.elements[indexFocus].DOM.value.length;
-                this.latextArea.elements[indexFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
-                this.toTextElement();
+        if (event.keyCode == 37 && positionCurseur == 0) {                //flèche gauche
+            if (j > 0) {
+                jToFocus = j-1;
+                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length-1;
+                change = true;
+            } 
+            else if (i>0) {
+                iToFocus = i-2;
+                jToFocus = this.latextArea.elements[iToFocus].length-1;
+                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
+                change = true;
             }
         }
         if (event.keyCode == 39 && positionCurseur - longueur == 0) {           //flèche droite
-            let indexFocus = this.latextArea.elements.indexOf(this) + 2;
-            if (indexFocus < this.latextArea.elements.length) {
-                this.latextArea.elements[indexFocus].toInput();
-                this.toTextElement();
+            if (j < this.latextArea.elements[iToFocus].length-1) {
+                jToFocus = j+1;
+                longueurFocus = 1;
+                change = true;
+            } 
+            else if (i < this.latextArea.elements.length-2) {
+                iToFocus = i+2;
+                jToFocus = 0;
+                change = true;
             }
         }
         if (event.keyCode == 38 && currentLine == 1) {                        //flèche haut
-            let indexFocus = this.latextArea.elements.indexOf(this) - 2;
-            if (indexFocus >= 0) {
-                this.latextArea.elements[indexFocus].toInput();
-                this.latextArea.elements[indexFocus].DOM.setSelectionRange(positionCurseur, positionCurseur);
-                this.toTextElement();
-            }
+            if (i > 0) {
+                iToFocus = i-2;
+                jToFocus = Math.min(j, this.latextArea.elements[iToFocus].length-1);
+                change = true;
+            } 
         }
         if (event.keyCode == 40 && currentLine == nbLines) {                  //flèche bas
-            let indexFocus = this.latextArea.elements.indexOf(this) + 2;
-            if (indexFocus < this.latextArea.elements.length) {
-                this.latextArea.elements[indexFocus].toInput();
-                this.latextArea.elements[indexFocus].DOM.setSelectionRange(positionCurseur, positionCurseur);
+            if (i < this.latextArea.elements.length - 2) {
+                iToFocus = i+2;
+                jToFocus = Math.min(j, this.latextArea.elements[iToFocus].length-1);
+                change = true;
+            } 
+        }
+
+        if (change) {
+                this.latextArea.elements[iToFocus][jToFocus].toInput();
+                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
                 this.toTextElement();
+        }
+
+        if (event.keyCode == 8 && positionCurseur == 0) {                   //backspace
+            event.preventDefault();
+            if (j > 0) {
+                jToFocus = j-1;
+                merge = true;
+            } 
+            else if (i>0) {
+                iToFocus = i-2;
+                jToFocus = this.latextArea.elements[iToFocus].length-1;
+                merge = true;
             }
         }
-        if (event.keyCode == 8 && positionCurseur == 0) {                     //backspace
+        if (merge) {
+                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
+                this.latextArea.merge(this.latextArea.elements[iToFocus][jToFocus], this.latextArea.elements[i][j]);
+                this.latextArea.elements[iToFocus][jToFocus].toInput();
+                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
+        }
+        if (event.keyCode == 13 ) {                   //enter
             event.preventDefault();
-            let indexFocus = this.latextArea.elements.indexOf(this) - 2;
-            let latext = this.latextArea;
-            if (indexFocus >= 0) {
-                let previousLength = latext.elements[indexFocus].text.length;
-                latext.merge(latext.elements[indexFocus], latext.elements[indexFocus + 2]);
-                latext.elements[indexFocus].toInput();
-                latext.elements[indexFocus].DOM.setSelectionRange(previousLength, previousLength);
-            }
+            let newFirst = [];
+            let newSecond = [];
+            for (let k=0; k<j; k++) newFirst.push(this.latextArea.elements[i][k]);
+            newFirst.push(new TextElement(this.latextArea, this.DOM.value.substring(0, positionCurseur) ));
+            let newLine = [new NewLineElement(this.latextArea)];
+            newSecond.push(new TextElement(this.latextArea, this.DOM.value.substring(positionCurseur) ));
+            for (let k=j+1; k<this.latextArea.elements[i].length; k++) newSecond.push(this.latextArea.elements[i][k]);
+            this.latextArea.replaceLine(this.latextArea.elements[i], [newFirst, newLine, newSecond]);
+            this.latextArea.elements[i+2][0].toInput();
+            console.log(this.latextArea.elements)
         }
     }
 
 }
+
 
 class NewLineElement extends LatextAreaElement {
 
@@ -361,12 +511,11 @@ class NewLineElement extends LatextAreaElement {
 
     toInput() {
         let newElement = new InputElement(this.latextArea, '\n');
-        this.latextArea.replace(this, newElement);
+        this.latextArea.replaceElement(this, newElement);
     }
 
-
-
 }
+
 
 class TextElement extends LatextAreaElement {
 
@@ -392,7 +541,7 @@ class TextElement extends LatextAreaElement {
 
     toInput() {
         let newElement = new InputElement(this.latextArea, this.textContent);
-        this.latextArea.replace(this, newElement);
+        this.latextArea.replaceElement(this, newElement);
     }
 
 }
