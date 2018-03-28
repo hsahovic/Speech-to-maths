@@ -104,6 +104,7 @@ MathJax.Hub.Config({
 <script src = "{% static 'js/communicationIndicatorManager.js' %}"> </script>
 <script> 
 	var voiceAnalysisLink = "{% url 'voice_analysis' %}";
+	var validateChoiceLink = "{% url 'validate_choice' %}";
 	var documentSaveLink = "{% url 'save_document' %}";
 	var docID = {{ doc.id }};
 	var latextArea = new LatextArea("latext-area", "hidden-origin");

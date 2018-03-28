@@ -7,8 +7,8 @@ import os
 import json
 import pickle
 
-#Beware! Always load s2m_parser before including sphinx
-#so as to make sure config files are generated BEFORE sphinx is turned on
+# Beware! Always load s2m_parser before including sphinx
+# so as to make sure config files are generated BEFORE sphinx is turned on
 try:
     from s2m.core.S2MParser import s2m_parser
 except RuntimeError as exc:
@@ -40,7 +40,8 @@ def voice_analysis(request):
            and 'placeholder_id' in request.POST:
             context_formula_id = request.POST['context_formula']
             placeholder_id = request.POST['placeholder_id']
-            context_formula_object = SavedFormula.objects.get(id=context_formula_id)
+            context_formula_object = SavedFormula.objects.get(
+                id=context_formula_id)
             if context_formula_object:
                 context_formula = json.loads(context_formula_object.formula)
         # Conversion du son en texte (Sphinx)
@@ -72,7 +73,8 @@ def voice_analysis(request):
             response = json.dumps({'instruction': 'nop'})
         else:
             parses_content, parses_scores = zip(*parses)
-            response = json.dumps({'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
+            response = json.dumps(
+                {'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
         return HttpResponse(response)
     except OSError:
         # Windows tests
@@ -81,7 +83,8 @@ def voice_analysis(request):
 
 @login_required
 def voice_training(request):
-    filename_ogg = save_file_from_request(request, "ogg", post_arg="file", file_path=".")
+    filename_ogg = save_file_from_request(
+        request, "ogg", post_arg="file", file_path=".")
     conversion_bool = False
     filename = filename_ogg
     try:
@@ -104,8 +107,8 @@ def voice_training(request):
 
 @login_required
 def validate_choice(request):
-    if not (request.POST \
-            and 'token' in request.POST \
+    if not (request.POST
+            and 'token' in request.POST
             and 'choice' in request.POST):
         raise ValueError('Ill-formatted request passed to validate_choice')
     token = request.POST['token']
@@ -118,7 +121,8 @@ def validate_choice(request):
         else:
             for (i, formula) in enumerate(formulae):
                 pickled_formula = pickle.dumps(formula)
-                saved_formula = SavedFormula.objects.get(formula=pickled_formula)
+                saved_formula = SavedFormula.objects.get(
+                    formula=pickled_formula)
                 if saved_formula:
                     saved_formula.count += 1
                     saved_formula.save()
@@ -131,14 +135,15 @@ def validate_choice(request):
                     formula_db.save()
                     return HttpResponse(formula_db.id)
     else:
-        raise ValueError('There are no pending formulae under token %r' % token)
+        raise ValueError(
+            'There are no pending formulae under token %r' % token)
 
-    
+
 @login_required
 def help_construction(request):
-    if request.POST['query'] != "" :
+    if request.POST['query'] != "":
         response = json.dumps(s2m_parser.help(request.POST['query']))
-    else :
+    else:
         response = json.dumps([])
     print(response)
     return HttpResponse(response)

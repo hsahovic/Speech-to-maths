@@ -301,7 +301,18 @@ class AudioResponseElement extends LatextAreaElement {
             let span = document.createElement('span');
             span.onclick = () => {
                 this.choose(this.choices[i]);
-                // TO DO ADD STUFF
+ 
+                let cSRFToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+                let formData = new FormData;
+                let request = new XMLHttpRequest();
+
+                request.open("POST", validateChoiceLink);
+                request.setRequestHeader("X-CSRFToken", cSRFToken)
+        
+                formData.append('token', docID);
+                formData.append('choice', i);
+
+                request.send(formData);
                 this.destroy();
             };
             span.innerHTML = this.choices[i];
