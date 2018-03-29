@@ -54,12 +54,11 @@ class LatextArea {
         }
         if (response.instruction == "propose") {
             if (this.audioResponseElement == undefined) {
-                console.log(response);
                 this.audioResponseElement =
-                    new AudioResponseElement(this, response.content);
+                    new AudioResponseElement(this, response.content, response.token);
             }
             else
-                this.audioResponseElement.updateChoices(response.content);
+                this.audioResponseElement.updateChoices(response.content, response.token);
         }
     }
 
@@ -287,9 +286,10 @@ class LatextAreaElement {
 
 class AudioResponseElement extends LatextAreaElement {
 
-    constructor(latextArea, choices, maxElements = 8) {
+    constructor(latextArea, choices, token, maxElements = 8) {
         super(latextArea, '');
         this.maxElements = maxElements;
+        this.token = token;
         console.log(choices);
         this.updateChoices(choices);
     }
@@ -309,7 +309,8 @@ class AudioResponseElement extends LatextAreaElement {
                 request.open("POST", validateChoiceLink);
                 request.setRequestHeader("X-CSRFToken", cSRFToken)
         
-                formData.append('token', docID);
+                formData.append('token', this.token);
+                formData.append('document', docID);
                 formData.append('choice', i);
 
                 request.send(formData);
@@ -342,8 +343,9 @@ class AudioResponseElement extends LatextAreaElement {
         document.getElementById("stop_rec").click();
     }
 
-    updateChoices(choices) {
+    updateChoices(choices, token) {
         this.choices = choices;
+        this.choices = token;
         this.build();
     }
 
