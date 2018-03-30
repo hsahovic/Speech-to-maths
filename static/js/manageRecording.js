@@ -103,9 +103,10 @@ function sendContinuousAudio(delay, link, manageButtons, responseManager) {
 		formData.append("additionalData", undefined);
 		request.open("POST", link);
 		request.setRequestHeader("X-CSRFToken", cSRFToken);
-		formData.append("file", blob);
-		try {formData.append('document', docID);} // la vérité c'est vraiment sale de faire ça mais j'ai la flemme de réécrire cette fonction. Ce bout de code est à destinartion de son execution dans document lors de l'envoie de données audio pour accompagner le signal de l'indication du document source
-		catch {}
+	        formData.append("file", blob);
+	        formData.append('document', docID);
+		//try {formData.append('document', docID);} // la vérité c'est vraiment sale de faire ça mais j'ai la flemme de réécrire cette fonction. Ce bout de code est à destinartion de son execution dans document lors de l'envoie de données audio pour accompagner le signal de l'indication du document source
+		//catch {}
 		// On affiche le fait que l'on communique avec le serveur et on lance la requête
 		communicationIndicatorManager.addRequest();
 		request.send(formData);

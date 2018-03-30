@@ -291,7 +291,7 @@ class AudioResponseElement extends LatextAreaElement {
         this.maxElements = maxElements;
         this.token = token;
         console.log(choices);
-        this.updateChoices(choices);
+        this.updateChoices(choices, token);
     }
 
     build() {
@@ -345,7 +345,7 @@ class AudioResponseElement extends LatextAreaElement {
 
     updateChoices(choices, token) {
         this.choices = choices;
-        this.choices = token;
+        this.token = token;
         this.build();
     }
 

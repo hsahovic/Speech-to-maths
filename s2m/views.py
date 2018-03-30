@@ -19,6 +19,7 @@ import s2m.core.sphinx_training
 from s2m.core.sphinx import sphinx
 from s2m.core.utils import ogg_to_wav
 from s2m.settings import MEDIA_ROOT
+from interface.models import Document
 from interface.models import TrainingSample
 from interface.models import PendingFormulae
 from interface.models import SavedFormula
@@ -48,7 +49,7 @@ def voice_analysis(request):
         text, nbest = sphinx.to_text(filename_wav)
         os.remove(filename_wav)
         # Récupération du document
-        document = get_document(request)
+        document = Document.objects.get(id=request.POST['document'])
         # a supprimer une fois le dev fini sur cette sequence
         print(text, nbest)
         # Analyse syntaxique
@@ -68,13 +69,17 @@ def voice_analysis(request):
                 except:
                     pass
                 i += 1
+        if document:
+            parses, token = parses
+        else:
+            token = ''
         # Renvoi de la réponse
         if parses == []:
             response = json.dumps({'instruction': 'nop'})
         else:
             parses_content, parses_scores = zip(*parses)
             response = json.dumps(
-                {'instruction': 'propose', 'content': parses_content, 'scores': parses_scores})
+                {'instruction': 'propose', 'content': parses_content, 'scores': parses_scores, 'token': token})
         return HttpResponse(response)
     except OSError:
         # Windows tests

@@ -50,9 +50,11 @@ class S2MParser():
                 if isinstance(p[0][0], Formula)], key=lambda x: x[1], reverse=True)))
             filtered_parses = [p for p in parses if isinstance(p[0][0], Formula)]
             if document:
+                print('document %r detected' % document)
                 token = append_formulae(filtered_parses, document)
                 return results, token
             else:
+                print('no document detected')
                 return results
 
     def __call__(self, w, **args):
