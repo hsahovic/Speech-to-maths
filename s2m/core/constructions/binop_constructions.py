@@ -21,7 +21,14 @@ class BinaryOperatorConstructions(Construction):
                  'CMP': {'latex': '%s \\circ %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                  'VEC': {'latex': '%s \\wedge %s', 'priority': 2, 'associative': True, 'weak': False, 'nobrackets': False},
                  'POW': {'latex': '{%s}^{%s}', 'priority': 3, 'associative': False, 'weak': False, 'nobrackets': False},
-                 'EVL': {'latex': '%s \\left( %s \\right)', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True}}
+                 'EVL': {'latex': '%s \\left( %s \\right)', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'BIN': {'latex': '\\binom {%s} {%s}', 'priority': 4, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'BEL': {'latex': '%s \\in %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                 'NBL': {'latex': '%s \\notin %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                 'PRI': {'latex': '%s \\setminus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                 'UNI': {'latex': '%s \\cup %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                 'INT': {'latex': '%s \\cap %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                 'SYM': {'latex': '%s \\oplus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False}}
 
     OPERATORS_PARSED = {'plus': 'ADD',
                         'moins': 'SUB',
@@ -41,7 +48,14 @@ class BinaryOperatorConstructions(Construction):
                         'contient': 'SPS',
                         'équivaut à': 'EQV',
                         'environ égal à': 'SEQ',
-                        'de': 'EVL'}
+                        'de': 'EVL',
+                        'binomial': 'BIN',
+                        'appartient à': 'BEL',
+                        "n'appartient pas à": 'NBL',
+                        'privé de': 'PRI',
+                        'union': 'UNI',
+                        'intersection': 'INT',
+                        'différence symétrique': 'SYM'}
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 
