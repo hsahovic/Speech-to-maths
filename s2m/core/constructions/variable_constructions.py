@@ -71,6 +71,15 @@ class VariableConstructions(Construction):
 
     GREEK_REVERSE = reverse_dict(GREEK_PARSED)
 
+    SET_PARSED = {'grand r': '\\mathbb{R}',
+                          'grand q': '\\mathbb{Q}',
+                          'grand z': '\\mathbb{Z}',
+                          'grand n': '\\mathbb{N}',
+                          'grand d': '\\mathbb{D}',
+                          'grand p': '\\mathbb{P}',}
+    
+    SET_REVERSE = reverse_dict(SET_PARSED)
+
     @classmethod
     def generate_help(cls):
         help = {}
@@ -82,4 +91,6 @@ class VariableConstructions(Construction):
             help[k] = {'name': k,
                        'latex': v,
                        'spelling': k}
+        for (k, v) in cls.SET_PARSED.items():
+            help[k] = {'name': k, 'latex': v, 'spelling': k}
         return help

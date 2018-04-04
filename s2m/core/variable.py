@@ -73,6 +73,8 @@ class Variable(Formula, VariableConstructions):
             return self.RADIO_ROMAN_REVERSE[self.__v]
         elif self.__v in self.GREEK_REVERSE:
             return self.GREEK_REVERSE[self.__v]
+        elif self.__v in self.SET_REVERSE:
+            return self.SET_REVERSE[self.__v]
         else:
             raise ValueError('Transcription for variable name %r is not defined.'
                              % self.__v)
@@ -99,16 +101,19 @@ class Variable(Formula, VariableConstructions):
                              Variable.GREEK_PARSED,
                              lambda x: Variable(x),
                              True)
+        
+        set_easy_reduce = ('variable/set', Variable.SET_PARSED, lambda x: Variable(x), True)
 
         parser.add_easy_reduce(*radio_roman_easy_reduce)
         parser.add_easy_reduce(*greek_easy_reduce)
+        parser.add_easy_reduce(*set_easy_reduce)
 
         VariableConstructions.teach(parser)
 
     @classmethod
     def generate_random(cls):
         """
-        Generates a random variable(either greek or radio)
+        Generates a random variable(either greek or radio or set)
         """
 
-        return Variable(random.choice(list(cls.GREEK_REVERSE.keys() | cls.RADIO_ROMAN_REVERSE.keys())))
+        return Variable(random.choice(list(cls.GREEK_REVERSE.keys() | cls.RADIO_ROMAN_REVERSE.keys() | cls.SET_REVERSE.keys())))
