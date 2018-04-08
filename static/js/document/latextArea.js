@@ -403,8 +403,9 @@ class InputElement extends LatextAreaElement {
     }
 
     toTextElement() {
-            if (this.DOM.value.indexOf('\n') == -1)
+            if (this.DOM.value.indexOf('\n') == -1) {
                 this.latextArea.replaceElement(this, new TextElement(this.latextArea, this.DOM.value));
+            }
             else {
                 let values = this.DOM.value.split('\n');
                 let elements = [];
@@ -423,7 +424,7 @@ class InputElement extends LatextAreaElement {
     mouvementHandler(event) {
         var i = this.latextArea.findIndexes(this)[0];
         var j = this.latextArea.findIndexes(this)[1];
-        var positionCurseur = this.DOM.selectionStart;
+        var positionCurseur = this.DOM.selectionEnd;
         var positionCurseurLine = positionCurseur;
         for (let k = 0; k < j; k++) positionCurseurLine += this.latextArea.elements[i][k].textContent.length;
         var longueur = this.DOM.value.length;
@@ -432,27 +433,27 @@ class InputElement extends LatextAreaElement {
 
         var iToFocus = i;
         var jToFocus = j;
-        var longueurFocus = 0;
+        var positionFocus = 0;
         var change = false;
         var merge = false;
         // Gestion des touches (à réorganiser en switch à la fin)
         if (event.keyCode == 37 && positionCurseur == 0) {                //flèche gauche
             if (j > 0) {
                 jToFocus = j-1;
-                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length-1;
+                positionFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length-1;
                 change = true;
             } 
             else if (i>0) {
                 iToFocus = i-2;
                 jToFocus = this.latextArea.elements[iToFocus].length-1;
-                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
+                positionFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
                 change = true;
             }
         }
         if (event.keyCode == 39 && positionCurseur - longueur == 0) {           //flèche droite
             if (j < this.latextArea.elements[iToFocus].length-1) {
                 jToFocus = j+1;
-                longueurFocus = 1;
+                positionFocus = 1;
                 change = true;
             } 
             else if (i < this.latextArea.elements.length-2) {
@@ -464,21 +465,31 @@ class InputElement extends LatextAreaElement {
         if (event.keyCode == 38 && currentLine == 1) {                        //flèche haut
             if (i > 0) {
                 iToFocus = i-2;
-                jToFocus = Math.min(j, this.latextArea.elements[iToFocus].length-1);
+                jToFocus = 0;
                 change = true;
+                while (this.latextArea.elements[iToFocus][jToFocus].text.length < positionCurseurLine) {
+                    positionCurseurLine -= this.latextArea.elements[iToFocus][jToFocus].text.length;
+                    if (jToFocus < this.latextArea.elements[iToFocus].length-1) jToFocus++;
+                }
+                positionFocus = positionCurseurLine;
             } 
         }
         if (event.keyCode == 40 && currentLine == nbLines) {                  //flèche bas
             if (i < this.latextArea.elements.length - 2) {
                 iToFocus = i+2;
-                jToFocus = Math.min(j, this.latextArea.elements[iToFocus].length-1);
+                jToFocus = 0;
                 change = true;
+                while (this.latextArea.elements[iToFocus][jToFocus].text.length < positionCurseurLine) {
+                    positionCurseurLine -= this.latextArea.elements[iToFocus][jToFocus].text.length;
+                    if (jToFocus < this.latextArea.elements[iToFocus].length-1) jToFocus++;
+                }
+                positionFocus = positionCurseurLine;
             } 
         }
 
         if (change) {
                 this.latextArea.elements[iToFocus][jToFocus].toInput();
-                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
+                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(positionFocus, positionFocus);
                 this.toTextElement();
         }
 
@@ -495,10 +506,10 @@ class InputElement extends LatextAreaElement {
             }
         }
         if (merge) {
-                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
+                positionFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
                 this.latextArea.merge(this.latextArea.elements[iToFocus][jToFocus], this.latextArea.elements[i][j]);
                 this.latextArea.elements[iToFocus][jToFocus].toInput();
-                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
+                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(positionFocus, positionFocus);
         }
         if (event.keyCode == 13 ) {                   //enter
             event.preventDefault();
@@ -539,7 +550,7 @@ class TextElement extends LatextAreaElement {
         // initialisation
         super(latextArea, text);
         this.DOM = document.createElement("span");
-        this.DOM.innerHTML = text;
+        this.DOM.innerHTML = text.replace(/ /g, "&nbsp;");
         this.DOM.className = "latext-element";
 
         // event bindings
