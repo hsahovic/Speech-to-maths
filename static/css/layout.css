@@ -278,7 +278,6 @@ input {
 
 .latext-element {
     display: inline;
-    width : 100%;
     min-height: 1em;
     cursor : text;
 }
