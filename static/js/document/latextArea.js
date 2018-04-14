@@ -441,20 +441,19 @@ class InputElement extends LatextAreaElement {
             width += element.DOM.offsetWidth;
         }
 
-        if (width > this.DOM.parentElement.offsetWidth) {
+        while (width > this.DOM.parentElement.offsetWidth) {
             var l = this.latextArea.elements[i].length - 1;
             var elementCoupe = this.latextArea.elements[i][l];
             var positionDernierMot = Math.max(elementCoupe.text.lastIndexOf(' '), elementCoupe.text.lastIndexOf("&nbsp"));
             var str1 = elementCoupe.text.substring(0, positionDernierMot);
             var str2 = elementCoupe.text.substring(positionDernierMot + 1);
-            console.log(str1);
-            console.log(str2)
+            width -= elementCoupe.DOM.offsetWidth;
             if (this==elementCoupe) {
+                this.iCurseur = this.DOM.selectionEnd;
                 this.DOM.value = str1;
             } else {
                 elementCoupe.DOM.innerHTML = str1;
                 elementCoupe.textContent = str1;
-                console.log(elementCoupe.text);
             }
             if (this.latextArea.elements.length>i+2) {
                 this.latextArea.elements[i+2][0].textContent = str2 + ' ' + this.latextArea.elements[i+2][0].textContent;
@@ -462,15 +461,64 @@ class InputElement extends LatextAreaElement {
             } else {
                 this.latextArea.elements.push([new NewLineElement(this.latextArea)]);
                 this.latextArea.elements.push([new TextElement(this.latextArea, str2)]);
-                this.latextArea.generateDOM();
+                this.latextArea.parent.appendChild(latextArea.elements[i+1][0].DOM);
+                this.latextArea.parent.appendChild(latextArea.elements[i+2][0].DOM);
             }
-            if ((this==elementCoupe) && (this.curseur==str1.length)) {
-                console.log('bl');
-                this.latextArea.elements[i+2][0].toInput(str2.length);    
+            if (this==elementCoupe) {
+                if (this.iCurseur > str1.length) {
+                    this.latextArea.elements[i+2][0].toInput(str2.length);    
+                } else {
+                    this.DOM.setSelectionRange(this.iCurseur, this.iCurseur);                
+                }
             }
             this.DOM.style.height = this.DOM.scrollHeight + "px";
             this.DOM.style.width = '1px';
             this.DOM.style.width = this.DOM.scrollWidth + "px";
+            width += elementCoupe.DOM.offsetWidth;
+        }
+
+        var change = false;
+        while ( (!change) && (this.latextArea.elements.length>i+2) && (!this.latextArea.elements[i+1][0].lineBreak)) {
+            var elementCoupe = this.latextArea.elements[i+2][0];
+            var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
+            var positionPremierMot = elementCoupe.text.indexOf(' ');
+            if (positionPremierMot != 0) {
+                var str1 = elementCoupe.text.substring(0, positionPremierMot);
+                var str2 = elementCoupe.text.substring(positionPremierMot + 1);
+                width -= elementAjout.DOM.offsetWidth;
+                if (elementAjout instanceof InputElement) {
+                    elementAjout.iCurseur = this.DOM.selectionEnd;
+                    elementAjout.DOM.value += ' ' + str1;
+                    elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
+                } else {
+                    elementAjout.DOM.innerHTML += '&nbsp' + str1;
+                    elementAjout.textContent += ' ' + str1;
+                }
+                this.DOM.style.height = this.DOM.scrollHeight + "px";
+                this.DOM.style.width = '1px';
+                this.DOM.style.width = this.DOM.scrollWidth + "px";
+                width += elementAjout.DOM.offsetWidth;
+                if (width <= this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas
+                    elementCoupe.textContent = str2;
+                    elementCoupe.DOM.innerHTML = str2;
+                } else {
+                    change = true;
+                    if (elementAjout instanceof InputElement) {         // sinon on enlève ce qu'on a fait
+                        elementAjout.iCurseur = elementAjout.curseur;
+                        elementAjout.DOM.value = elementAjout.DOM.value.substring(0, elementAjout.text.length - positionPremierMot - 1);
+                        elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
+                    } else {
+                        elementAjout.DOM.innerHTML = elementAjout.DOM.innerHTML.substring(0, elementAjout.DOM.innerHTML.length - positionPremierMot);
+                        elementAjout.textContent = elementAjout.DOM.innerHTML.replace(/&nbsp;/g, " ");
+                    }
+                }
+            } else {
+                change = true;
+            }
+            
+            this.DOM.style.height = this.DOM.scrollHeight + "px";
+            this.DOM.style.width = '1px';
+            this.DOM.style.width = this.DOM.scrollWidth + "px";        
         }
     }
 
@@ -586,7 +634,7 @@ class InputElement extends LatextAreaElement {
             let newSecond = [];
             for (let k=0; k<j; k++) newFirst.push(this.latextArea.elements[i][k]);
             newFirst.push(new TextElement(this.latextArea, this.DOM.value.substring(0, positionCurseur) ));
-            let newLine = [new NewLineElement(this.latextArea)];
+            let newLine = [new NewLineElement(this.latextArea, true)];
             newSecond.push(new TextElement(this.latextArea, this.DOM.value.substring(positionCurseur) ));
             for (let k=j+1; k<this.latextArea.elements[i].length; k++) newSecond.push(this.latextArea.elements[i][k]);
             this.latextArea.replaceLine(this.latextArea.elements[i], [newFirst, newLine, newSecond]);
@@ -599,8 +647,13 @@ class InputElement extends LatextAreaElement {
 
 class NewLineElement extends LatextAreaElement {
 
-    constructor(latextArea) {
+    constructor(latextArea, lineBreak) {
         super(latextArea, '\n');
+        if (lineBreak != undefined) {
+            this.lineBreak = lineBreak;
+        } else {
+            this.lineBreak = false;
+        }
         this.DOM = document.createElement('br');
     }
 
@@ -621,7 +674,7 @@ class TextElement extends LatextAreaElement {
         this.DOM.innerHTML = text.replace(/ /g, "&nbsp;");
         this.DOM.className = "latext-element";
         // event bindings
-        this.DOM.onclick = this.toInput.bind(this);
+        this.DOM.onclick = this.toInput.bind(this, this.iCurseur);
     }
 
     insert(value) {
@@ -642,7 +695,6 @@ class TextElement extends LatextAreaElement {
         let newElement = new InputElement(this.latextArea, this.textContent, curseur);
         newElement.DOM.setSelectionRange(curseur, curseur);
         this.latextArea.replaceElement(this, newElement);
-        console.log(curseur);
     }
 
 }

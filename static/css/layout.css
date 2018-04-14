@@ -271,7 +271,7 @@ input {
     border : 0;
     height: 1em;
     font-family: 'Lato', sans-serif;
-    overflow-x: scroll;
+    overflow-x: hidden;
     overflow-y: hidden;
     white-space: pre;
 }
