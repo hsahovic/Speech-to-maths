@@ -2,6 +2,7 @@ from s2m.core.constructions.constructions import Construction
 
 from s2m.core.utils import reverse_dict
 
+
 class BinaryOperatorConstructions(Construction):
 
     OPERATORS = {'EQU': {'latex': '%s = %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
@@ -28,7 +29,8 @@ class BinaryOperatorConstructions(Construction):
                  'PRI': {'latex': '%s \\setminus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                  'UNI': {'latex': '%s \\cup %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                  'INT': {'latex': '%s \\cap %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                 'SYM': {'latex': '%s \\oplus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False}}
+                 'SYM': {'latex': '%s \\oplus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
+                 'DST': {'latex': 'd ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True}}
 
     OPERATORS_PARSED = {'plus': 'ADD',
                         'moins': 'SUB',
@@ -55,13 +57,14 @@ class BinaryOperatorConstructions(Construction):
                         'privé de': 'PRI',
                         'union': 'UNI',
                         'intersection': 'INT',
-                        'différence symétrique': 'SYM'}
+                        'différence symétrique': 'SYM',
+                        'distance':'DST'}
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 
     @classmethod
     def generate_help(cls):
-        BLANK = ('\\bullet','\\bullet')
+        BLANK = ('\\bullet', '\\bullet')
         help = {}
         for (k, v) in cls.OPERATORS.items():
             n = cls.OPERATORS_REVERSE[k]
@@ -69,5 +72,5 @@ class BinaryOperatorConstructions(Construction):
                        'latex': v['latex'] % BLANK,
                        'spelling': n,
                        'example': 'lambda %s mu' % n,
-                       'example-latex': v['latex'] % ('\\lambda','\\mu')}
+                       'example-latex': v['latex'] % ('\\lambda', '\\mu')}
         return help

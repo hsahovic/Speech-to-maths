@@ -2,6 +2,7 @@ from s2m.core.constructions.constructions import Construction
 
 from s2m.core.utils import reverse_dict
 
+
 class UnaryOperatorConstructions(Construction):
 
     OPERATORS = {'NEG': {'latex': '-%s', 'priority': 4, 'nobrackets': False},
@@ -27,8 +28,12 @@ class UnaryOperatorConstructions(Construction):
                  'SIH': {'latex': '\\sinh(%s)', 'priority': 5, 'nobrackets': True},
                  'TAH': {'latex': '\\tanh(%s)', 'priority': 5, 'nobrackets': True},
                  'KER': {'latex': '\\ker(%s)', 'priority': 5, 'nobrackets': True},
-                 'IMA': {'latex': 'Im(%s)', 'priority': 5, 'nobrackets': True}
-                }
+                 'IMA': {'latex': 'Im(%s)', 'priority': 5, 'nobrackets': True},
+                 'ITR': {'latex': '\\overset{\circ}{%s}', 'priority': 5, 'nobrackets': True},
+                 'VSN': {'latex': '\\mathcal V (%s)', 'priority': 5, 'nobrackets': True},
+                 'ADR': {'latex': '\\overline{%s}', 'priority': 5, 'nobrackets': True},
+                 'FTR': {'latex': '\\partial %s ', 'priority': 5, 'nobrackets': True},
+                 }
 
     OPERATORS_PARSED = {'moins': 'NEG',
                         'racine de': 'SQR',
@@ -54,7 +59,11 @@ class UnaryOperatorConstructions(Construction):
                         'sinus hyperbolique de': 'SIH',
                         'tangente hyperbolique de': 'COH',
                         'noyau de': 'KER',
-                        'image de': 'IMA'}
+                        'image de': 'IMA',
+                        'intérieur de': 'ITR',
+                        'voisinage de': 'VSN',
+                        'adhérence de': 'ADR',
+                        'frontière de': 'FTR'}
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 
