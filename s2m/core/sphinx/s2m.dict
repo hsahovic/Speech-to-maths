@@ -69,23 +69,34 @@ fermez(4) ff ei rr mm ei zz
 fin ff in
 fois ff ww aa
 fois(2) ff ww aa zz
+foxtrot ff oo kk ss tt rr oo tt 
+foxtrot(2) ff oo kk ss tt rr oo tt ee 
 gamma gg aa mm aa
+golf gg oo ll ff
 grec gg rr ai kk
+hotel oo tt ai ll
 huit uy ii
 huit(2) uy ii tt
 inclus in kk ll uu
 inclus(2) in kk ll uu zz
+india ii nn dd ii aa 
 inférieur in ff ai rr yy oe rr
 intersection in tt ai rr ss ai kk ss yy on
 intégrale in tt ai gg rr aa ll
 intégrale(2) in tt ai gg rr aa ll ee
 iota yy oo tt aa
+juliett ju ll ii ai tt 
+juliette(2) ju ll ii ai tt ee
 kappa kk aa pp aa
 kappa(2) kk aa pp pp aa
+kilo kk ii ll oo 
 la ll aa
 lambda ll an bb dd aa
+lima ll ii mm aa
 majuscule mm aa jj uu ss kk uu ll
 majuscule(2) mm aa jj uu ss kk uu ll ee
+mike mm aa ii kk
+mike(2) mm aa ii kk ee 
 mille mm ii ll
 mille(2) mm ii ll ee
 milliard mm ii ll yy aa rr
@@ -101,6 +112,7 @@ nonilliard nn oo nn ii ll ii aa rr
 nonilliard(2) nn oo nn ii ll yy aa rr
 nonillion nn oo nn ii ll ii on
 nonillion(2) nn oo nn ii ll yy on
+november nn oo vv ee mm bb ee rr
 nu nn uu
 octante oo kk tt an tt
 octilliard oo kk tt ii ll ii aa rr
@@ -110,9 +122,11 @@ octillion(2) oo kk tt ii ll yy on
 omega oo mm ee gg aa
 onze on zz
 onze(2) on zz ee
+oscar oo ss kk aa rr 
 ou ou
 ouvrez ou vv rr ei
 ouvrez(2) ou vv rr ei zz
+papa pp aa pp aa
 par pp aa rr
 parenthèse pp aa rr an tt ai zz
 parenthèse(2) pp aa rr an tt ai zz ee
@@ -157,11 +171,14 @@ quintillion(2) kk in tt ii ll yy on
 quinze kk in zz
 quinze(2) kk in zz ee
 quinze(3) kk in zz ei
+québec kk ei bb ai kk
+québec(2) kk ei bb ei kk
 racine rr aa ss ii nn
 racine(2) rr aa ss ii nn ee
 rho rr oo
 rond rr on
 rond(2) rr on tt
+romeo rr oo mm ei oo
 seize ss ai zz
 seize(2) ss ai zz ee
 sept ss ai tt
@@ -174,6 +191,7 @@ sextilliard ss ai kk ss tt ii ll ii aa rr
 sextilliard(2) ss ai kk ss tt ii ll yy aa rr
 sextillion ss ai kk ss tt ii ll ii on
 sextillion(2) ss ai kk ss tt ii ll yy on
+sierra ss ii ei rr aa 
 sigma ss ii gg mm aa
 six ss ii
 six(2) ss ii ss
@@ -185,6 +203,8 @@ somme(2) ss oo mm ee
 supérieur ss uu pp ai rr yy oe rr
 sur ss uu rr
 tau tt au
+tango tt an gg oo
+tango(2) tt an nn gg oo
 theta tt ei tt aa
 theta(2) tt ai tt aa
 treize tt rr ai zz
