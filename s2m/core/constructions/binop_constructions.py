@@ -30,7 +30,10 @@ class BinaryOperatorConstructions(Construction):
                  'UNI': {'latex': '%s \\cup %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                  'INT': {'latex': '%s \\cap %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                  'SYM': {'latex': '%s \\oplus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
-                 'DST': {'latex': 'd ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True}}
+                 'DST': {'latex': 'd ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'BLO': {'latex': 'B ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'BLF': {'latex': 'B_f ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True}
+                 }
 
     OPERATORS_PARSED = {'plus': 'ADD',
                         'moins': 'SUB',
@@ -58,7 +61,10 @@ class BinaryOperatorConstructions(Construction):
                         'union': 'UNI',
                         'intersection': 'INT',
                         'différence symétrique': 'SYM',
-                        'distance':'DST'}
+                        'distance': 'DST',
+                        'boule ouverte ': 'BLO',
+                        'boule fermée ': 'BLF'
+                        }
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 

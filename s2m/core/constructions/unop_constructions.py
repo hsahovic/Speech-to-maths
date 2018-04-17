@@ -33,6 +33,8 @@ class UnaryOperatorConstructions(Construction):
                  'VSN': {'latex': '\\mathcal V (%s)', 'priority': 5, 'nobrackets': True},
                  'ADR': {'latex': '\\overline{%s}', 'priority': 5, 'nobrackets': True},
                  'FTR': {'latex': '\\partial %s ', 'priority': 5, 'nobrackets': True},
+                 'NRM': {'latex': '\\Vert %s \\Vert','priority': 5, 'nobrackets': True},
+                 'NRO': {'latex': '\\vvvert %s \\vvvert','priority': 5, 'nobrackets': True}
                  }
 
     OPERATORS_PARSED = {'moins': 'NEG',
@@ -63,7 +65,9 @@ class UnaryOperatorConstructions(Construction):
                         'intérieur de': 'ITR',
                         'voisinage de': 'VSN',
                         'adhérence de': 'ADR',
-                        'frontière de': 'FTR'}
+                        'frontière de': 'FTR',
+                        'norme de': 'NRM',
+                        'norme subordonnée de': 'NRO'}
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 
