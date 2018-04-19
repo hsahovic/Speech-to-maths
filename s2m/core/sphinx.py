@@ -51,6 +51,8 @@ class Sphinx(Thread):
                 spoken_duration += segment.end_frame - segment.start_frame
                 segment_list.append(segment.word)
                 word_count += 1
+        if word_count == 0:
+            return ''
         avg_word_duration = spoken_duration / word_count
         return ' '.join((self.get_silence(s / avg_word_duration)
                          if type(s) is int else nobrackets(s))
@@ -60,7 +62,10 @@ class Sphinx(Thread):
         if not self.ready:
             raise EnvironmentError('Initialization of sphinx not finished.')
         FILLER_WORDS = ['<s>', '<sil>', '</s>']
-        self.pocketsphinx.decode(filename)
+        try:
+            self.pocketsphinx.decode(filename)
+        except Exception as e:
+            print("An error was raised by sphinx while decoding file '%r', parsing aborted" % filename)
         text = " ".join(
            [s for s in self.pocketsphinx.segments() if s not in FILLER_WORDS])
         text = nobrackets(text)

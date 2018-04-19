@@ -104,10 +104,10 @@ def generate_random_word(length=12):
 
 def merge_lists(lists, head=None, length=8):
     l = [] if head is None else [head]
-    length = length - 1 if head else length
-    lists = [[e for e in l if e is not None] for l in lists]
+    length -= len(l)
     if lists == []:
         return l + [None] * length
+    lists = [[e for e in l if e is not None] for l in lists]
     n = len(lists)
     lens = [len(l) for l in lists]
     for i in range(max(lens)):

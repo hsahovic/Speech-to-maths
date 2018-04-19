@@ -1,4 +1,3 @@
-
 #Temp
 from s2m.core.parser_n2 import Parser
 #End-Temp
@@ -14,6 +13,7 @@ from s2m.core.utils import listset
 from s2m.core.utils import normalize_scores
 from s2m.core.sphinx_config import SphinxConfig
 from s2m.core.proximity_dict import ProximityDict
+from s2m.core.s2m_training import s2m_training
 
 from s2m.core.S2MParser_utils import append_formulae
 
@@ -35,29 +35,29 @@ class S2MParser():
         BigOperator.teach(self.__parser)
         PlaceHolder.teach(self.__parser)
         self.__parser.sphinx_config.update_config_files()
+        #décommenter ceci après dev
+        #s2m_training.enable_system_training()
 
     def help(self, s):
         return self.__parser.help_dict.get_all(s)
              
-    def parse(self, w, formal=False, document=None, **args):
+    def parse(self, w, sess, document, formal=False, save=True, **args):
 
-        parses = self.__parser.myers(w, **args)
+        parses = self.__parser.myers(w, sess, document, **args)
         if formal:
             return parses
         else:
             results = normalize_scores(listset(sorted(
-                [(p[0][0].latex(), p[0][0].evaluation()) for p in parses
+                [(p[0][0].latex(), p[0][0].evaluation(sess, document)) for p in parses
                 if isinstance(p[0][0], Formula)], key=lambda x: x[1], reverse=True)))
             filtered_parses = [p for p in parses if isinstance(p[0][0], Formula)]
-            if document:
-                print('document %r detected' % document)
+            if save:
                 token = append_formulae(filtered_parses, document)
                 return results, token
             else:
-                print('no document detected')
                 return results
 
-    def __call__(self, w, **args):
-        return self.parse(w, **args)
+    def __call__(self, w, sess, document, **args):
+        return self.parse(w, sess, document, **args)
 
 s2m_parser = S2MParser()

@@ -13,7 +13,6 @@ import uuid
 from s2m.core.formulae import Formula
 from s2m.core.s2m_training import s2m_training
 
-
 @login_required
 def account(request):
     user = get_user(request)

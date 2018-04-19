@@ -68,9 +68,9 @@ class Formula(metaclass=ABCMeta):
         elif level > 6:
             return '\\left\\lbrace %s \\right\\rbrace'
 
-    def evaluation(self, context_formula=None, placeholder_id=1):
+    def evaluation(self, sess, document, context_formula=None, placeholder_id=1):
 
-        return evaluator(self, context_formula, placeholder_id)
+        return evaluator(self, sess, document, context_formula, placeholder_id)
 
     def replace_placeholder(self, formula, placeholder_id=0, next_placeholder=1):
         pass

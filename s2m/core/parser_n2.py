@@ -150,7 +150,7 @@ class Parser:
          
         self.__sphinx_config.add_complex_rule(name, s, is_expression)
 
-    def _compare(self, x, y, context_formula=None, placeholder_id=1):
+    def _compare(self, x, y, sess, document, context_formula=None, placeholder_id=1):
 
         if x[1] > y[1]:
             return True
@@ -158,7 +158,7 @@ class Parser:
             return False
         elif len(x[0]) == 1 and len(y[0]) == 1 \
              and isinstance(x[0][0], Formula) and isinstance(y[0][0], Formula) \
-        and x[0][0].evaluation(context_formula, placeholder_id) < y[0][0].evaluation(context_formula, placeholder_id):
+        and x[0][0].evaluation(sess, document, context_formula, placeholder_id) < y[0][0].evaluation(sess, document, context_formula, placeholder_id):
             return True
         else:
             return False
@@ -237,7 +237,7 @@ class Parser:
         return C[desc][l][i].min_value()
 
 
-    def myers(self, s, context_formula=None, placeholder_id=0, threshold_factor=2, verbose=False):
+    def myers(self, s, sess, document, context_formula=None, placeholder_id=0, threshold_factor=2, verbose=False):
 
         if verbose:
             _time = time()
@@ -259,7 +259,7 @@ class Parser:
 
         #Initialisation de C
         C = { desc: [ [BoundedWriteOnlyQueue(comparator=self._compare,
-                                             args=(context_formula, placeholder_id))
+                                             args=(sess, document, context_formula, placeholder_id))
                        for _1 in range(N+1-_2)] for _2 in range(N+1) ]
               for desc in self.__descriptors }
 
@@ -275,7 +275,6 @@ class Parser:
 
         for l in range(0, N+1):
             for i in range(0, N-l+1):
-                #print([[d.min_value() for d in c] for c in C['$brackettedblock/implicit.0t1']])
                 current_min = float('inf')
                 if verbose:
                     _time2 -= time()

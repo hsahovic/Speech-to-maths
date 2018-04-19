@@ -4,9 +4,9 @@ from interface.models import PendingFormulae
 import pickle
 
 def append_formulae(formulae, document):
+    pickled_formulae = pickle.dumps(formulae)
     formulae_db = PendingFormulae.objects.create(token=generate_random_word(),
-                                                 formulae=formulae,
+                                                 formulae=pickled_formulae,
                                                  document=document)
     formulae_db.save()
-    print('appended')
     return formulae_db.token

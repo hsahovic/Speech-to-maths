@@ -11,14 +11,22 @@ from s2m.core.evaluator import evaluator
 import os
 import subprocess
 import uuid
+import pickle
 
 
 class S2MModel(models.Model):
 
-    json_model = models.TextField(
-        default=evaluator.create_empty_model().to_json())
+    json_model = models.TextField(null=True)
+    weights = models.BinaryField(null=True)
 
+    @classmethod
+    def create(cls):
+        model = evaluator.create_empty_model()
+        json_model = model.to_json()
+        weights = pickle.dumps(model.get_weights())
+        return cls(json_model=json_model, weights=weights)
 
+    
 class Utilisateur(User):
 
     s2m_model = models.OneToOneField(
@@ -73,7 +81,7 @@ class ElementaryFormula(models.Model):
     document = models.ForeignKey(
         'Document', on_delete=models.CASCADE, related_name='elementary_formulae')
     creation_date = models.DateField(auto_now_add=True)
-    formula = models.TextField(validators=[is_pickled_formula])
+    formula = models.BinaryField(validators=[is_pickled_formula])
     count = models.IntegerField(default=1)
 
 
@@ -96,7 +104,7 @@ class PendingFormulae(models.Model):
     document = models.ForeignKey(
         'Document', on_delete=models.CASCADE, related_name='pending_formulae')
     creation_date = models.DateField(auto_now_add=True)
-    formulae = models.TextField(validators=[is_pickled_formula_list])
+    formulae = models.BinaryField(validators=[is_pickled_formula_list])
 
 
 class SavedFormula(models.Model):
@@ -104,6 +112,6 @@ class SavedFormula(models.Model):
     document = models.ForeignKey(
         'Document', on_delete=models.CASCADE, related_name='saved_formulae')
     creation_date = models.DateField(auto_now_add=True)
-    formula = models.TextField(validators=[is_pickled_formula])
+    formula = models.BinaryField(validators=[is_pickled_formula])
     count = models.IntegerField(default=1)
     chosen = models.BooleanField(default=False)

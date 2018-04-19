@@ -4,70 +4,104 @@ from keras.layers import Dense, Activation
 from keras.models import model_from_json
 from django.apps import apps
 
+from time import time
+
 import pickle
 
 class Evaluator:
 
-    def __call__(self, formula, context_formula=None, placeholder_id=1):
+    def __init__(self):
+
+        self.__memo = {}
+
+    def __call__(self, formula, sess, document, context_formula=None, placeholder_id=1):
         #outputs a score for formula based on a tensorflow calculation
         #TEMPORARY workaround
         if context_formula:
             context_formula.replace_placeholder(formula, placeholder_id, conservative=True)
         else:
             context_formula = formula
-        count_brackets_v = self.h_count_brackets(context_formula)[0]
-        symmetry = self.h_symmetry(context_formula)
-        WEIGHTS = (0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125, 0.00390625)
-        symmetry_v = sum(s * w for s, w in zip(symmetry, WEIGHTS))
-        result = (count_brackets_v + symmetry_v) / 2
-        return result
+        #count_brackets_v = self.h_count_brackets(context_formula)[0]
+        #symmetry = self.h_symmetry(context_formula)
+        #WEIGHTS = (0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125, 0.00390625)
+        #symmetry_v = sum(s * w for s, w in zip(symmetry, WEIGHTS))
+        #result = (count_brackets_v + symmetry_v) / 2
+        #return result
+        return self.evaluate(formula, sess, document)
 
-    def evaluate(self, formula, document):
+    def reset(self):
+        self.__memo = {}
+
+    def evaluate(self, formula, sess, document):
         input_vector = self.h_all(formula)
         user = document.author
         system = apps.get_model('interface', 'S2MModel').objects.get(id=0)
-        result_document = self.evaluate_model(document, input_vector)
-        result_user = self.evaluate_model(user, input_vector)
-        result_system = self.evaluate_model(system, input_vector)
+        result_document = self.evaluate_model(document, sess, input_vector)
+        result_user = self.evaluate_model(user, sess, input_vector)
+        result_system = self.evaluate_model(system, sess, input_vector)
         return (result_document + result_user + result_system) / 3
 
-    def evaluate_model(self, obj, input_vector):
-        if len(input_vector.shape) == 1:
-            input_vector.shape = (input_vector.shape[0],1)
-        if not obj.s2m_model:
-            model = apps.get_model('interface', 'S2MModel')()
-            model.save()
-            obj.s2m_model = model
+    def _s2m_model_from_obj(self, obj, no_obj=False):
+        S2MModel = apps.get_model('interface', 'S2MModel')
+        #Premier cas : obj est déjà un S2MModel
+        if isinstance(obj, S2MModel):
+            s2m_model = obj
+        #Deuxième cas : création d'un S2MModel nécessaire
+        elif (not no_obj) and (not obj.s2m_model):
+            s2m_model = S2MModel.create()
+            s2m_model.save()
+            obj.s2m_model = s2m_model
             obj.save()
+        #Troisième cas : le S2MModel existe déjà
         else:
-            model = model_from_json(obj.s2m_model)
-        return model.predict(input_vector)
+            s2m_model = obj.s2m_model
+        return s2m_model
+        
+    def evaluate_model(self, obj, sess, input_vector):
+        input_vectors = np.array([input_vector])
+        kmodel = self._load_s2m_model_from_obj(obj, sess)
+        return kmodel.predict(input_vectors)[0][0]
         
     def create_empty_model(self):
         model = Sequential()
         model.add(Dense(32, activation='relu', input_dim=9))
         model.add(Dense(32, activation='relu'))
         model.add(Dense(1, activation='sigmoid'))
-        model.compile(optimizer='rmsprop',
-              loss='binary_crossentropy',
-              metrics=['accuracy'])
         return model
 
-    def train_model(self, obj, no_obj=False):
-        saved_formulae = apps.get_model('interface', 'SavedFormula').objects.all()
-        data, labels = zip([(np.array(self.h_all(f.formula)), float(f.chosen)) for f in saved_formulae])
+    def _load_s2m_model(self, s2m_model):
+        kmodel = model_from_json(s2m_model.json_model)
+        kmodel.set_weights(pickle.loads(s2m_model.weights))
+        kmodel.compile(optimizer='rmsprop',
+                       loss='binary_crossentropy',
+                       metrics=['accuracy'])
+        return kmodel
+
+    def _load_s2m_model_from_obj(self, obj, sess, no_obj=False):
+        if (sess, obj) in self.__memo:
+            return self.__memo[(sess, obj)]
+        else:
+            s2m_model = self._s2m_model_from_obj(obj, no_obj)
+            kmodel = self._load_s2m_model(s2m_model)
+            self.__memo[(sess, obj)] = kmodel
+            return kmodel
+
+    def train_model(self, obj, sess, no_obj=False):
+        #Chargement des modèles (depuis apps pour éviter les imports cycliques)
+        SavedFormula = apps.get_model('interface', 'SavedFormula')
+        #Récupération des données d'apprentissage
+        saved_formulae = SavedFormula.objects.all()
+        data, labels = zip(*[(np.array(self.h_all(pickle.loads(f.formula))), float(f.chosen)) for f in saved_formulae])
         np_data, np_labels = np.array(data), np.array(labels)
-        if not no_obj and not obj.s2m_model:
-            model = apps.get_model('interface', 'S2MModel')()
-            model.save()
-            obj.s2m_model = model
-            obj.save()
-        elif no_obj:
-            model = obj
-        kmodel = model_from_json(model.json_model)
-        kmodel.fit(np_data, np_labels, epoch=10, batch_size=32)
-        model.json_model = kmodel.to_json()
-        model.save()
+        #Extraction du S2MModel pertinent
+        s2m_model = self._s2m_model_from_obj(obj, no_obj)
+        #Chargement du model keras
+        kmodel = self._load_s2m_model_from_obj(obj, sess, no_obj)
+        #Régression
+        kmodel.fit(np_data, np_labels, epochs=10, batch_size=32)
+        #Sauvegarde des coefficients dans la BDD
+        s2m_model.weights = pickle.dumps(kmodel.get_weights())
+        s2m_model.save()
 
     def h_all(self, formula):
         v_count_brackets = self.h_count_brackets(formula)

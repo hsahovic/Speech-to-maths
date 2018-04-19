@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponse
 from django.conf import settings
 from django.core.files import File
+from django.core.exceptions import ObjectDoesNotExist
 
 import os
 import json
@@ -18,6 +19,7 @@ import s2m.core.sphinx_training
 
 from s2m.core.sphinx import sphinx
 from s2m.core.utils import ogg_to_wav
+from s2m.core.parsing_queue import parsing_queue
 from s2m.settings import MEDIA_ROOT
 from interface.models import Document
 from interface.models import TrainingSample
@@ -30,7 +32,7 @@ from interface.views_utils import get_document
 
 @login_required
 def voice_analysis(request):
-    try:
+    #try:
         # Chargement du fichier son
         filename_ogg = save_file_from_request(
             request, "ogg", post_arg="file", file_path=os.path.join(MEDIA_ROOT, 'file_analysis'))
@@ -52,38 +54,20 @@ def voice_analysis(request):
         document = Document.objects.get(id=request.POST['document'])
         # a supprimer une fois le dev fini sur cette sequence
         print(text, nbest)
-        # Analyse syntaxique
+        condition = parsing_queue.schedule(text,
+                                           document,
+                                           context_formula=context_formula,
+                                           placeholder_id=placeholder_id)
+        condition.acquire()
         try:
-            parses = s2m_parser(text,
-                                document=document,
-                                context_formula=context_formula,
-                                placeholder_id=placeholder_id)
-        except:
-            i = 0
-            while not parses and i < len(nbest):
-                try:
-                    parses = s2m_parser(nbest[i],
-                                        document=document,
-                                        context_formula=context_formula,
-                                        placeholder_id=placeholder_id)
-                except:
-                    pass
-                i += 1
-        if document:
-            parses, token = parses
-        else:
-            token = ''
-        # Renvoi de la réponse
-        if parses == []:
-            response = json.dumps({'instruction': 'nop'})
-        else:
-            parses_content, parses_scores = zip(*parses)
-            response = json.dumps(
-                {'instruction': 'propose', 'content': parses_content, 'scores': parses_scores, 'token': token})
+            condition.wait()
+        finally:
+            condition.release()
+        response = parsing_queue.retrieve(document)
         return HttpResponse(response)
-    except OSError:
+    #except OSError:
         # Windows tests
-        return HttpResponse(json.dumps({'instruction': 'propose', 'content': [" Text de test", "T'es de test"]}))
+        #return HttpResponse(json.dumps({'instruction': 'propose', 'content': [" Text de test", "T'es de test"]}))
 
 
 @login_required
@@ -117,7 +101,7 @@ def validate_choice(request):
             and 'choice' in request.POST):
         raise ValueError('Ill-formatted request passed to validate_choice')
     token = request.POST['token']
-    choice = request.POST['choice']
+    choice = int(request.POST['choice'])
     pending = PendingFormulae.objects.get(token=token)
     if pending:
         formulae = pickle.loads(pending.formulae)
@@ -125,23 +109,23 @@ def validate_choice(request):
             raise ValueError
         else:
             for (i, formula) in enumerate(formulae):
-                pickled_formula = pickle.dumps(formula)
-                saved_formula = SavedFormula.objects.get(
-                    formula=pickled_formula)
-                if saved_formula:
-                    saved_formula.count += 1
-                    saved_formula.save()
-                    return HttpResponse(saved_formula.id)
-                else:
-                    formula_db = SavedFormula.objects.create()
+                pickled_formula = pickle.dumps(formula[0][0])
+                try:
+                    saved_formula = SavedFormula.objects.get(
+                        formula=pickled_formula)
+                except ObjectDoesNotExist:
+                    formula_db = SavedFormula()
                     formula_db.document = pending.document
                     formula_db.formula = pickled_formula
                     formula_db.chosen = (i == choice)
                     formula_db.save()
-                    return HttpResponse(formula_db.id)
+                else:
+                    saved_formula.count += 1
+                    saved_formula.save()
     else:
         raise ValueError(
             'There are no pending formulae under token %r' % token)
+    return HttpResponse()
 
 
 @login_required
@@ -150,5 +134,4 @@ def help_construction(request):
         response = json.dumps(s2m_parser.help(request.POST['query']))
     else:
         response = json.dumps([])
-    print(response)
     return HttpResponse(response)
