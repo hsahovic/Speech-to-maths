@@ -186,7 +186,6 @@ class LatextArea {
         if (this.elements.length != 0)
             this.elements.pop();
         this.elements[0][0].toInput();
-        console.log(this.elements);
     }
 
     replaceElement(elementToReplace, newElements = undefined) {
@@ -271,14 +270,46 @@ class LatextArea {
 
 class LatextAreaElement {
 
-    constructor(latextArea, text) {
+    constructor(latextArea, text, position) {
         this.latextArea = latextArea;
         this.textContent = text;
+        if (position != undefined) {
+            this.iCurseur = position;    
+        } else {
+            this.iCurseur = 0;
+        }
+        
         this.DOM = document.createElement("span");
     }
 
     get text() {
         return this.textContent;
+    }
+
+    get curseur() {
+        return this.iCurseur;
+    }
+
+    get curseurLigne() {
+        var i = this.latextArea.findIndexes(this)[0];
+        var j = this.latextArea.findIndexes(this)[1];
+        var positionCurseurLine = this.curseur;
+        for (let k = 0; k < j; k++) positionCurseurLine += this.latextArea.elements[i][k].textContent.length;
+        return positionCurseurLine;
+    }
+
+    findIndexes() {
+        let resi = -1;
+        let resj = -1;
+        for (let i = 0; i < this.latextArea.elements.length; i++) {
+            for (let j = 0; j < this.latextArea.elements[i].length; j++) {
+                if (this === this.latextArea.elements[i][j]) {
+                    resi = i;
+                    resj = j;
+                }
+            }
+        }
+        return [resi, resj];
     }
 
 }
@@ -355,7 +386,7 @@ class AudioResponseElement extends LatextAreaElement {
 class EmptyElement extends LatextAreaElement {
 
     constructor(latextArea) {
-        super(latextArea, '');
+        super(latextArea, '', 0);
         this.DOM = document.createElement('span');
         this.DOM.innerHTML = "";
     }
@@ -364,9 +395,9 @@ class EmptyElement extends LatextAreaElement {
 
 class InputElement extends LatextAreaElement {
 
-    constructor(latextArea, text) {
+    constructor(latextArea, text, position) {
         // initialisation
-        super(latextArea, text);
+        super(latextArea, text, position);
         this.DOM = document.createElement("textArea");
         this.DOM.value = text;
         // event bindings
@@ -387,6 +418,10 @@ class InputElement extends LatextAreaElement {
         return this.DOM.value;
     }
 
+    get curseur() {
+        return this.DOM.selectionEnd;
+    }
+
     insert(value) {
         if (this.DOM.value != "" && this.DOM.value.substr(this.DOM.value.length - 1) != " ") {
             value = " " + value;
@@ -400,22 +435,108 @@ class InputElement extends LatextAreaElement {
         this.DOM.style.height = this.DOM.scrollHeight + "px";
         this.DOM.style.width = '1px';
         this.DOM.style.width = this.DOM.scrollWidth + "px";
+        var i = this.latextArea.findIndexes(this)[0];
+        var width = this.latextArea.elements[0][0].DOM.offsetLeft;
+        for (let element of this.latextArea.elements[i]) {
+            width += element.DOM.offsetWidth;
+        }
+
+        while (width > this.DOM.parentElement.offsetWidth) {
+            var l = this.latextArea.elements[i].length - 1;
+            var elementCoupe = this.latextArea.elements[i][l];
+            var positionDernierMot = Math.max(elementCoupe.text.lastIndexOf(' '), elementCoupe.text.lastIndexOf("&nbsp"));
+            var str1 = elementCoupe.text.substring(0, positionDernierMot);
+            var str2 = elementCoupe.text.substring(positionDernierMot + 1);
+            width -= elementCoupe.DOM.offsetWidth;
+            if (this==elementCoupe) {
+                this.iCurseur = this.DOM.selectionEnd;
+                this.DOM.value = str1;
+            } else {
+                elementCoupe.DOM.innerHTML = str1;
+                elementCoupe.textContent = str1;
+            }
+            if (this.latextArea.elements.length>i+2) {
+                this.latextArea.elements[i+2][0].textContent = str2 + ' ' + this.latextArea.elements[i+2][0].textContent;
+                this.latextArea.elements[i+2][0].DOM.innerHTML = this.latextArea.elements[i+2][0].textContent.replace(/ /g, "&nbsp;");
+            } else {
+                this.latextArea.elements.push([new NewLineElement(this.latextArea)]);
+                this.latextArea.elements.push([new TextElement(this.latextArea, str2)]);
+                this.latextArea.parent.appendChild(latextArea.elements[i+1][0].DOM);
+                this.latextArea.parent.appendChild(latextArea.elements[i+2][0].DOM);
+            }
+            if (this==elementCoupe) {
+                if (this.iCurseur > str1.length) {
+                    this.latextArea.elements[i+2][0].toInput(str2.length);    
+                } else {
+                    this.DOM.setSelectionRange(this.iCurseur, this.iCurseur);                
+                }
+            }
+            this.DOM.style.height = this.DOM.scrollHeight + "px";
+            this.DOM.style.width = '1px';
+            this.DOM.style.width = this.DOM.scrollWidth + "px";
+            width += elementCoupe.DOM.offsetWidth;
+        }
+
+        var change = false;
+        while ( (!change) && (this.latextArea.elements.length>i+2) && (!this.latextArea.elements[i+1][0].lineBreak)) {
+            var elementCoupe = this.latextArea.elements[i+2][0];
+            var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
+            var positionPremierMot = elementCoupe.text.indexOf(' ');
+            if (positionPremierMot != 0) {
+                var str1 = elementCoupe.text.substring(0, positionPremierMot);
+                var str2 = elementCoupe.text.substring(positionPremierMot + 1);
+                width -= elementAjout.DOM.offsetWidth;
+                if (elementAjout instanceof InputElement) {
+                    elementAjout.iCurseur = this.DOM.selectionEnd;
+                    elementAjout.DOM.value += ' ' + str1;
+                    elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
+                } else {
+                    elementAjout.DOM.innerHTML += '&nbsp' + str1;
+                    elementAjout.textContent += ' ' + str1;
+                }
+                this.DOM.style.height = this.DOM.scrollHeight + "px";
+                this.DOM.style.width = '1px';
+                this.DOM.style.width = this.DOM.scrollWidth + "px";
+                width += elementAjout.DOM.offsetWidth;
+                if (width <= this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas
+                    elementCoupe.textContent = str2;
+                    elementCoupe.DOM.innerHTML = str2;
+                } else {
+                    change = true;
+                    if (elementAjout instanceof InputElement) {         // sinon on enlève ce qu'on a fait
+                        elementAjout.iCurseur = elementAjout.curseur;
+                        elementAjout.DOM.value = elementAjout.DOM.value.substring(0, elementAjout.text.length - positionPremierMot - 1);
+                        elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
+                    } else {
+                        elementAjout.DOM.innerHTML = elementAjout.DOM.innerHTML.substring(0, elementAjout.DOM.innerHTML.length - positionPremierMot);
+                        elementAjout.textContent = elementAjout.DOM.innerHTML.replace(/&nbsp;/g, " ");
+                    }
+                }
+            } else {
+                change = true;
+            }
+            
+            this.DOM.style.height = this.DOM.scrollHeight + "px";
+            this.DOM.style.width = '1px';
+            this.DOM.style.width = this.DOM.scrollWidth + "px";        
+        }
     }
 
     toTextElement() {
-            if (this.DOM.value.indexOf('\n') == -1)
-                this.latextArea.replaceElement(this, new TextElement(this.latextArea, this.DOM.value));
-            else {
-                let values = this.DOM.value.split('\n');
-                let elements = [];
-                for (let value of values) {
-                    elements.push(new TextElement(this.latextArea, value));
-                    elements.push(new NewLineElement(this.latextArea));
-                }
-                if (elements.length != 0)
-                    elements.pop();
-                this.latextArea.replaceElement(this, elements);
+        if (this.DOM.value.indexOf('\n') == -1) {
+            this.latextArea.replaceElement(this, new TextElement(this.latextArea, this.DOM.value, this.curseur));
+        }
+        /*else {
+            let values = this.DOM.value.split('\n');
+            let elements = [];
+            for (let value of values) {
+                elements.push(new TextElement(this.latextArea, value));
+                elements.push(new NewLineElement(this.latextArea));
             }
+            if (elements.length != 0)
+            elements.pop();
+            this.latextArea.replaceElement(this, elements);
+        }*/
         MathJax.Hub.Typeset();
 
     }
@@ -423,36 +544,35 @@ class InputElement extends LatextAreaElement {
     mouvementHandler(event) {
         var i = this.latextArea.findIndexes(this)[0];
         var j = this.latextArea.findIndexes(this)[1];
-        var positionCurseur = this.DOM.selectionStart;
-        var positionCurseurLine = positionCurseur;
-        for (let k = 0; k < j; k++) positionCurseurLine += this.latextArea.elements[i][k].textContent.length;
+        var positionCurseur = this.curseur;
+        var positionCurseurLine = this.curseurLigne;
         var longueur = this.DOM.value.length;
         var nbLines = (this.DOM.value.match(/\n/g) || []).length + 1;
         var currentLine = -1* ((this.DOM.value.substring(positionCurseur).match(/\n/g) || []).length - nbLines);
 
         var iToFocus = i;
         var jToFocus = j;
-        var longueurFocus = 0;
+        var positionFocus = 0;
         var change = false;
         var merge = false;
         // Gestion des touches (à réorganiser en switch à la fin)
         if (event.keyCode == 37 && positionCurseur == 0) {                //flèche gauche
             if (j > 0) {
                 jToFocus = j-1;
-                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length-1;
+                positionFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length-1;
                 change = true;
             } 
             else if (i>0) {
                 iToFocus = i-2;
                 jToFocus = this.latextArea.elements[iToFocus].length-1;
-                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
+                positionFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
                 change = true;
             }
         }
         if (event.keyCode == 39 && positionCurseur - longueur == 0) {           //flèche droite
             if (j < this.latextArea.elements[iToFocus].length-1) {
                 jToFocus = j+1;
-                longueurFocus = 1;
+                positionFocus = 1;
                 change = true;
             } 
             else if (i < this.latextArea.elements.length-2) {
@@ -464,21 +584,30 @@ class InputElement extends LatextAreaElement {
         if (event.keyCode == 38 && currentLine == 1) {                        //flèche haut
             if (i > 0) {
                 iToFocus = i-2;
-                jToFocus = Math.min(j, this.latextArea.elements[iToFocus].length-1);
+                jToFocus = 0;
                 change = true;
+                while (this.latextArea.elements[iToFocus][jToFocus].text.length < positionCurseurLine) {
+                    positionCurseurLine -= this.latextArea.elements[iToFocus][jToFocus].text.length;
+                    if (jToFocus < this.latextArea.elements[iToFocus].length-1) jToFocus++;
+                }
+                positionFocus = positionCurseurLine;
             } 
         }
         if (event.keyCode == 40 && currentLine == nbLines) {                  //flèche bas
             if (i < this.latextArea.elements.length - 2) {
                 iToFocus = i+2;
-                jToFocus = Math.min(j, this.latextArea.elements[iToFocus].length-1);
+                jToFocus = 0;
                 change = true;
+                while (this.latextArea.elements[iToFocus][jToFocus].text.length < positionCurseurLine) {
+                    positionCurseurLine -= this.latextArea.elements[iToFocus][jToFocus].text.length;
+                    if (jToFocus < this.latextArea.elements[iToFocus].length-1) jToFocus++;
+                }
+                positionFocus = positionCurseurLine;
             } 
         }
 
         if (change) {
-                this.latextArea.elements[iToFocus][jToFocus].toInput();
-                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
+                this.latextArea.elements[iToFocus][jToFocus].toInput(positionFocus);
                 this.toTextElement();
         }
 
@@ -495,10 +624,9 @@ class InputElement extends LatextAreaElement {
             }
         }
         if (merge) {
-                longueurFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
+                positionFocus = this.latextArea.elements[iToFocus][jToFocus].textContent.length;
                 this.latextArea.merge(this.latextArea.elements[iToFocus][jToFocus], this.latextArea.elements[i][j]);
-                this.latextArea.elements[iToFocus][jToFocus].toInput();
-                this.latextArea.elements[iToFocus][jToFocus].DOM.setSelectionRange(longueurFocus, longueurFocus);
+                this.latextArea.elements[iToFocus][jToFocus].toInput(positionFocus);
         }
         if (event.keyCode == 13 ) {                   //enter
             event.preventDefault();
@@ -506,12 +634,11 @@ class InputElement extends LatextAreaElement {
             let newSecond = [];
             for (let k=0; k<j; k++) newFirst.push(this.latextArea.elements[i][k]);
             newFirst.push(new TextElement(this.latextArea, this.DOM.value.substring(0, positionCurseur) ));
-            let newLine = [new NewLineElement(this.latextArea)];
+            let newLine = [new NewLineElement(this.latextArea, true)];
             newSecond.push(new TextElement(this.latextArea, this.DOM.value.substring(positionCurseur) ));
             for (let k=j+1; k<this.latextArea.elements[i].length; k++) newSecond.push(this.latextArea.elements[i][k]);
             this.latextArea.replaceLine(this.latextArea.elements[i], [newFirst, newLine, newSecond]);
             this.latextArea.elements[i+2][0].toInput();
-            console.log(this.latextArea.elements)
         }
     }
 
@@ -520,8 +647,13 @@ class InputElement extends LatextAreaElement {
 
 class NewLineElement extends LatextAreaElement {
 
-    constructor(latextArea) {
+    constructor(latextArea, lineBreak) {
         super(latextArea, '\n');
+        if (lineBreak != undefined) {
+            this.lineBreak = lineBreak;
+        } else {
+            this.lineBreak = false;
+        }
         this.DOM = document.createElement('br');
     }
 
@@ -535,15 +667,14 @@ class NewLineElement extends LatextAreaElement {
 
 class TextElement extends LatextAreaElement {
 
-    constructor(latextArea, text) {
+    constructor(latextArea, text, position) {
         // initialisation
-        super(latextArea, text);
+        super(latextArea, text, position);
         this.DOM = document.createElement("span");
-        this.DOM.innerHTML = text;
+        this.DOM.innerHTML = text.replace(/ /g, "&nbsp;");
         this.DOM.className = "latext-element";
-
         // event bindings
-        this.DOM.onclick = this.toInput.bind(this);
+        this.DOM.onclick = this.toInput.bind(this, this.iCurseur);
     }
 
     insert(value) {
@@ -555,8 +686,14 @@ class TextElement extends LatextAreaElement {
         this.latextArea.manageChange();
     }
 
-    toInput() {
-        let newElement = new InputElement(this.latextArea, this.textContent);
+    toInput(positionFocus) {
+        if (positionFocus != undefined) {
+            var curseur = positionFocus;
+        } else {
+            var curseur = this.curseur;
+        }
+        let newElement = new InputElement(this.latextArea, this.textContent, curseur);
+        newElement.DOM.setSelectionRange(curseur, curseur);
         this.latextArea.replaceElement(this, newElement);
     }
 

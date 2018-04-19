@@ -2,6 +2,7 @@ from s2m.core.constructions.constructions import Construction
 
 from s2m.core.utils import reverse_dict
 
+
 class VariableConstructions(Construction):
 
     RADIO_ROMAN_PARSED = {'alpha': 'a',
@@ -9,7 +10,24 @@ class VariableConstructions(Construction):
                           'charlie': 'c',
                           'delta': 'd',
                           'echo': 'e',
+                          'foxtrot': 'f',
+                          'golf': 'g',
+                          'hotel': 'h',
+                          'india': 'i',
+                          'juliett': 'j',
+                          'kilo': 'k',
+                          'lima': 'l',
+                          'mike': 'm',
+                          'november': 'n',
+                          'oscar': 'o',
+                          'papa': 'p',
+                          'québec': 'q',
+                          'romeo': 'r',
+                          'sierra': 's',
+                          'tango': 't',
                           'uniform': 'u',
+                          'victor': 'v',
+                          'whisky': 'w',
                           'xray': 'x',
                           'yankee': 'y',
                           'zulu': 'z'}
@@ -67,9 +85,18 @@ class VariableConstructions(Construction):
                     'psi majuscule variante': '\\varPsi',
                     'omega majuscule': '\\Omega',
                     'omega majuscule variante': '\\varOmega',
-                }
+                    }
 
     GREEK_REVERSE = reverse_dict(GREEK_PARSED)
+
+    SET_PARSED = {'grand r': '\\mathbb{R}',
+                  'grand q': '\\mathbb{Q}',
+                  'grand z': '\\mathbb{Z}',
+                  'grand n': '\\mathbb{N}',
+                  'grand d': '\\mathbb{D}',
+                  'grand p': '\\mathbb{P}', }
+
+    SET_REVERSE = reverse_dict(SET_PARSED)
 
     @classmethod
     def generate_help(cls):
@@ -82,4 +109,6 @@ class VariableConstructions(Construction):
             help[k] = {'name': k,
                        'latex': v,
                        'spelling': k}
+        for (k, v) in cls.SET_PARSED.items():
+            help[k] = {'name': k, 'latex': v, 'spelling': k}
         return help
