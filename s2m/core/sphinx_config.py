@@ -146,7 +146,7 @@ class SphinxConfig:
 
         # Ensemble des mots français utilisés, triés.
         # Les mots commençant par "é" ou "è" sont bien triés en fin de liste, idem dans fr.dict.
-        wrds = sorted(list(self.d))
+        wrds = [w for w in sorted(list(self.d)) if w]
         # Les mots commençant par "é" ou "è" sont bien triés en fin de liste, idem dans fr.dict.
         # On supose que fr.dict est correctement formaté.
         dictionary_s2m = dictionary_s2m or os.path.join("s2m", "core", "sphinx", "s2m.dict")

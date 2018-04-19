@@ -14,7 +14,7 @@ class VariableConstructions(Construction):
                           'golf': 'g',
                           'hotel': 'h',
                           'india': 'i',
-                          'juliett': 'j',
+                          'juliet': 'j',
                           'kilo': 'k',
                           'lima': 'l',
                           'mike': 'm',

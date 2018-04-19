@@ -1503,6 +1503,8 @@ adhère(2) aa dd ai rr ee
 adhèrent aa dd ai rr ee
 adhérant aa dd ai rr an
 adhérant(2) aa dd ai rr an tt
+adhérence aa dd ai rr an ss
+adhérence(2) aa dd ai rr an ss ee
 adhérent aa dd ai rr an
 adhérent(2) aa dd ai rr an tt
 adhérente aa dd ai rr an tt
@@ -11194,6 +11196,8 @@ bing bb ii nn gg
 bingol bb in gg oo ll
 binoche bb ii nn oo ch
 binoche(2) bb ii nn oo ch ee
+binomial bb ii nn oo mm yy aa ll
+binomial(2) bb ii nn oo mm ii aa ll
 binta bb in tt aa
 binôme bb ii nn au mm
 binôme(2) bb ii nn au mm ee
@@ -23234,6 +23238,7 @@ cosigner(3) kk oo ss ii gn ei
 cosigner(4) kk oo ss ii gn ei rr
 cosigné kk oo ss ii gn ei
 cosignée kk oo ss ii gn ei
+cosinus kk oo ss ii nn uu ss
 cosma kk oo ss mm aa
 cosmique kk oo ss mm ii kk
 cosmique(2) kk oo ss mm ii kk ee
@@ -46418,6 +46423,8 @@ hymnes(3) ii mm nn ee zz
 hymnes(4) ii mm nn zz
 hyper ii pp ei
 hyper- ii pp ei
+hyperbolique ii pp ai rr bb oo ll ii kk
+hyperbolique(2) ii pp ai rr bb oo ll ii kk ee
 hyperinflation ii pp ee rr in ff ll aa ss yy on
 hypermarché ii pp ai rr mm aa rr ch ei
 hypermarchés ii pp ai rr mm aa rr ch ei
@@ -56184,6 +56191,8 @@ lodève ll oo dd ai vv
 lodève(2) ll oo dd ai vv ee
 loeb ll au ei bb
 loft ll oo ff tt
+logarithme ll oo gg aa rr ii tt mm
+logarithme(2) ll oo gg aa rr ii tt mm ee
 loge ll oo jj
 loge(2) ll oo jj ee
 logeait ll oo jj ai
@@ -63959,6 +63968,7 @@ napoléoniennes nn aa pp oo ll ai oo nn yy ai nn
 napoléoniennes(2) nn aa pp oo ll ai oo nn yy ai nn ee
 napoléoniennes(3) nn aa pp oo ll ai oo nn yy ai nn ee zz
 napoléoniennes(4) nn aa pp oo ll ai oo nn yy ai nn zz
+nappartient nn aa pp aa rr tt yy in 
 nappe nn aa pp
 nappe(2) nn aa pp ee
 nappes nn aa pp
@@ -65735,6 +65745,7 @@ népal nn ei pp aa ll
 népalais nn ei pp aa ll ai
 népotisme nn ai pp oo tt ii ss mm
 népotisme(2) nn ai pp oo tt ii ss mm ee
+népérien nn ai pp ai rr yy in
 nérac nn ei rr aa kk
 néron nn ei rr on
 néréssis nn ei rr ei ss ii
@@ -88560,6 +88571,7 @@ sinueuses(3) ss ii nn uu eu zz ee zz
 sinueuses(4) ss ii nn uu eu zz zz
 sinueux ss ii nn uu eu
 sinueux(2) ss ii nn uu eu zz
+sinus ss ii nn uu ss
 sinéad ss ii nn ei aa
 sinécure ss ii nn ai kk uu rr
 sinécure(2) ss ii nn ai kk uu rr ee
@@ -93441,6 +93453,8 @@ tandis tt an dd ii
 tandis_qu' tt an dd ii ss kk
 tandis_que tt an dd ii ss kk ee
 tang tt an gg
+tangente tt an jj an tt
+tangente(2) tt an jj an tt ee
 tanger tt an jj ei
 tangible tt an jj ii bb ll
 tangible(2) tt an jj ii bb ll ee
@@ -94825,6 +94839,8 @@ tiko tt ii kk au
 tikriti tt ii kk rr ii tt ii
 tikritis tt ii kk rr ii tt ii ss
 tilala tt ii ll aa ll aa
+tilde tt ii ll dd
+tilde(2) tt ii ll dd ee
 tilleul tt ii yy oe ll
 tilleuls tt ii yy oe ll
 tilleuls(2) tt ii yy oe ll zz

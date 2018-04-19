@@ -1,16 +1,27 @@
 absolu aa bb ss oo ll uu
+adhérence aa dd ai rr an ss
+adhérence(2) aa dd ai rr an ss ee
 alpha aa ll ff aa
+appartient aa pp aa rr tt yy in
+appartient(2) aa pp aa rr tt yy in tt
+arc aa rr kk
+arc(2) aa rr kk ee
 au au
 beta bb ei tt aa
 billiard bb ii ll ii aa rr
 billiard(3) bb ii ll yy aa rr
 billion bb ii ll ii on
 billion(2) bb ii ll yy on
+binomial bb ii nn oo mm yy aa ll
+binomial(2) bb ii nn oo mm ii aa ll
 blanc bb ll an
+boule bb ou ll
+boule(2) bb ou ll ee
 bravo bb rr aa vv au
 carré kk aa rr ei
 cent ss an
 cent(2) ss an tt
+chapeau ch aa pp au
 charlie ch aa rr ll ii
 chi ch ii
 chose ch au zz
@@ -22,9 +33,40 @@ cinquante(2) ss in kk an tt ee
 conjugué kk on jj uu gg ei
 contient kk on tt yy in
 contient(2) kk on tt yy in tt
+cosinus kk oo ss ii nn uu ss
 cubique kk uu bb ii kk
 cubique(2) kk uu bb ii kk ee
 curseur kk uu rr ss oe rr
+d dd ai
+d(2) dd ei
+d' dd
+d'_abord dd aa bb oo rr
+d'_accord dd aa kk oo rr
+d'_ailleurs dd aa yy oe rr
+d'_après dd aa pp rr ai
+d'_autant_plus_qu' dd au tt an pp ll uu ss kk
+d'_autant_plus_que dd au tt an pp ll uu ss kk ee
+d'_autant_qu' dd au tt an kk
+d'_autant_que dd au tt an kk ee
+d'_autre_part dd au tt rr ee pp aa rr
+d'_avant dd aa vv an
+d'_entre dd an tt rr
+d'_un_autre_côté dd un au tt rr ee kk au tt ei
+d'_une_manière_générale dd uu nn ee mm aa nn yy ai rr ee jj ei nn ei rr aa ll
+d'abord dd aa bb oo rr
+d'accord dd aa kk oo rr
+d'affilée dd aa ff ii ll ei
+d'ailleurs dd aa yy oe rr
+d'alberto dd aa ll bb ai rr tt au
+d'alema dd aa ll ee mm aa
+d'antan dd an tt an
+d'après dd aa pp rr ai
+d'arrache-pied dd aa rr aa ch ee pp yy ei
+d'autre_part dd au tt rr ee pp aa rr
+d'emblée dd an bb ll ei
+d'habitude dd aa bb ii tt uu dd
+d'ores_et_déjà dd oo rr ee zz ai dd ai jj aa
+d'une_part dd uu nn ee pp aa rr
 dans dd an
 dans(2) dd an zz
 de dd
@@ -35,8 +77,12 @@ des(2) dd ai zz
 des(3) dd ei
 deux dd eu
 deux(2) dd eu zz
+différence dd ii ff ai rr an ss
+différence(2) dd ii ff ai rr an ss ee
 différent dd ii ff ai rr an
 différent(2) dd ii ff ai rr an tt
+distance dd ii ss tt an ss
+distance(2) dd ii ss tt an ss ee
 divisé dd ii vv ii zz ei
 dix dd ii
 dix(2) dd ii kk ss
@@ -61,42 +107,66 @@ et ai
 et(2) ai tt
 eta ei tt aa
 eta(2) eu tt ei aa
+exponentielle ai kk ss pp oo nn an ss yy ai ll
+exponentielle(2) ai kk ss pp oo nn an ss yy ai ll ee
 factorielle ff aa kk tt oo rr ii ai ll
 fermez ff ai rr mm ei
 fermez(2) ff ai rr mm ei zz
 fermez(3) ff ei rr mm ei
 fermez(4) ff ei rr mm ei zz
+fermée ff ai rr mm ei
 fin ff in
 fois ff ww aa
 fois(2) ff ww aa zz
-foxtrot ff oo kk ss tt rr oo tt 
-foxtrot(2) ff oo kk ss tt rr oo tt ee 
+foxtrot ff oo kk ss tt rr oo tt
+frontière ff rr on tt yy ai rr
+frontière(2) ff rr on tt yy ai rr ee
 gamma gg aa mm aa
 golf gg oo ll ff
+grand gg rr an
+grand(2) gg rr an tt
+grand'messe gg rr an mm ai ss
+grand'messe(2) gg rr an mm ai ss ee
 grec gg rr ai kk
 hotel oo tt ai ll
 huit uy ii
 huit(2) uy ii tt
+hyperbolique ii pp ai rr bb oo ll ii kk
+hyperbolique(2) ii pp ai rr bb oo ll ii kk ee
+image ii mm aa jj
+image(2) ii mm aa jj ee
 inclus in kk ll uu
 inclus(2) in kk ll uu zz
-india ii nn dd ii aa 
+india ii nn dd ii aa
 inférieur in ff ai rr yy oe rr
 intersection in tt ai rr ss ai kk ss yy on
 intégrale in tt ai gg rr aa ll
 intégrale(2) in tt ai gg rr aa ll ee
+intérieur in tt ai rr yy oe rr
+intérieur(2) in tt ei rr yy oe rr
+inverse in vv ai rr ss
+inverse(2) in vv ai rr ss ee
 iota yy oo tt aa
-juliett ju ll ii ai tt 
-juliette(2) ju ll ii ai tt ee
+juliet jj uu ll yy ai tt
 kappa kk aa pp aa
 kappa(2) kk aa pp pp aa
-kilo kk ii ll oo 
+kilo kk ii ll au
 la ll aa
 lambda ll an bb dd aa
 lima ll ii mm aa
+lima(2) ll ii mm aa
+limite ll ii mm ii tt
+limite(2) ll ii mm ii tt ee
+logarithme ll oo gg aa rr ii tt mm
+logarithme(2) ll oo gg aa rr ii tt mm ee
 majuscule mm aa jj uu ss kk uu ll
 majuscule(2) mm aa jj uu ss kk uu ll ee
 mike mm aa ii kk
-mike(2) mm aa ii kk ee 
+mike(2) mm aa ii kk ee
+mike(3) mm aa yy kk
+mike(4) mm aa yy kk ee
+mike(5) mm ai kk
+mike(6) mm ai kk ee
 mille mm ii ll
 mille(2) mm ii ll ee
 milliard mm ii ll yy aa rr
@@ -104,6 +174,23 @@ million mm ii ll yy on
 moins mm ww in
 moins(2) mm ww in zz
 mu mm uu
+n ai nn
+n' nn
+n'_importe nn in pp oo rr tt
+n'_importe_quoi nn in pp oo rr tt ee kk ww aa
+n'djamena nn dd jj aa mm ei nn aa
+n'djamena(2) ai nn dd jj aa mm ei nn aa
+n'dour nn dd ou rr
+n'dour(2) ai nn dd ou rr
+n'dri nn dd rr ii
+n'dri(2) ai nn dd rr ii
+n'guessan nn gg ei ss an
+n'guessan(2) ai nn gg ei ss an
+n'guesso nn gg ei ss au
+n'guesso(2) ai   nn gg ei ss au
+n'tamack nn tt aa mm aa kk
+n'tamack(2) ai nn tt aa mm aa kk
+nappartient nn aa pp aa rr tt yy in 
 neuf nn eu ff
 neuf(2) nn oe ff
 nonante nn oo nn an tt
@@ -112,8 +199,12 @@ nonilliard nn oo nn ii ll ii aa rr
 nonilliard(2) nn oo nn ii ll yy aa rr
 nonillion nn oo nn ii ll ii on
 nonillion(2) nn oo nn ii ll yy on
-november nn oo vv ee mm bb ee rr
+norme nn oo rr mm
+norme(2) nn oo rr mm ee
+november nn oo vv ei mm bb ee rr
+noyau nn ww aa yy au
 nu nn uu
+népérien nn ai pp ai rr yy in
 octante oo kk tt an tt
 octilliard oo kk tt ii ll ii aa rr
 octilliard(2) oo kk tt ii ll yy aa rr
@@ -122,15 +213,21 @@ octillion(2) oo kk tt ii ll yy on
 omega oo mm ee gg aa
 onze on zz
 onze(2) on zz ee
-oscar oo ss kk aa rr 
+oscar oo ss kk aa rr
 ou ou
+ouverte ou vv ai rr tt
+ouverte(2) ou vv ai rr tt ee
 ouvrez ou vv rr ei
 ouvrez(2) ou vv rr ei zz
+p pp ai
+p(2) pp ei
 papa pp aa pp aa
 par pp aa rr
 parenthèse pp aa rr an tt ai zz
 parenthèse(2) pp aa rr an tt ai zz ee
 partie pp aa rr tt ii
+pas pp aa
+pas(2) pp aa zz
 phi ff ii
 pi pp ii
 pi(2) pp ii
@@ -140,12 +237,14 @@ plus(3) pp ll uu ss
 point pp ww in
 point(2) pp ww in tt
 pour pp ou rr
+privé pp rr ii vv ei
 produit pp rr oo dd uy ii
 produit(2) pp rr oo dd uy ii tt
 psi pp ei ai ss ii
 psi(2) pp ss ii
 puissance pp uy ii ss an ss
 puissance(2) pp uy ii ss an ss ee
+q kk uu
 quadrilliard kk ww aa dd rr ii ll ii aa rr
 quadrilliard(2) kk aa dd rr ii ll ii aa rr
 quadrilliard(3) kk ww aa dd rr ii ll yy aa rr
@@ -171,14 +270,16 @@ quintillion(2) kk in tt ii ll yy on
 quinze kk in zz
 quinze(2) kk in zz ee
 quinze(3) kk in zz ei
-québec kk ei bb ai kk
-québec(2) kk ei bb ei kk
+québec kk ai bb ai kk
+québec(2) kk ei bb ai kk
+r ai rr
+r'miki rr mm ii kk ii
 racine rr aa ss ii nn
 racine(2) rr aa ss ii nn ee
 rho rr oo
+romeo rr au mm ei au
 rond rr on
 rond(2) rr on tt
-romeo rr oo mm ei oo
 seize ss ai zz
 seize(2) ss ai zz ee
 sept ss ai tt
@@ -191,8 +292,10 @@ sextilliard ss ai kk ss tt ii ll ii aa rr
 sextilliard(2) ss ai kk ss tt ii ll yy aa rr
 sextillion ss ai kk ss tt ii ll ii on
 sextillion(2) ss ai kk ss tt ii ll yy on
-sierra ss ii ei rr aa 
+sierra ss yy ai rr aa
+sierra(2) ss yy ei rr aa
 sigma ss ii gg mm aa
+sinus ss ii nn uu ss
 six ss ii
 six(2) ss ii ss
 six(3) ss ii zz
@@ -200,13 +303,19 @@ soixante ss ww aa ss an tt
 soixante(2) ss ww aa ss an tt ee
 somme ss oo mm
 somme(2) ss oo mm ee
+subordonnée ss uu bb oo rr dd oo nn ei
 supérieur ss uu pp ai rr yy oe rr
 sur ss uu rr
+symétrique ss ii mm ai tt rr ii kk
+symétrique(2) ss ii mm ai tt rr ii kk ee
+tangente tt an jj an tt
+tangente(2) tt an jj an tt ee
+tango tt an gg au
 tau tt au
-tango tt an gg oo
-tango(2) tt an nn gg oo
 theta tt ei tt aa
 theta(2) tt ai tt aa
+tilde tt ii ll dd
+tilde(2) tt ii ll dd ee
 treize tt rr ai zz
 treize(2) tt rr ai zz ee
 trente tt rr an tt
@@ -230,17 +339,23 @@ variante vv aa rr yy an tt
 variante(2) vv aa rr yy an tt ee
 vectoriel vv ai kk tt oo rr yy ei ll
 vectoriel(2) vv ai kk tt oo rr ii ei ll
+victor vv ii kk tt oo rr
 vingt vv ii nn gg tt
 vingt(2) vv in
 vingt(3) vv in tt
 virgule vv ii rr gg uu ll
 virgule(2) vv ii rr gg uu ll ee
+voisinage vv ww aa zz ii nn aa jj
+voisinage(2) vv ww aa zz ii nn aa jj ee
+whisky ww ii ss kk ii
 xi kk ss ii
 xray ii kk ss rr ai
 xray(2) ii kk ss rr ai yy
 xray(3) ai kk ss rr ai
 xray(4) ai kk ss rr ai yy
 yankee yy an kk ii
+z zz ai dd
+z(2) zz ai dd zz
 zeta zz ei tt aa
 zulu zz ou ll ou
 zéro zz ai rr au
@@ -249,3 +364,5 @@ zéro(2) zz ei rr au
 égal ai gg aa ll
 équivaut ai kk ii vv au
 équivaut(2) ai kk ii vv au tt
+étoile ai tt ww aa ll
+étoile(2) ai tt ww aa ll ee

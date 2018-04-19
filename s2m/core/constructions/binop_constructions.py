@@ -56,7 +56,7 @@ class BinaryOperatorConstructions(Construction):
                         'de': 'EVL',
                         'binomial': 'BIN',
                         'appartient à': 'BEL',
-                        "n'appartient pas à": 'NBL',
+                        "nappartient pas à": 'NBL',
                         'privé de': 'PRI',
                         'union': 'UNI',
                         'intersection': 'INT',

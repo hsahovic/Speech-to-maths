@@ -59,7 +59,7 @@ class UnaryOperatorConstructions(Construction):
                         'arc tangente de': 'ART',
                         'cosinus hyperbolique de': 'COH',
                         'sinus hyperbolique de': 'SIH',
-                        'tangente hyperbolique de': 'COH',
+                        'tangente hyperbolique de': 'TAH',
                         'noyau de': 'KER',
                         'image de': 'IMA',
                         'intérieur de': 'ITR',
