@@ -312,6 +312,107 @@ class LatextAreaElement {
         return [resi, resj];
     }
 
+    resizeForward() {
+        //this.DOM.style.height = '1em';
+        this.size();
+        var i = this.latextArea.findIndexes(this)[0];
+        let width = this.latextArea.elements[0][0].DOM.offsetLeft;
+        for (let element of this.latextArea.elements[i]) {
+            width += element.DOM.offsetWidth;
+        }
+        while (width > this.DOM.parentElement.offsetWidth) {
+            var l = this.latextArea.elements[i].length - 1;
+            var elementCoupe = this.latextArea.elements[i][l];
+            var positionDernierMot = Math.max(elementCoupe.text.lastIndexOf(' '), elementCoupe.text.lastIndexOf("&nbsp"));
+            var str1 = elementCoupe.text.substring(0, positionDernierMot);
+            var str2 = elementCoupe.text.substring(positionDernierMot + 1);
+            width -= elementCoupe.DOM.offsetWidth;
+            if (elementCoupe instanceof InputElement) {
+                elementCoupe.iCurseur = elementCoupe.DOM.selectionEnd;
+            }
+            elementCoupe.setText(str1);
+            if (this.latextArea.elements.length>i+2) {
+                this.latextArea.elements[i+2][0].setText(str2 + ' ' + this.latextArea.elements[i+2][0].textContent);
+            } else {
+                this.latextArea.elements.push([new NewLineElement(this.latextArea)]);
+                this.latextArea.elements.push([new TextElement(this.latextArea, str2)]);
+                this.latextArea.parent.appendChild(latextArea.elements[i+1][0].DOM);
+                this.latextArea.parent.appendChild(latextArea.elements[i+2][0].DOM);
+            }
+            if (elementCoupe instanceof InputElement) {
+                if (elementCoupe.iCurseur > str1.length) {
+                    elementCoupe.latextArea.elements[i+2][0].toInput(str2.length);    
+                } else {
+                    elementCoupe.DOM.setSelectionRange(elementCoupe.iCurseur, elementCoupe.iCurseur);                
+                }
+            }
+            this.size();
+            width += elementCoupe.DOM.offsetWidth;  
+        }
+        if (this.latextArea.elements.length>=i+2) {
+            this.latextArea.elements[i+2][0].resizeForward();
+        }
+    }
+
+    resizeBackward () {
+        //this.DOM.style.height = '1em';
+        this.size();
+        var i = this.latextArea.findIndexes(this)[0];
+        var width = this.latextArea.elements[0][0].DOM.offsetLeft;
+        for (let element of this.latextArea.elements[i]) {
+            width += element.DOM.offsetWidth;
+        }
+
+        var change = false;
+        while ( (!change) && (this.latextArea.elements.length>i+2) && (!this.latextArea.elements[i+1][0].lineBreak)) {  // resize backward
+            var elementCoupe = this.latextArea.elements[i+2][0];
+            var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
+            var positionPremierMot = elementCoupe.text.indexOf(' ');
+            if (positionPremierMot != 0) {
+                var str1 = elementCoupe.text.substring(0, positionPremierMot);
+                var str2 = elementCoupe.text.substring(positionPremierMot + 1);
+                width -= elementAjout.DOM.offsetWidth;
+                if (elementAjout instanceof InputElement) {
+                    elementAjout.iCurseur = this.DOM.selectionEnd;
+                    elementAjout.DOM.value += ' ' + str1;
+                    elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
+                } else {
+                    elementAjout.DOM.innerHTML += '&nbsp' + str1;
+                    elementAjout.textContent += ' ' + str1;
+                }
+                this.size();
+                width += elementAjout.DOM.offsetWidth;
+                if (width <= this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas
+                    elementCoupe.textContent = str2;
+                    elementCoupe.DOM.innerHTML = str2;
+                } else {
+                    change = true;
+                    if (elementAjout instanceof InputElement) {         // sinon on enlève ce qu'on a fait
+                        elementAjout.iCurseur = elementAjout.curseur;
+                        elementAjout.DOM.value = elementAjout.DOM.value.substring(0, elementAjout.text.length - positionPremierMot - 1);
+                        elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
+                    } else {
+                        elementAjout.DOM.innerHTML = elementAjout.DOM.innerHTML.substring(0, elementAjout.DOM.innerHTML.length - positionPremierMot);
+                        elementAjout.textContent = elementAjout.DOM.innerHTML.replace(/&nbsp;/g, " ");
+                    }
+                }
+            } else {
+                change = true;
+            }
+            this.size();     
+        }
+    }
+
+    size() {
+        this.DOM.style.height = this.DOM.scrollHeight + "px";
+        this.DOM.style.width = '1px';
+        this.DOM.style.width = this.DOM.scrollWidth + "px";  
+    }
+
+    setText(str) {
+        this.textContent=str;
+        this.DOM.innerHTML=str.replace(/ /g, "&nbsp;");; 
+    }
 }
 
 
@@ -430,96 +531,16 @@ class InputElement extends LatextAreaElement {
         this.latextArea.manageChange();
     }
 
+    setText(str) {
+        var curseur = this.curseur;
+        this.textContent = str;
+        this.DOM.value = str;
+        this.DOM.setSelectionRange(curseur, curseur);
+    }
+
     resize() {
-        //this.DOM.style.height = '1em';
-        this.DOM.style.height = this.DOM.scrollHeight + "px";
-        this.DOM.style.width = '1px';
-        this.DOM.style.width = this.DOM.scrollWidth + "px";
-        var i = this.latextArea.findIndexes(this)[0];
-        var width = this.latextArea.elements[0][0].DOM.offsetLeft;
-        for (let element of this.latextArea.elements[i]) {
-            width += element.DOM.offsetWidth;
-        }
-
-        while (width > this.DOM.parentElement.offsetWidth) {
-            var l = this.latextArea.elements[i].length - 1;
-            var elementCoupe = this.latextArea.elements[i][l];
-            var positionDernierMot = Math.max(elementCoupe.text.lastIndexOf(' '), elementCoupe.text.lastIndexOf("&nbsp"));
-            var str1 = elementCoupe.text.substring(0, positionDernierMot);
-            var str2 = elementCoupe.text.substring(positionDernierMot + 1);
-            width -= elementCoupe.DOM.offsetWidth;
-            if (this==elementCoupe) {
-                this.iCurseur = this.DOM.selectionEnd;
-                this.DOM.value = str1;
-            } else {
-                elementCoupe.DOM.innerHTML = str1;
-                elementCoupe.textContent = str1;
-            }
-            if (this.latextArea.elements.length>i+2) {
-                this.latextArea.elements[i+2][0].textContent = str2 + ' ' + this.latextArea.elements[i+2][0].textContent;
-                this.latextArea.elements[i+2][0].DOM.innerHTML = this.latextArea.elements[i+2][0].textContent.replace(/ /g, "&nbsp;");
-            } else {
-                this.latextArea.elements.push([new NewLineElement(this.latextArea)]);
-                this.latextArea.elements.push([new TextElement(this.latextArea, str2)]);
-                this.latextArea.parent.appendChild(latextArea.elements[i+1][0].DOM);
-                this.latextArea.parent.appendChild(latextArea.elements[i+2][0].DOM);
-            }
-            if (this==elementCoupe) {
-                if (this.iCurseur > str1.length) {
-                    this.latextArea.elements[i+2][0].toInput(str2.length);    
-                } else {
-                    this.DOM.setSelectionRange(this.iCurseur, this.iCurseur);                
-                }
-            }
-            this.DOM.style.height = this.DOM.scrollHeight + "px";
-            this.DOM.style.width = '1px';
-            this.DOM.style.width = this.DOM.scrollWidth + "px";
-            width += elementCoupe.DOM.offsetWidth;
-        }
-
-        var change = false;
-        while ( (!change) && (this.latextArea.elements.length>i+2) && (!this.latextArea.elements[i+1][0].lineBreak)) {
-            var elementCoupe = this.latextArea.elements[i+2][0];
-            var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
-            var positionPremierMot = elementCoupe.text.indexOf(' ');
-            if (positionPremierMot != 0) {
-                var str1 = elementCoupe.text.substring(0, positionPremierMot);
-                var str2 = elementCoupe.text.substring(positionPremierMot + 1);
-                width -= elementAjout.DOM.offsetWidth;
-                if (elementAjout instanceof InputElement) {
-                    elementAjout.iCurseur = this.DOM.selectionEnd;
-                    elementAjout.DOM.value += ' ' + str1;
-                    elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
-                } else {
-                    elementAjout.DOM.innerHTML += '&nbsp' + str1;
-                    elementAjout.textContent += ' ' + str1;
-                }
-                this.DOM.style.height = this.DOM.scrollHeight + "px";
-                this.DOM.style.width = '1px';
-                this.DOM.style.width = this.DOM.scrollWidth + "px";
-                width += elementAjout.DOM.offsetWidth;
-                if (width <= this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas
-                    elementCoupe.textContent = str2;
-                    elementCoupe.DOM.innerHTML = str2;
-                } else {
-                    change = true;
-                    if (elementAjout instanceof InputElement) {         // sinon on enlève ce qu'on a fait
-                        elementAjout.iCurseur = elementAjout.curseur;
-                        elementAjout.DOM.value = elementAjout.DOM.value.substring(0, elementAjout.text.length - positionPremierMot - 1);
-                        elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
-                    } else {
-                        elementAjout.DOM.innerHTML = elementAjout.DOM.innerHTML.substring(0, elementAjout.DOM.innerHTML.length - positionPremierMot);
-                        elementAjout.textContent = elementAjout.DOM.innerHTML.replace(/&nbsp;/g, " ");
-                    }
-                }
-            } else {
-                change = true;
-            }
-            
-            this.DOM.style.height = this.DOM.scrollHeight + "px";
-            this.DOM.style.width = '1px';
-            this.DOM.style.width = this.DOM.scrollWidth + "px";        
-        }
+        this.resizeForward();
+        //this.resizeBackward();
     }
 
     toTextElement() {
@@ -538,7 +559,15 @@ class InputElement extends LatextAreaElement {
             this.latextArea.replaceElement(this, elements);
         }*/
         MathJax.Hub.Typeset();
+    }
 
+    toInput(positionFocus) {
+        if (positionFocus != undefined) {
+            var curseur = positionFocus;
+        } else {
+            var curseur = this.curseur;
+        }
+        this.DOM.setSelectionRange(curseur, curseur);
     }
 
     mouvementHandler(event) {

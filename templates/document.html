@@ -61,12 +61,19 @@
 	</span>
 </div>
 
-	<div id = "latext-area" class = "latext-area"></div>
+	<span class = "grid">
 
-{% if doc.pdf %}
-<h3> PDF </h3>
-<iframe src="{{ doc.pdf.url }}" width="1200" height="1200" align="middle"></iframe>
-{% endif %}
+		<div id = "latext-area" class = "latext-area"></div>
+
+		<div class = "latext-area">
+			{% if doc.pdf %}
+			<h3> PDF </h3>
+			<iframe src="{{ doc.pdf.url }}" width="1200" height="1200" align="middle"></iframe>
+			{% endif %}
+		</div>
+
+	</span>
+
 
 <div id="responseDisplay" class = "audio-display"> </div>
 

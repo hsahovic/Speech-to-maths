@@ -255,6 +255,13 @@ input {
     border-radius: 50%;
 }
 
+.grid{
+    display:grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
+    grid-gap: 0em;
+}
+
 .latext-area {
     text-align: left;
     background-color: white;
