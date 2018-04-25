@@ -10,6 +10,7 @@ class LatextArea {
         // initialisation
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
+        console.log(document.getElementById(sourceId));
         this.elements = [];
         this.killNextAudio = false;
         this.parse();
@@ -42,7 +43,11 @@ class LatextArea {
         let str = '';
         for (let line of this.elements) {
             for (let element of line)
-                str += element.text;
+                if ( !(element instanceof NewLineElement) || (element.lineBreak)) {
+                    str += element.text;
+                } else {
+                    str += ' ';
+                }
         }
         return str;
     }
@@ -120,54 +125,35 @@ class LatextArea {
         let end = this.elements.slice(iSecond + 1);
 
         let mergedElement = new TextElement(this, firstElement.text + secondElement.text);
-        let tmpMerge = [];
-        for (let j = 0; j < jFirst; j++) tmpMerge.push(this.elements[iFirst][j]);
-        tmpMerge.push(mergedElement);
-        for (let j = jFirst+2; j < this.elements[iFirst].length; j++) tmpMerge.push(this.elements[iFirst][j]);
 
-
-        let tmpLine = [];
-        this.elements = [];
-        for (let line of start) {
-            for (let element of line) tmpLine.push(element);
-            this.elements.push(tmpLine);
-            tmpLine = [];
-        }
-        this.elements.push(tmpMerge);
-        for (let line of end) {
-            for (let element of line) tmpLine.push(element);
-            this.elements.push(tmpLine);
-            tmpLine = [];
-        }
-
-        // un peu couteux, voir s'il n'y a pas plus simple
+        this.elements[iFirst].splice(jFirst, 2, mergedElement);
         firstElement.DOM.remove();
         secondElement.DOM.remove();
-        this.generateDOM();
+        if (this.elements[iFirst].length > jFirst+1) {
+            this.parent.insertBefore(mergedElement.DOM, this.elements[iFirst][jFirst+1].DOM);
+        } else if (this.elements.length > iFirst+1) {
+            this.parent.insertBefore(mergedElement.DOM, this.elements[iFirst+1][jFirst].DOM);
+        } else {
+            this.parent.appendChild(mergedElement.DOM);
+
+        }
     }
 
     mergeLines(firstLine, secondLine) {
         let indexFirst = this.elements.indexOf(firstLine);
         let indexSecond = this.elements.indexOf(secondLine);
-        let start = this.elements.slice(0, indexFirst + 1);
-        let end = this.elements.slice(indexSecond + 1);
-        let tmpLine = [];
-
-        this.elements = [];
-        for (let line of start) {
-            for (let element of line) tmpLine.push(element);
-            this.elements.push(tmpLine);
-            tmpLine = [];
-        }
-        for (let element of secondLine) this.elements[indexFirst].push(element)
-        for (let line of end) {
-            for (let element of line) tmpLine.push(element);
-            this.elements.push(tmpLine);
-            tmpLine = [];
-        }
+        
+        let mergedLine = this.elements[indexFirst].concat(this.elements[indexSecond]);
+        this.elements.splice(indexFirst, 3, mergedLine);
         for (let element of firstLine) element.DOM.remove();
         for (let element of secondLine) element.DOM.remove();
-        this.generateDOM();
+        console.log(this.elements);
+        if (this.elements.length > indexFirst+1) {
+            for (let element of mergedLine) this.parent.insertBefore(element.DOM, this.elements[indexFirst+1][0].DOM);
+        } else {
+            for (let element of mergedLine) this.parent.appendChild(element.DOM);
+
+        }
     }
 
     parse() {
@@ -181,11 +167,12 @@ class LatextArea {
                 textLine.push(textElement);
             }
             this.elements.push(textLine);
-            this.elements.push([new NewLineElement(this)]);
+            this.elements.push([new NewLineElement(this, true)]);
         }
         if (this.elements.length != 0)
             this.elements.pop();
         this.elements[0][0].toInput();
+        console.log(this.textContent);
     }
 
     replaceElement(elementToReplace, newElements = undefined) {
@@ -331,8 +318,14 @@ class LatextAreaElement {
                 elementCoupe.iCurseur = elementCoupe.DOM.selectionEnd;
             }
             elementCoupe.setText(str1);
-            if (this.latextArea.elements.length>i+2) {
-                this.latextArea.elements[i+2][0].setText(str2 + ' ' + this.latextArea.elements[i+2][0].textContent);
+            if (this.latextArea.elements.length>i+2) {  // On choisit où rajouter ce qui dépasse
+                if (this.latextArea.elements[i+1][0].lineBreak) {  // Si on a un saut de ligne on crée une nouvelle ligne 
+                    this.latextArea.elements.splice(i+1, 0, [new NewLineElement(this.latextArea)], [new TextElement(this.latextArea, str2)]);
+                    this.latextArea.parent.insertBefore(latextArea.elements[i+1][0].DOM, latextArea.elements[i+3][0].DOM);
+                    this.latextArea.parent.insertBefore(latextArea.elements[i+2][0].DOM, latextArea.elements[i+3][0].DOM);
+                } else {
+                    this.latextArea.elements[i+2][0].setText(str2 + ' ' + this.latextArea.elements[i+2][0].textContent); // Sinon on ajoute à la ligne suivante
+                }
             } else {
                 this.latextArea.elements.push([new NewLineElement(this.latextArea)]);
                 this.latextArea.elements.push([new TextElement(this.latextArea, str2)]);
@@ -341,7 +334,7 @@ class LatextAreaElement {
             }
             if (elementCoupe instanceof InputElement) {
                 if (elementCoupe.iCurseur > str1.length) {
-                    elementCoupe.latextArea.elements[i+2][0].toInput(str2.length);    
+                    elementCoupe.latextArea.elements[i+2][0].toInput(elementCoupe.iCurseur - elementCoupe.curseur - 1);
                 } else {
                     elementCoupe.DOM.setSelectionRange(elementCoupe.iCurseur, elementCoupe.iCurseur);                
                 }
@@ -364,42 +357,48 @@ class LatextAreaElement {
         }
 
         var change = false;
-        while ( (!change) && (this.latextArea.elements.length>i+2) && (!this.latextArea.elements[i+1][0].lineBreak)) {  // resize backward
-            var elementCoupe = this.latextArea.elements[i+2][0];
-            var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
-            var positionPremierMot = elementCoupe.text.indexOf(' ');
-            if (positionPremierMot != 0) {
-                var str1 = elementCoupe.text.substring(0, positionPremierMot);
+        console.log(this.latextArea.elements);
+        while ( (!change) && (this.latextArea.elements.length>i+2) && !(this.latextArea.elements[i+1][0].lineBreak)) {  // resize backward
+            var elementCoupe;
+            var k = 0;
+            while ((elementCoupe == undefined) && (k < this.latextArea.elements[i+2].length)) { // On cherche le premier element de la ligne avec du texte
+                if (this.latextArea.elements[i+2][k].text.length > 0) {
+                    elementCoupe = this.latextArea.elements[i+2][k];
+                }
+                k++;
+            }
+            if (elementCoupe != undefined) {    // Il y a quelque chose sur la ligne suivante
+                var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
+                var positionPremierMot = elementCoupe.text.indexOf(' ');
+                if (positionPremierMot == -1) {
+                    positionPremierMot = elementCoupe.text.length;
+                }
+                var str1 = ' ' + elementCoupe.text.substring(0, positionPremierMot);
                 var str2 = elementCoupe.text.substring(positionPremierMot + 1);
                 width -= elementAjout.DOM.offsetWidth;
                 if (elementAjout instanceof InputElement) {
                     elementAjout.iCurseur = this.DOM.selectionEnd;
-                    elementAjout.DOM.value += ' ' + str1;
-                    elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
-                } else {
-                    elementAjout.DOM.innerHTML += '&nbsp' + str1;
-                    elementAjout.textContent += ' ' + str1;
+                }
+                elementAjout.setText(elementAjout.text + str1);
+                if (elementCoupe instanceof InputElement) {
+                    elementAjout.iCurseur = elementAjout.text.length;
                 }
                 this.size();
                 width += elementAjout.DOM.offsetWidth;
-                if (width <= this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas
-                    elementCoupe.textContent = str2;
-                    elementCoupe.DOM.innerHTML = str2;
+                if (width > this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas 
+                    change = true; // sinon on enlève ce qu'on a fait
+                    elementAjout.setText(elementAjout.text.substring(0, elementAjout.text.length - positionPremierMot - 1));
                 } else {
-                    change = true;
-                    if (elementAjout instanceof InputElement) {         // sinon on enlève ce qu'on a fait
-                        elementAjout.iCurseur = elementAjout.curseur;
-                        elementAjout.DOM.value = elementAjout.DOM.value.substring(0, elementAjout.text.length - positionPremierMot - 1);
-                        elementAjout.DOM.setSelectionRange(elementAjout.iCurseur, elementAjout.iCurseur);
-                    } else {
-                        elementAjout.DOM.innerHTML = elementAjout.DOM.innerHTML.substring(0, elementAjout.DOM.innerHTML.length - positionPremierMot);
-                        elementAjout.textContent = elementAjout.DOM.innerHTML.replace(/&nbsp;/g, " ");
-                    }
+                    elementCoupe.setText(str2);
                 }
+                //elementAjout.toInput(elementAjout.iCurseur);
             } else {
                 change = true;
             }
             this.size();     
+        }
+        if (this.latextArea.elements.length>=i+2) {
+            this.latextArea.elements[i+2][0].resizeBackward();
         }
     }
 
@@ -540,7 +539,7 @@ class InputElement extends LatextAreaElement {
 
     resize() {
         this.resizeForward();
-        //this.resizeBackward();
+        this.resizeBackward();
     }
 
     toTextElement() {
