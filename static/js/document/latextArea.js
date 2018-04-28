@@ -10,7 +10,6 @@ class LatextArea {
         // initialisation
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
-        console.log(document.getElementById(sourceId));
         this.elements = [];
         this.killNextAudio = false;
         this.parse();
@@ -36,6 +35,13 @@ class LatextArea {
             for (let j = this.elements[i].length-1; j>=0; j--)
             if (this.elements[i][j] instanceof TextElement ||
                 this.elements[i][j] instanceof InputElement)
+                return this.elements[i][j];
+    }
+
+    get inputElement() {
+        for (let i = this.elements.length - 1; i >= 0; i--)
+            for (let j = this.elements[i].length-1; j>=0; j--)
+            if (this.elements[i][j] instanceof InputElement)
                 return this.elements[i][j];
     }
 
@@ -147,7 +153,6 @@ class LatextArea {
         this.elements.splice(indexFirst, 3, mergedLine);
         for (let element of firstLine) element.DOM.remove();
         for (let element of secondLine) element.DOM.remove();
-        console.log(this.elements);
         if (this.elements.length > indexFirst+1) {
             for (let element of mergedLine) this.parent.insertBefore(element.DOM, this.elements[indexFirst+1][0].DOM);
         } else {
@@ -158,54 +163,40 @@ class LatextArea {
 
     parse() {
         let contentByLine = this.textContent.split(/\n/);
+        var i = 0;
         for (let line of contentByLine) {
             line = line.replace(/\$(.*)\$/, "{breaK}$&{breaK}");
-            let contentLine = line.split(/\{breaK\}/);
-            let textLine = [];
+            var contentLine = line.split(/\{breaK\}/);
+            var textLine = [];
             for (let elem of contentLine) {
                 let textElement = new TextElement(this, elem);
                 textLine.push(textElement);
+                
             }
-            this.elements.push(textLine);
+            this.elements.splice(i, 0, textLine);
             this.elements.push([new NewLineElement(this, true)]);
+            i++;
         }
         if (this.elements.length != 0)
             this.elements.pop();
         this.elements[0][0].toInput();
-        console.log(this.textContent);
     }
 
-    replaceElement(elementToReplace, newElements = undefined) {
+    replaceElement(elementToReplace, newElement = undefined) {
         /*
             Replaces elementToReplace in this.elements
-            newElements can be either :
+            newElement can be either :
                 - undefined : in this case, elementsToReplace will just be deleted
                 - an instance of LatextAreaElement
-                - an array of instances of LatextAreaElement
         */
-
         let iToReplace = this.findIndexes(elementToReplace)[0];
         let jToReplace = this.findIndexes(elementToReplace)[1];
-        let newLine = this.elements[iToReplace];
-        let start = newLine.slice(0, jToReplace);
-        let end = newLine.slice(jToReplace + 1);
         elementToReplace.DOM.remove();
-
-        newLine = [];
-        for (let element of start) newLine.push(element)
-        if (newElements == undefined) {
-            /* Nothing happens */
+        if (newElement != undefined) {
+            this.elements[iToReplace].splice(jToReplace, 1, newElement);
+        } else {        
+            this.elements[iToReplace].splice(jToReplace, 1);
         }
-        else if (newElements instanceof LatextAreaElement) {
-            newLine.push(newElements);
-        }
-        else {
-            for (let element of newElements) newLine.push(element);
-        }
-        for (let element of end) newLine.push(element);
-
-        this.replaceLine(this.elements[iToReplace], newLine)
-
         // un peu couteux, voir s'il n'y a pas plus simple
         this.generateDOM();
     }
@@ -301,21 +292,23 @@ class LatextAreaElement {
 
     resizeForward() {
         //this.DOM.style.height = '1em';
-        this.size();
+        this.setSize();
+        var change = false;
         var i = this.latextArea.findIndexes(this)[0];
         let width = this.latextArea.elements[0][0].DOM.offsetLeft;
         for (let element of this.latextArea.elements[i]) {
             width += element.DOM.offsetWidth;
         }
-        while (width > this.DOM.parentElement.offsetWidth) {
-            var l = this.latextArea.elements[i].length - 1;
+        let parentWidth = this.DOM.parentElement.offsetWidth;
+        while (width > parentWidth) {
+            var l = this.latextArea.elements[i].length - 1; // changer nom
             var elementCoupe = this.latextArea.elements[i][l];
             var positionDernierMot = Math.max(elementCoupe.text.lastIndexOf(' '), elementCoupe.text.lastIndexOf("&nbsp"));
             var str1 = elementCoupe.text.substring(0, positionDernierMot);
             var str2 = elementCoupe.text.substring(positionDernierMot + 1);
             width -= elementCoupe.DOM.offsetWidth;
             if (elementCoupe instanceof InputElement) {
-                elementCoupe.iCurseur = elementCoupe.DOM.selectionEnd;
+                elementCoupe.iCurseur = elementCoupe.DOM.selectionEnd;  // changer nom 
             }
             elementCoupe.setText(str1);
             if (this.latextArea.elements.length>i+2) {  // On choisit où rajouter ce qui dépasse
@@ -334,12 +327,14 @@ class LatextAreaElement {
             }
             if (elementCoupe instanceof InputElement) {
                 if (elementCoupe.iCurseur > str1.length) {
+                    elementCoupe.toTextElement();
                     elementCoupe.latextArea.elements[i+2][0].toInput(elementCoupe.iCurseur - elementCoupe.curseur - 1);
                 } else {
-                    elementCoupe.DOM.setSelectionRange(elementCoupe.iCurseur, elementCoupe.iCurseur);                
+                    elementCoupe.DOM.setSelectionRange(elementCoupe.iCurseur, elementCoupe.iCurseur);
+
                 }
             }
-            this.size();
+            this.setSize();
             width += elementCoupe.DOM.offsetWidth;  
         }
         if (this.latextArea.elements.length>=i+2) {
@@ -349,26 +344,26 @@ class LatextAreaElement {
 
     resizeBackward () {
         //this.DOM.style.height = '1em';
-        this.size();
+        this.setSize();
         var i = this.latextArea.findIndexes(this)[0];
         var width = this.latextArea.elements[0][0].DOM.offsetLeft;
         for (let element of this.latextArea.elements[i]) {
             width += element.DOM.offsetWidth;
         }
-
+        var parentWidth = this.DOM.parentElement.offsetWidth;
         var change = false;
-        console.log(this.latextArea.elements);
         while ( (!change) && (this.latextArea.elements.length>i+2) && !(this.latextArea.elements[i+1][0].lineBreak)) {  // resize backward
-            var elementCoupe;
+            let elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
+            let elements = this.latextArea.elements;
+            let elementCoupe;
             var k = 0;
-            while ((elementCoupe == undefined) && (k < this.latextArea.elements[i+2].length)) { // On cherche le premier element de la ligne avec du texte
-                if (this.latextArea.elements[i+2][k].text.length > 0) {
-                    elementCoupe = this.latextArea.elements[i+2][k];
+            while ((elementCoupe == undefined) && (k < elements[i+2].length)) { // On cherche le premier element de la ligne avec du texte
+                if (elements[i+2][k].text.length > 0) {
+                    elementCoupe = elements[i+2][k];
                 }
                 k++;
             }
             if (elementCoupe != undefined) {    // Il y a quelque chose sur la ligne suivante
-                var elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
                 var positionPremierMot = elementCoupe.text.indexOf(' ');
                 if (positionPremierMot == -1) {
                     positionPremierMot = elementCoupe.text.length;
@@ -376,33 +371,31 @@ class LatextAreaElement {
                 var str1 = ' ' + elementCoupe.text.substring(0, positionPremierMot);
                 var str2 = elementCoupe.text.substring(positionPremierMot + 1);
                 width -= elementAjout.DOM.offsetWidth;
-                if (elementAjout instanceof InputElement) {
-                    elementAjout.iCurseur = this.DOM.selectionEnd;
-                }
                 elementAjout.setText(elementAjout.text + str1);
-                if (elementCoupe instanceof InputElement) {
-                    elementAjout.iCurseur = elementAjout.text.length;
-                }
-                this.size();
+                elementAjout.setSize();
                 width += elementAjout.DOM.offsetWidth;
-                if (width > this.DOM.parentElement.offsetWidth) {       // on vérifie que ça ne dépasse pas 
+                if (width > parentWidth) {       // on vérifie que ça ne dépasse pas 
                     change = true; // sinon on enlève ce qu'on a fait
                     elementAjout.setText(elementAjout.text.substring(0, elementAjout.text.length - positionPremierMot - 1));
                 } else {
                     elementCoupe.setText(str2);
+                    if (elementCoupe instanceof InputElement) {
+                        let posCurseur = elementCoupe.curseur;
+                        elementCoupe.toTextElement();
+                        elementAjout.toInput(elementAjout.text.length - positionPremierMot + posCurseur);
+                    }
                 }
-                //elementAjout.toInput(elementAjout.iCurseur);
             } else {
                 change = true;
             }
-            this.size();     
+            elementAjout.setSize();    
         }
         if (this.latextArea.elements.length>=i+2) {
-            this.latextArea.elements[i+2][0].resizeBackward();
-        }
+                this.latextArea.elements[i+2][0].resizeBackward();
+        } 
     }
 
-    size() {
+    setSize() {
         this.DOM.style.height = this.DOM.scrollHeight + "px";
         this.DOM.style.width = '1px';
         this.DOM.style.width = this.DOM.scrollWidth + "px";  
@@ -539,7 +532,12 @@ class InputElement extends LatextAreaElement {
 
     resize() {
         this.resizeForward();
-        this.resizeBackward();
+        var i = Math.max(0, this.latextArea.findIndexes(this)[0]-2);
+        this.latextArea.elements[i][0].resizeBackward();
+
+        //this.latextArea.elements[i][0].resizeBackward1();
+        //this.resizeBackward1();
+        //this.resizeBackward2();
     }
 
     toTextElement() {
@@ -639,16 +637,18 @@ class InputElement extends LatextAreaElement {
                 this.toTextElement();
         }
 
-        if (event.keyCode == 8 && positionCurseur == 0) {                   //backspace
-            event.preventDefault();
-            if (j > 0) {
-                jToFocus = j-1;
-                merge = true;
-            } 
-            else if (i>0) {
-                iToFocus = i-2;
-                jToFocus = this.latextArea.elements[iToFocus].length-1;
-                merge = true;
+        if (event.keyCode == 8) {
+            if (positionCurseur == 0) {                   //backspace
+                event.preventDefault();            
+                if (j > 0) {
+                    jToFocus = j-1;
+                    merge = true;
+                } 
+                else if (i>0) {
+                    iToFocus = i-2;
+                    jToFocus = this.latextArea.elements[iToFocus].length-1;
+                    merge = true;
+                }
             }
         }
         if (merge) {
