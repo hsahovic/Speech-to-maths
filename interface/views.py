@@ -153,11 +153,13 @@ def documents_search(request, context_length=50):
 
 @login_required
 def save_document(request):
-    # sécurité ?
     data = json.loads(request.POST['data'])
     doc = get_document(request, id_=data["docID"])
     doc.content = data["newContent"]
-    # Regenere pdf ?
+    try :
+        doc.generate_pdf()
+    except Exception as exc :
+        print("Something did't work with the generation of the PDF file ; check out the 'save_document' function in interface/views.py")
     doc.save()
     s2m_training.schedule(doc)
     return HttpResponse(json.dumps({"result": True}))

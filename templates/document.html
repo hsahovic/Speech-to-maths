@@ -61,18 +61,16 @@
 	</span>
 </div>
 
-	<span class = "grid">
-
-		<div id = "latext-area" class = "latext-area"></div>
-
-		<div class = "latext-area">
-			{% if doc.pdf %}
-			<h3> PDF </h3>
-			<iframe src="{{ doc.pdf.url }}" width="1200" height="1200" align="middle"></iframe>
-			{% endif %}
-		</div>
-
-	</span>
+<span class = "grid">
+	<div id = "latext-area" class = "latext-area"></div>
+	<div>
+		{% if doc.pdf %}
+		<iframe id = "pdfframe" src="{{ doc.pdf.url }}"></iframe>
+		{% else %}
+		<iframe id = "pdfframe" src="{% static 'pdf/default_speech_to_maths_pdf.pdf' %}" style = "position : fixed"></iframe>
+		{% endif %}
+	</div>
+</span>
 
 
 <div id="responseDisplay" class = "audio-display"> </div>
@@ -81,7 +79,7 @@
 
 <span id = "hidden-origin" style = "display:none">{{ doc.content }}</span>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
+<script type="text/javascript" src="{% static 'js/MathJax/MathJax.js' %}">
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
   jax: ["input/TeX","output/PreviewHTML", "output/NativeMML","output/SVG","output/HTML-CSS"],
@@ -117,4 +115,17 @@ MathJax.Hub.Config({
 	var latextArea = new LatextArea("latext-area", "hidden-origin");
 	var helpLink = "{% url 'help_construction' %}";
 </script>
+
+<script>
+	function resizeIframe (id) {
+		let iframe = document.getElementById(id);
+		iframe.width = iframe.parentElement.clientWidth - 24;
+		iframe.height = window.innerHeight - iframe.getBoundingClientRect().top - 24;
+	}
+	muttedResizeIframe = () => resizeIframe("pdfframe");
+	setTimeout(muttedResizeIframe, 0);
+	window.addEventListener("resize", muttedResizeIframe, false);
+
+</script>
+
 {% endblock %}

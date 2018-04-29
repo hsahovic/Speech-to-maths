@@ -3,6 +3,9 @@
 // Dans manage change, rebrancher ce qui manque sur les états des autres classes
 // Comment supprimer un saut de ligne
 // meilleure gestion de l'audio continu
+// si latextarea vide, sur clic rajouter un element automatiquement en input
+// si click sur zone vide de latexarea, selectionner la derniere partie en input
+// gerer les selections
 
 class LatextArea {
 

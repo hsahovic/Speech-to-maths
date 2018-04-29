@@ -260,6 +260,7 @@ input {
     grid-template-columns: 50% 50%;
     grid-template-rows: 100%;
     grid-gap: 0em;
+    /* min-height: 100vh; */
 }
 
 .latext-area {
