@@ -3,9 +3,6 @@
 // Dans manage change, rebrancher ce qui manque sur les états des autres classes
 // Comment supprimer un saut de ligne
 // meilleure gestion de l'audio continu
-// si latextarea vide, sur clic rajouter un element automatiquement en input
-// si click sur zone vide de latexarea, selectionner la derniere partie en input
-// gerer les selections
 
 class LatextArea {
 
@@ -166,23 +163,27 @@ class LatextArea {
 
     parse() {
         let contentByLine = this.textContent.split(/\n/);
-        var i = 0;
         for (let line of contentByLine) {
-            line = line.replace(/\$(.*)\$/, "{breaK}$&{breaK}");
+            var patt = /(\$\$[^\$]*\$\$|\$[^\$]*\$)/g;
+            line = line.replace(patt, "{breaK}$&{breaK}");
             var contentLine = line.split(/\{breaK\}/);
             var textLine = [];
             for (let elem of contentLine) {
-                let textElement = new TextElement(this, elem);
-                textLine.push(textElement);
-                
+                if (elem[0]=='\$') {
+                    let textElement = new MathElement(this, elem);
+                    textLine.push(textElement);
+                } else {
+                    let textElement = new TextElement(this, elem);
+                    textLine.push(textElement);
+                }     
             }
-            this.elements.splice(i, 0, textLine);
+            this.elements.push(textLine);
             this.elements.push([new NewLineElement(this, true)]);
-            i++;
         }
         if (this.elements.length != 0)
             this.elements.pop();
         this.elements[0][0].toInput();
+        console.log(this.elements);
     }
 
     replaceElement(elementToReplace, newElement = undefined) {
@@ -191,14 +192,20 @@ class LatextArea {
             newElement can be either :
                 - undefined : in this case, elementsToReplace will just be deleted
                 - an instance of LatextAreaElement
+                - a array of elements
         */
         let iToReplace = this.findIndexes(elementToReplace)[0];
         let jToReplace = this.findIndexes(elementToReplace)[1];
         elementToReplace.DOM.remove();
-        if (newElement != undefined) {
-            this.elements[iToReplace].splice(jToReplace, 1, newElement);
-        } else {        
+        if (newElement == undefined) {
             this.elements[iToReplace].splice(jToReplace, 1);
+        } else if (newElement instanceof LatextAreaElement) { 
+            this.elements[iToReplace].splice(jToReplace, 1, newElement);
+        } else {
+            this.elements[iToReplace].splice(jToReplace, 1, newElement[0]);
+            for (let compt = 1; compt < newElement.length; compt++) {
+                this.elements[iToReplace].splice(jToReplace + compt, 0, newElement[compt]);
+            }
         }
         // un peu couteux, voir s'il n'y a pas plus simple
         this.generateDOM();
@@ -295,6 +302,7 @@ class LatextAreaElement {
 
     resizeForward() {
         //this.DOM.style.height = '1em';
+        var compteur = 0;
         this.setSize();
         var change = false;
         var i = this.latextArea.findIndexes(this)[0];
@@ -304,6 +312,8 @@ class LatextAreaElement {
         }
         let parentWidth = this.DOM.parentElement.offsetWidth;
         while (width > parentWidth) {
+            if (compteur == 100) {break;}
+            compteur++;
             var l = this.latextArea.elements[i].length - 1; // changer nom
             var elementCoupe = this.latextArea.elements[i][l];
             var positionDernierMot = Math.max(elementCoupe.text.lastIndexOf(' '), elementCoupe.text.lastIndexOf("&nbsp"));
@@ -332,6 +342,7 @@ class LatextAreaElement {
                 if (elementCoupe.iCurseur > str1.length) {
                     elementCoupe.toTextElement();
                     elementCoupe.latextArea.elements[i+2][0].toInput(elementCoupe.iCurseur - elementCoupe.curseur - 1);
+                    console.log(elementCoupe.latextArea.elements);
                 } else {
                     elementCoupe.DOM.setSelectionRange(elementCoupe.iCurseur, elementCoupe.iCurseur);
 
@@ -346,6 +357,7 @@ class LatextAreaElement {
     }
 
     resizeBackward () {
+        var compteur = 0;
         //this.DOM.style.height = '1em';
         this.setSize();
         var i = this.latextArea.findIndexes(this)[0];
@@ -356,6 +368,8 @@ class LatextAreaElement {
         var parentWidth = this.DOM.parentElement.offsetWidth;
         var change = false;
         while ( (!change) && (this.latextArea.elements.length>i+2) && !(this.latextArea.elements[i+1][0].lineBreak)) {  // resize backward
+            if (compteur == 100) {break;}
+            compteur++;
             let elementAjout = this.latextArea.elements[i][this.latextArea.elements[i].length-1];
             let elements = this.latextArea.elements;
             let elementCoupe;
@@ -368,7 +382,7 @@ class LatextAreaElement {
             }
             if (elementCoupe != undefined) {    // Il y a quelque chose sur la ligne suivante
                 var positionPremierMot = elementCoupe.text.indexOf(' ');
-                if (positionPremierMot == -1) {
+                if ((positionPremierMot == -1) || (elementCoupe instanceof MathElement)) {
                     positionPremierMot = elementCoupe.text.length;
                 }
                 var str1 = ' ' + elementCoupe.text.substring(0, positionPremierMot);
@@ -545,7 +559,32 @@ class InputElement extends LatextAreaElement {
 
     toTextElement() {
         if (this.DOM.value.indexOf('\n') == -1) {
-            this.latextArea.replaceElement(this, new TextElement(this.latextArea, this.DOM.value, this.curseur));
+            var patt = /(\$\$[^\$]*\$\$|\$[^\$]*\$)/g;
+            let text = this.DOM.value.replace(patt, "{breaK}$&{breaK}");
+            console.log(text);
+            let contentText = text.split(/\{breaK\}/);
+            let newElements = [];
+            let curseur = 0;
+            this.iCurseur = this.curseur;
+            for (let elem of contentText) {
+                curseur = 0;
+                if(this.iCurseur <= elem.length) {
+                    curseur = this.iCurseur;
+                } else {
+                    this.iCurseur-=elem.length;
+                }
+                if (elem[0]=='\$') {
+                    let textElement = new MathElement(this.latextArea, elem, curseur);
+                    newElements.push(textElement);
+                } else {
+                    if (elem.length > 0) {
+                        let textElement = new TextElement(this.latextArea, elem, curseur);
+                        newElements.push(textElement);
+                    }
+                } 
+            }
+            console.log(newElements);
+            this.latextArea.replaceElement(this, newElements);
         }
         /*else {
             let values = this.DOM.value.split('\n');
@@ -636,8 +675,10 @@ class InputElement extends LatextAreaElement {
         }
 
         if (change) {
-                this.latextArea.elements[iToFocus][jToFocus].toInput(positionFocus);
                 this.toTextElement();
+                //setTimeout(0);
+                this.latextArea.elements[iToFocus][jToFocus].toInput(positionFocus);
+                console.log(this.latextArea.elements);
         }
 
         if (event.keyCode == 8) {
@@ -697,6 +738,41 @@ class NewLineElement extends LatextAreaElement {
 
 
 class TextElement extends LatextAreaElement {
+
+    constructor(latextArea, text, position) {
+        // initialisation
+        super(latextArea, text, position);
+        this.DOM = document.createElement("span");
+        this.DOM.innerHTML = text.replace(/ /g, "&nbsp;");
+        this.DOM.className = "latext-element";
+        // event bindings
+        this.DOM.onclick = this.toInput.bind(this, this.iCurseur);
+    }
+
+    insert(value) {
+        if (this.DOM.innerText != "" && this.DOM.innerText.substr(this.DOM.innerText.length - 1) != " ") {
+            value = " " + value;
+        }
+        this.DOM.innerText += value;
+        this.textContent += value;
+        this.latextArea.manageChange();
+    }
+
+    toInput(positionFocus) {
+        if (positionFocus != undefined) {
+            var curseur = positionFocus;
+        } else {
+            var curseur = this.curseur;
+        }
+        let newElement = new InputElement(this.latextArea, this.textContent, curseur);
+        newElement.DOM.setSelectionRange(curseur, curseur);
+        this.latextArea.replaceElement(this, newElement);
+    }
+
+}
+
+
+class MathElement extends LatextAreaElement {
 
     constructor(latextArea, text, position) {
         // initialisation
