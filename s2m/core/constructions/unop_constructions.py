@@ -34,7 +34,10 @@ class UnaryOperatorConstructions(Construction):
                  'ADR': {'latex': '\\overline{%s}', 'priority': 5, 'nobrackets': True},
                  'FTR': {'latex': '\\partial %s ', 'priority': 5, 'nobrackets': True},
                  'NRM': {'latex': '\\Vert %s \\Vert','priority': 5, 'nobrackets': True},
-                 'NRO': {'latex': '\\vvvert %s \\vvvert','priority': 5, 'nobrackets': True}
+                 'NRO': {'latex': '\\vvvert %s \\vvvert','priority': 5, 'nobrackets': True},
+                 'EXI': {'latex': '\\exists %s ','priority': 5, 'nobrackets': True},
+                 'EXU': {'latex': '\\exists ! %s ','priority': 5, 'nobrackets': True},
+                 'QQS': {'latex': '\\forall %s ','priority': 5, 'nobrackets': True}
                  }
 
     OPERATORS_PARSED = {'moins': 'NEG',
@@ -67,7 +70,10 @@ class UnaryOperatorConstructions(Construction):
                         'adhérence de': 'ADR',
                         'frontière de': 'FTR',
                         'norme de': 'NRM',
-                        'norme subordonnée de': 'NRO'}
+                        'norme subordonnée de': 'NRO',
+                        'il existe': 'EXI',
+                        'il existe un unique': 'EXU',
+                        'quel que soit': 'QQS'}
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
 

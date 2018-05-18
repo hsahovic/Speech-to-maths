@@ -32,7 +32,13 @@ class BinaryOperatorConstructions(Construction):
                  'SYM': {'latex': '%s \\oplus %s', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': False},
                  'DST': {'latex': 'd ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
                  'BLO': {'latex': 'B ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
-                 'BLF': {'latex': 'B_f ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True}
+                 'BLF': {'latex': 'B_f ( %s , %s )', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'DVS': {'latex': '%s \\mid  %s', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'NDV': {'latex': '%s \\nmid %s', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'MOD': {'latex': '%s \\pmod{%s} ', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'CGR': {'latex': '%s \\equiv %s ', 'priority': 0, 'associative': False, 'weak': False, 'nobrackets': True},
+                 'GCD': {'latex': '%s \\wedge %s ', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True},
+                 'LCM': {'latex': '%s \\vee %s ', 'priority': 0, 'associative': True, 'weak': False, 'nobrackets': True}
                  }
 
     OPERATORS_PARSED = {'plus': 'ADD',
@@ -63,7 +69,13 @@ class BinaryOperatorConstructions(Construction):
                         'différence symétrique': 'SYM',
                         'distance': 'DST',
                         'boule ouverte ': 'BLO',
-                        'boule fermée ': 'BLF'
+                        'boule fermée ': 'BLF',
+                        'divise ': 'DVS',
+                        'ne divise pas ': 'NDV',
+                        'modulo ': 'MOD',
+                        'congru à ': 'CGR',
+                        'pgcd ': 'GCD',
+                        'ppcm ': 'LCM'
                         }
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
