@@ -2,11 +2,6 @@ from s2m.core.utils import _unlist
 
 class BoundedWriteOnlyQueue:
 
-    #À faire:
-    #Enlever tous les [:2]
-    #Stocker les ukeys dans un **tableau** dédié parallèle à dict
-    #Corriger le passage stupide
-
     def __init__(self, comparator=None, size=5, args=None):
 
         self.__size = size

@@ -151,7 +151,7 @@ class SphinxConfig:
         # On supose que fr.dict est correctement formaté.
         dictionary_s2m = dictionary_s2m or os.path.join("s2m", "core", "sphinx", "s2m.dict")
         dictionary_fr = os.path.join("s2m", "core", "sphinx", "fr.dict")
-        first_word_regex = re.compile(r'^[\w-]+', re.UNICODE)
+        first_word_regex = re.compile(r'^([\w-]+)[ (]', re.UNICODE)
         with open(dictionary_s2m, "w", encoding='utf-8') as dict_s2m:
             with open(dictionary_fr, "r", encoding='utf-8') as dict_fr:
                 i, n, f = 0, len(wrds), False
@@ -162,7 +162,7 @@ class SphinxConfig:
                         raise RuntimeError('Word %r cannot be found in dictionary.' % wrds[i])
                     word = first_word_regex.match(line)
                     if word:
-                        word = word.group()
+                        word = word.group(1)
                     else:
                         continue
                     if word == wrds[i]:

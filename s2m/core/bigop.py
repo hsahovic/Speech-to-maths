@@ -19,9 +19,14 @@ class BigOperator(Formula, BigOperatorConstructions):
             if len(args) > 3 or len(args) == 0:
                 raise ValueError(
                     'Wrong amout of arguments for operator: %r' % len(args))
-        for form in args:
-            if not isinstance(form, Formula):
-                raise ValueError('Input not Formula: %r' % form)
+        elif self.OPERATORS[o]['type'] == 'ITV':
+            if len(args) > 4 or len(args) < 3:
+                raise ValueError(
+                    'Wrong amout of arguments for operator: %r' % len(args))
+        elif self.OPERATORS[o]['type'] == 'DEV':
+            if len(args) > 3 or len(args) == 0:
+                raise ValueError(
+                    'Wrong amout of arguments for operator: %r' % len(args))
         self.__fl = args
         self.__o = o
 
@@ -57,6 +62,7 @@ class BigOperator(Formula, BigOperatorConstructions):
         return reduce(lambda a, b: a ^ hash(b), self.__fl, 0)
 
     def _latex(self, next_placeholder=1):
+        from s2m.core.number import Number
         if self.operator_type == 'SUM':
             c_tex, c_level = '', 0
             d_tex, d_level = '', 0
@@ -64,19 +70,60 @@ class BigOperator(Formula, BigOperatorConstructions):
             if len(self.__fl) == 1:
                 c_tex, next_placeholder, c_level = self.__fl[0]._latex(
                     next_placeholder)
-            if len(self.__fl) == 2:
+            elif len(self.__fl) == 2:
                 c_tex, next_placeholder, c_level = self.__fl[1]._latex(
                     next_placeholder)
                 d_tex, next_placeholder, d_level = self.__fl[0]._latex(
                     next_placeholder)
-            if len(self.__fl) == 3:
+            elif len(self.__fl) == 3:
                 c_tex, next_placeholder, c_level = self.__fl[2]._latex(
                     next_placeholder)
                 d_tex, next_placeholder, d_level = self.__fl[0]._latex(
                     next_placeholder)
                 u_tex, next_placeholder, u_level = self.__fl[1]._latex(
                     next_placeholder)
-            return self.latex_model % (d_tex, u_tex, c_tex), next_placeholder, c_level
+            return (self.latex_model % (d_tex, u_tex, c_tex),
+                    next_placeholder,
+                    c_level)
+        elif self.operator_type == 'ITV':
+            lb_tex = self.BOUNDS[(self.__o, self.__fl[0], 0)]
+            l_tex, next_placeholder, l_level = self.__fl[1]._latex(
+                    next_placeholder)
+            if len(self.__fl) == 3:
+                rb_tex = self.BOUNDS[(self.__o, self.__fl[0], 1)]
+                r_tex, next_placeholder, r_level = self.__fl[2]._latex(
+                    next_placeholder)
+            elif len(self.__fl) == 4:
+                rb_tex = self.BOUNDS[(self.__o, self.__fl[2], 1)]
+                r_tex, next_placeholder, r_level = self.__fl[3]._latex(
+                    next_placeholder)
+            return (self.latex_model % (lb_tex, l_tex, r_tex, rb_tex),
+                    next_placeholder,
+                    max(l_level, r_level))
+        elif self.operator_type == 'DEV':
+            c_tex, c_level = '', 0
+            d_tex, d_level = '', 0
+            u_tex, u_level = '', 0
+            if len(self.__fl) == 1:
+                c_tex, next_placeholder, c_level = self.__fl[0]._latex(
+                    next_placeholder)
+            elif len(self.__fl) == 2:
+                c_tex, next_placeholder, c_level = self.__fl[1]._latex(
+                    next_placeholder)
+                u_tex, next_placeholder, u_level = self.__fl[0]._latex(
+                    next_placeholder)
+            elif len(self.__fl) == 3:
+                c_tex, next_placeholder, c_level = self.__fl[2]._latex(
+                    next_placeholder)
+                u_tex, next_placeholder, u_level = self.__fl[0]._latex(
+                    next_placeholder)
+                d_tex, next_placeholder, d_level = self.__fl[1]._latex(
+                    next_placeholder)
+            if u_tex == Number(1).latex():
+                u_tex = ''
+            return (self.latex_model % (d_tex, u_tex, c_tex),
+                    next_placeholder,
+                    c_level)
         else:
             return '', next_placeholder, 0
 
@@ -96,8 +143,8 @@ class BigOperator(Formula, BigOperatorConstructions):
            and self.arity == other.arity:
             s = 0
             for i in range(self.arity):
-                s += (self.__l(i)).a_similarity()
-            return s / len(self.__fl)
+                s += (self.__fl[i]).a_similarity(other.fl[i])
+            return s / self.arity
         else:
             return 0.
 
@@ -130,6 +177,8 @@ class BigOperator(Formula, BigOperatorConstructions):
     @classmethod
     def teach(cls, parser):
 
+        from s2m.core.number import Number
+
         big_operator_easy = ('bigoperator-operator',
                              cls.OPERATORS_PARSED,
                              lambda x: x)
@@ -142,7 +191,11 @@ class BigOperator(Formula, BigOperatorConstructions):
                            {'de': None, 'des': None},
                            lambda x: None)
 
-        # Defines op A -> BinaryOperator(op, A)
+        big_operator_bnd = ('bigoperator-bnd',
+                            cls.BOUNDS_PARSED,
+                            lambda x: x)
+
+        # Defines op A -> BigOperator(op, A)
         def big_operator_expand(formulae):
             return BigOperator(*[f for f in formulae if f is not None])
 
@@ -151,28 +204,82 @@ class BigOperator(Formula, BigOperatorConstructions):
                                        big_operator_expand,
                                        True)
 
-        # Defines op from A of B -> BinaryOperator(op, A, B)
+        # Defines op from A of B -> BigOperator(op, A, B)
         big_operator_arity2_complex = ('bigoperator/arity2',
                                        '$bigoperator-operator $bigoperator-from %f $bigoperator-of %f',
                                        big_operator_expand,
                                        True)
 
-        # Defines op from A to B of C -> BinaryOperator(op, A, B, C)
+        # Defines op from A to B of C -> BigOperator(op, A, B, C)
         big_operator_arity3_complex = ('bigoperator/arity3',
                                        '$bigoperator-operator $bigoperator-from %f à %f $bigoperator-of %f',
                                        big_operator_expand,
                                        True)
 
+        # Defines op bnd from A to B -> BigOperator(op, bnd, A, B)
+        itv_arity3_complex = ('bigoperator/itvarity3',
+                             '$bigoperator-operator $bigoperator-bnd de %f à %f',
+                             big_operator_expand)
+
+        # Defines op bndA in A bndB in B -> BigOperator(op, bnd, A, bnd, B)
+        itv_arity4_complex = ('bigoperator/itvarity4',
+                             '$bigoperator-operator $bigoperator-bnd en %f $bigoperator-bnd en %f',
+                             big_operator_expand)
+
+        # Interval shortcuts
+        segment_complex = ('bigoperator/segment',
+                                    'segment de %f à %f',
+                                    lambda x: big_operator_expand(['ITR', 'CL', x[0], x[1]]),
+                                    True)
+
+        interval_complex = ('bigoperator/interval',
+                                    'intervalle de %f à %f',
+                                    lambda x: big_operator_expand(['ITR', 'OP', x[0], x[1]]),
+                                    True)
+
+        # Derivatives
+        derivative_arity1_complex = ('bigoperator/devarity1',
+                                     '$bigoperator-operator %f',
+                                     big_operator_expand,
+                                     True)
+
+        derivative_arity2_complex = ('bigoperator/devarity2',
+                                     '$bigoperator-operator par rapport à %f de %f',
+                                     lambda x: big_operator_expand([x[0], Number(1), x[1], x[2]]),
+                                     True)
+
+        derivative_arity2b_complex = ('bigoperator/devarity2b',
+                                     '$bigoperator-operator %f %f',
+                                     big_operator_expand,
+                                     True)
+
+        derivative_arity3_complex = ('bigoperator/devarity3',
+                                     '$bigoperator-operator %f par rapport à %f de %f',
+                                     big_operator_expand,
+                                     True)
+
         parser.add_easy_reduce(*big_operator_easy)
         parser.add_easy_reduce(*big_operator_from)
         parser.add_easy_reduce(*big_operator_of)
+        parser.add_easy_reduce(*big_operator_bnd)
         parser.add_complex_rule(*big_operator_arity1_complex)
         parser.add_complex_rule(*big_operator_arity2_complex)
         parser.add_complex_rule(*big_operator_arity3_complex)
+        parser.add_complex_rule(*itv_arity3_complex)
+        parser.add_complex_rule(*itv_arity4_complex)
+        parser.add_complex_rule(*segment_complex)
+        parser.add_complex_rule(*interval_complex)
+        parser.add_complex_rule(*derivative_arity1_complex)
+        parser.add_complex_rule(*derivative_arity2_complex)
+        parser.add_complex_rule(*derivative_arity2b_complex)
+        parser.add_complex_rule(*derivative_arity3_complex)
 
         BigOperatorConstructions.teach(parser)
 
     def transcription(self):
+
+        from s2m.core.number import Number
+        
         if self.operator_type == 'SUM':
             if self.__o == 'ITG':
                 connector = 'de'
@@ -193,3 +300,33 @@ class BigOperator(Formula, BigOperatorConstructions):
                                                 self.__fl[1].transcription(),
                                                 connector,
                                                 self.__fl[2].transcription())
+        if self.operator_type == 'ITV':
+            if len(self.__fl) == 3:
+                return '%s %s de %s à %s' % (self.OPERATORS_REVERSE[self.__o],
+                                             self.BOUNDS_REVERSE[self.__fl[0]],
+                                             self.__fl[1].transcription(),
+                                             self.__fl[2].transcription())
+            else: 
+                return '%s %s en %s %s en %s' % (self.OPERATORS_REVERSE[self.__o],
+                                                 self.BOUNDS_REVERSE[self.__fl[0]],
+                                                 self.__fl[1].transcription(),
+                                                 self.BOUNDS_REVERSE[self.__fl[2]],
+                                                 self.__fl[3].transcription())
+        if self.operator_type == 'DEV':
+            if len(self.__fl) == 1:
+                return '%s %s' % (self.OPERATORS_REVERSE[self.__o],
+                                     self.__fl[0].transcription())
+            elif len(self.__fl) == 2:
+                return '%s %s %s' % (self.OPERATORS_REVERSE[self.__o],
+                                     self.__fl[0].transcription(),
+                                     self.__fl[1].transcription())
+            else:
+                if self.__fl[0] == Number(1):
+                    return '%s par rapport à %s de %s' % (self.OPERATORS_REVERSE[self.__o],
+                                                          self.__fl[1].transcription(),
+                                                          self.__fl[2].transcription())
+                else:
+                    return '%s %s par rapport à %s de %s' % (self.OPERATORS_REVERSE[self.__o],
+                                                             self.__fl[0].transcription(),
+                                                             self.__fl[1].transcription(),
+                                                             self.__fl[2].transcription())

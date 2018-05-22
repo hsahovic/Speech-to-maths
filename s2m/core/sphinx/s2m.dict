@@ -30,6 +30,7 @@ cinq ss in
 cinq(2) ss in kk
 cinquante ss in kk an tt
 cinquante(2) ss in kk an tt ee
+congru kk on gg rr uu
 conjugué kk on jj uu gg ei
 contient kk on tt yy in
 contient(2) kk on tt yy in tt
@@ -39,34 +40,6 @@ cubique(2) kk uu bb ii kk ee
 curseur kk uu rr ss oe rr
 d dd ai
 d(2) dd ei
-d' dd
-d'_abord dd aa bb oo rr
-d'_accord dd aa kk oo rr
-d'_ailleurs dd aa yy oe rr
-d'_après dd aa pp rr ai
-d'_autant_plus_qu' dd au tt an pp ll uu ss kk
-d'_autant_plus_que dd au tt an pp ll uu ss kk ee
-d'_autant_qu' dd au tt an kk
-d'_autant_que dd au tt an kk ee
-d'_autre_part dd au tt rr ee pp aa rr
-d'_avant dd aa vv an
-d'_entre dd an tt rr
-d'_un_autre_côté dd un au tt rr ee kk au tt ei
-d'_une_manière_générale dd uu nn ee mm aa nn yy ai rr ee jj ei nn ei rr aa ll
-d'abord dd aa bb oo rr
-d'accord dd aa kk oo rr
-d'affilée dd aa ff ii ll ei
-d'ailleurs dd aa yy oe rr
-d'alberto dd aa ll bb ai rr tt au
-d'alema dd aa ll ee mm aa
-d'antan dd an tt an
-d'après dd aa pp rr ai
-d'arrache-pied dd aa rr aa ch ee pp yy ei
-d'autre_part dd au tt rr ee pp aa rr
-d'emblée dd an bb ll ei
-d'habitude dd aa bb ii tt uu dd
-d'ores_et_déjà dd oo rr ee zz ai dd ai jj aa
-d'une_part dd uu nn ee pp aa rr
 dans dd an
 dans(2) dd an zz
 de dd
@@ -83,6 +56,8 @@ différent dd ii ff ai rr an
 différent(2) dd ii ff ai rr an tt
 distance dd ii ss tt an ss
 distance(2) dd ii ss tt an ss ee
+divise dd ii vv ii zz
+divise(2) dd ii vv ii zz ee
 divisé dd ii vv ii zz ei
 dix dd ii
 dix(2) dd ii kk ss
@@ -90,12 +65,18 @@ dix(3) dd ii ss
 dix(4) dd ii zz
 douze dd ou zz
 douze(2) dd ou zz ee
+dé dd ei
 décilliard dd ai ss ii ll ii aa rr
 décilliard(2) dd ai ss ii ll yy aa rr
 décillion dd ai ss ii ll ii on
 décillion(2) dd ai ss ii ll yy on
 echo ei ch oo
 echo(2) ai kk au
+en an
+en(2) an
+en(3) an nn
+entier an tt yy ei
+entier(2) an tt yy ei rr
 entière an tt yy ai rr
 entière(2) an tt yy ai rr ee
 entre an tt rr
@@ -107,6 +88,8 @@ et ai
 et(2) ai tt
 eta ei tt aa
 eta(2) eu tt ei aa
+existe ai gg zz ii ss tt
+existe(2) ai gg zz ii ss tt ee
 exponentielle ai kk ss pp oo nn an ss yy ai ll
 exponentielle(2) ai kk ss pp oo nn an ss yy ai ll ee
 factorielle ff aa kk tt oo rr ii ai ll
@@ -114,6 +97,7 @@ fermez ff ai rr mm ei
 fermez(2) ff ai rr mm ei zz
 fermez(3) ff ei rr mm ei
 fermez(4) ff ei rr mm ei zz
+fermé ff ai rr mm ei
 fermée ff ai rr mm ei
 fin ff in
 fois ff ww aa
@@ -125,21 +109,24 @@ gamma gg aa mm aa
 golf gg oo ll ff
 grand gg rr an
 grand(2) gg rr an tt
-grand'messe gg rr an mm ai ss
-grand'messe(2) gg rr an mm ai ss ee
 grec gg rr ai kk
 hotel oo tt ai ll
 huit uy ii
 huit(2) uy ii tt
 hyperbolique ii pp ai rr bb oo ll ii kk
 hyperbolique(2) ii pp ai rr bb oo ll ii kk ee
+il ii ll
 image ii mm aa jj
 image(2) ii mm aa jj ee
 inclus in kk ll uu
 inclus(2) in kk ll uu zz
 india ii nn dd ii aa
+indice in dd ii ss
+indice(2) in dd ii ss ee
 inférieur in ff ai rr yy oe rr
 intersection in tt ai rr ss ai kk ss yy on
+intervalle in tt ai rr vv aa ll
+intervalle(2) in tt ai rr vv aa ll ee
 intégrale in tt ai gg rr aa ll
 intégrale(2) in tt ai gg rr aa ll ee
 intérieur in tt ai rr yy oe rr
@@ -171,26 +158,14 @@ mille mm ii ll
 mille(2) mm ii ll ee
 milliard mm ii ll yy aa rr
 million mm ii ll yy on
+modulo mm oo dd uu ll oo
 moins mm ww in
 moins(2) mm ww in zz
 mu mm uu
 n ai nn
-n' nn
-n'_importe nn in pp oo rr tt
-n'_importe_quoi nn in pp oo rr tt ee kk ww aa
-n'djamena nn dd jj aa mm ei nn aa
-n'djamena(2) ai nn dd jj aa mm ei nn aa
-n'dour nn dd ou rr
-n'dour(2) ai nn dd ou rr
-n'dri nn dd rr ii
-n'dri(2) ai nn dd rr ii
-n'guessan nn gg ei ss an
-n'guessan(2) ai nn gg ei ss an
-n'guesso nn gg ei ss au
-n'guesso(2) ai   nn gg ei ss au
-n'tamack nn tt aa mm aa kk
-n'tamack(2) ai nn tt aa mm aa kk
-nappartient nn aa pp aa rr tt yy in 
+nappartient nn aa pp aa rr tt yy in
+ne nn
+ne(2) nn ee
 neuf nn eu ff
 neuf(2) nn oe ff
 nonante nn oo nn an tt
@@ -204,6 +179,7 @@ norme(2) nn oo rr mm ee
 november nn oo vv ei mm bb ee rr
 noyau nn ww aa yy au
 nu nn uu
+nuplet ei nn uu pp ll ei
 népérien nn ai pp ai rr yy in
 octante oo kk tt an tt
 octilliard oo kk tt ii ll ii aa rr
@@ -215,12 +191,15 @@ onze on zz
 onze(2) on zz ee
 oscar oo ss kk aa rr
 ou ou
+ouvert ou vv ai rr
 ouverte ou vv ai rr tt
 ouverte(2) ou vv ai rr tt ee
 ouvrez ou vv rr ei
 ouvrez(2) ou vv rr ei zz
 p pp ai
 p(2) pp ei
+paire pp ai rr
+paire(2) pp ai rr ee
 papa pp aa pp aa
 par pp aa rr
 parenthèse pp aa rr an tt ai zz
@@ -228,6 +207,7 @@ parenthèse(2) pp aa rr an tt ai zz ee
 partie pp aa rr tt ii
 pas pp aa
 pas(2) pp aa zz
+pgcd pp ei jj ei ss ei dd ei
 phi ff ii
 pi pp ii
 pi(2) pp ii
@@ -237,6 +217,9 @@ plus(3) pp ll uu ss
 point pp ww in
 point(2) pp ww in tt
 pour pp ou rr
+ppcm pp ei pp ei ss ei ai mm
+prime pp rr ii mm
+prime(2) pp rr ii mm ee
 privé pp rr ii vv ei
 produit pp rr oo dd uy ii
 produit(2) pp rr oo dd uy ii tt
@@ -261,6 +244,9 @@ quatorze(2) kk aa tt oo rr zz ee
 quatorze(3) kk ww aa tt oo rr zz
 quatre kk aa tt rr
 quatre(2) kk aa tt rr ee
+que kk
+que(2) kk ee
+quel kk ai ll
 quelque kk ai ll kk
 quelque(2) kk ai ll kk ee
 quintilliard kk in tt ii ll ii aa rr
@@ -273,13 +259,16 @@ quinze(3) kk in zz ei
 québec kk ai bb ai kk
 québec(2) kk ei bb ai kk
 r ai rr
-r'miki rr mm ii kk ii
 racine rr aa ss ii nn
 racine(2) rr aa ss ii nn ee
+rapport rr aa pp oo rr
 rho rr oo
 romeo rr au mm ei au
 rond rr on
 rond(2) rr on tt
+seconde ss ee gg on dd
+seconde(2) ss ee gg on dd ee
+segment ss ai gg mm an
 seize ss ai zz
 seize(2) ss ai zz ee
 sept ss ai tt
@@ -299,6 +288,8 @@ sinus ss ii nn uu ss
 six ss ii
 six(2) ss ii ss
 six(3) ss ii zz
+soit ss ww aa
+soit(2) ss ww aa tt
 soixante ss ww aa ss an tt
 soixante(2) ss ww aa ss an tt ee
 somme ss oo mm
@@ -314,6 +305,8 @@ tango tt an gg au
 tau tt au
 theta tt ei tt aa
 theta(2) tt ai tt aa
+tierce tt yy ai rr ss
+tierce(2) tt yy ai rr ss ee
 tilde tt ii ll dd
 tilde(2) tt ii ll dd ee
 treize tt rr ai zz
@@ -333,6 +326,8 @@ uniform uu nn ii ff oo rr mm
 uniform(2) yy ou nn ii ff oo rr mm
 union uu nn yy au nn
 union(2) uu nn yy on
+unique uu nn ii kk
+unique(2) uu nn ii kk ee
 upsilon uu pp ss ii ll oo nn
 valeur vv aa ll oe rr
 variante vv aa rr yy an tt

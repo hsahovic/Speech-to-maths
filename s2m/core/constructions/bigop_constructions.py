@@ -11,6 +11,10 @@ class BigOperatorConstructions(Construction):
                  'ITR': {'latex': '\bigcap_{%s}^{%s} %s', 'priority': 2, 'type': 'SUM', 'subtype': 'DIS'},
                  'UNI': {'latex': '\bigcup_{%s}^{%s} %s', 'priority': 1, 'type': 'SUM', 'subtype': 'DIS'},
                  'LIM': {'latex': '\\underset{ %s \\rightarrow \%s}{\\lim} %s ', 'priority': 1, 'type': 'LIM', 'subtype': 'LIM'},
+                 'ITR': {'latex': '%s%s,%s%s', 'priority': 3, 'type': 'ITV', 'subtype': 'ITV'},
+                 'ITI': {'latex': '%s%s,%s%s', 'priority': 3, 'type': 'ITV', 'subtype': 'ITV'},
+                 'DER': {'latex': '\\mathrm{d}_{%s}^{%s} %s', 'priority': 5, 'type': 'DEV', 'subtype': 'DEV'},
+                 'PAR': {'latex': '\\partial_{%s}^{%s} %s', 'priority': 5, 'type': 'DEV', 'subtype': 'DEV'},
                  }
 
     OPERATORS_PARSED = {'intégrale': 'ITG',
@@ -18,10 +22,28 @@ class BigOperatorConstructions(Construction):
                         'produit': 'PRO',
                         'intersection': 'ITR',
                         'union': 'UNI',
-                        'limite': 'LIM'
+                        'limite': 'LIM',
+                        'intervalle': 'ITR',
+                        'intervalle entier': 'ITI',
+                        'dé': 'DER',
+                        'dé rond': 'PAR',
                         }
 
     OPERATORS_REVERSE = reverse_dict(OPERATORS_PARSED)
+
+    BOUNDS = {('ITR', 'OP', 0): '\\left]',
+              ('ITR', 'CL', 0): '\\left[',
+              ('ITR', 'OP', 1): '\\right[',
+              ('ITR', 'CL', 1): '\\right]',
+              ('ITI', 'OP', 0): '\\left]\\!\\left]',
+              ('ITI', 'CL', 0): '\\left[\\!\\left[',
+              ('ITI', 'OP', 1): '\\right[\\!\\right[',
+              ('ITI', 'CL', 1): '\\right]\\!\\right]',}
+
+    BOUNDS_PARSED = {'ouvert': 'OP',
+                     'fermé': 'CL'}
+
+    BOUNDS_REVERSE = reverse_dict(BOUNDS_PARSED)
 
     @classmethod
     def generate_help(cls):
@@ -49,5 +71,19 @@ class BigOperatorConstructions(Construction):
                                'spelling': n,
                                'example': '%s quand n tend vers l\'infini de u de n' % n,
                                'example-latex': v['latex'] % ('n', '\\infty', 'u_n')}
+            if v['type'] == 'ITV':
+                if v['subtype'] == 'ITV':
+                    help[n] = {'name': n,
+                               'latex': v['latex'] % ('\\bullet', '\\bullet', '\\bullet', '\\bullet'),
+                               'spelling': n,
+                               'example': '%s fermé en 1 ouvert en 2' % n,
+                               'example-latex': v['latex'] % ('\\left[', '1', '2', '\\right[')}
+            if v['type'] == 'DEV':
+                if v['subtype'] == 'DEV':
+                    help[n] = {'name': n,
+                               'latex': v['latex'] % BLANK,
+                               'spelling': n,
+                               'example': '%s par rapport à lambda puissance deux de mu' % n,
+                               'example-latex': v['latex'] % ('\\lambda', '2', '\\mu')}
 
         return help

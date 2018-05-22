@@ -13,6 +13,7 @@ class Evaluator:
     def __init__(self):
 
         self.__memo = {}
+        self.__memo_eval = {}
 
     def __call__(self, formula, sess, document, context_formula=None, placeholder_id=1):
         #outputs a score for formula based on a tensorflow calculation
@@ -33,13 +34,17 @@ class Evaluator:
         self.__memo = {}
 
     def evaluate(self, formula, sess, document):
+        if (formula, sess, document) in self.__memo_eval:
+            return self.__memo_eval[(formula, sess, document)]
         input_vector = self.h_all(formula)
         user = document.author
         system = apps.get_model('interface', 'S2MModel').objects.get(id=0)
         result_document = self.evaluate_model(document, sess, input_vector)
         result_user = self.evaluate_model(user, sess, input_vector)
         result_system = self.evaluate_model(system, sess, input_vector)
-        return (result_document + result_user + result_system) / 3
+        result = (result_document + result_user + result_system) / 3
+        self.__memo_eval[(formula, sess, document)] = result
+        return result
 
     def _s2m_model_from_obj(self, obj, no_obj=False):
         S2MModel = apps.get_model('interface', 'S2MModel')

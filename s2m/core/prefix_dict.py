@@ -57,6 +57,9 @@ class PrefixDict:
         if value in self.__reverse_dict:
             return self.__reverse_dict[value]
         else:
+            #temp
+            print(self.__reverse_dict)
+            #endtemp
             raise KeyError(value)
         
     def __getitem__(self, key):

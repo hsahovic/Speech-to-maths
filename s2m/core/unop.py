@@ -30,6 +30,8 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
             return self.OPERATORS[self.__o]['latex']
         elif p == 'nobrackets':
             return self.OPERATORS[self.__o]['nobrackets']
+        elif p == 'postfix':
+            return self.OPERATORS[self.__o]['postfix']
         elif p == 'operators':
             return self.OPERATORS.keys()
         else:
@@ -88,8 +90,8 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
         return self._latex()[0]
 
     def transcription(self):
-        if self.__o == 'SQR':
-            return 'racine de %s' % self.__r.transcription()
+        if self.postfix:
+            return self.__r.transcription() + ' ' + self.OPERATORS_REVERSE[self.__o]
         else:
             return self.OPERATORS_REVERSE[self.__o] + ' ' + self.__r.transcription()
 
@@ -110,24 +112,40 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
 
     @classmethod
     def teach(cls, parser):
+
+        PREFIX_OPERATORS_PARSED = {x:y for (x,y) in cls.OPERATORS_PARSED.items()
+                                   if not cls.OPERATORS[y]['postfix']}
+        POSTFIX_OPERATORS_PARSED = {x:y for (x,y) in cls.OPERATORS_PARSED.items()
+                                    if cls.OPERATORS[y]['postfix']}
+        
         # Recognizes unary operators
-        unary_operator_easy = ('unaryoperator-operator',
-                               cls.OPERATORS_PARSED,
-                               lambda x: x)
+        unary_operator_prefix_easy = ('unaryoperator-operator-prefix',
+                                      PREFIX_OPERATORS_PARSED,
+                                      lambda x: x)
+
+        unary_operator_postfix_easy = ('unaryoperator-operator-postfix',
+                                       POSTFIX_OPERATORS_PARSED,
+                                       lambda x: x)
 
         # Recognized unary operators without 'de'
         unary_operator_term_easy = ('unaryoperator-term',
                                     {k[:k.rfind(' ') if k.rfind(' ') >= 0 else len(k)]: v
-                                     for (k, v) in cls.OPERATORS_PARSED.items()},
+                                     for (k, v) in PREFIX_OPERATORS_PARSED.items()},
                                     lambda x: x)
 
         # Defines op A -> UnaryOperator(op, A)
         def unary_operator_complex_expand(words):
             return UnaryOperator(*words)
-        unary_operator_complex = ('unaryoperator',
-                                  '$unaryoperator-operator %f',
-                                  unary_operator_complex_expand,
-                                  True)
+
+        unary_operator_prefix_complex = ('unaryoperator/prefix',
+                                         '$unaryoperator-operator-prefix %f',
+                                         unary_operator_complex_expand,
+                                         True)
+
+        unary_operator_postfix_complex = ('unaryoperator/postfix',
+                                          '%f $unaryoperator-operator-postfix',
+                                          lambda x: unary_operator_complex_expand([x[1], x[0]]),
+                                          True)
 
         # Defines op A fin de op -> UnaryOperator(op, A)
         def unary_operator_explicit_complex_expand(words):
@@ -137,13 +155,15 @@ class UnaryOperator(Formula, UnaryOperatorConstructions):
                 raise Exception
 
         unary_operator_explicit_complex = ('unaryoperator/explicit',
-                                           '$unaryoperator-operator %f fin de $unaryoperator-term',
+                                           '$unaryoperator-operator-prefix %f fin de $unaryoperator-term',
                                            unary_operator_explicit_complex_expand,
                                            True)
 
+        parser.add_easy_reduce(*unary_operator_prefix_easy)
+        parser.add_easy_reduce(*unary_operator_postfix_easy)
         parser.add_easy_reduce(*unary_operator_term_easy)
-        parser.add_easy_reduce(*unary_operator_easy)
-        parser.add_complex_rule(*unary_operator_complex)
+        parser.add_complex_rule(*unary_operator_prefix_complex)
+        parser.add_complex_rule(*unary_operator_postfix_complex)
         parser.add_complex_rule(*unary_operator_explicit_complex)
 
         UnaryOperatorConstructions.teach(parser)

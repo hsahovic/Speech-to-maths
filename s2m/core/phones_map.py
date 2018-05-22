@@ -42,7 +42,7 @@ class PhonesMap:
     def delete_cost(self, phone):
         return self.insert_cost(phone)
         
-    def replace_cost(self, phone1, phone2):
+    def replace_cost(self, phone1, phone2): 
         m1, x1, y1 = self.__map[phone1]
         m2, x2, y2 = self.__map[phone2]
         if m1 != m2:

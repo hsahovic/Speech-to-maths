@@ -87,8 +87,20 @@ class BrackettedBlock(Formula):
                                              bracketted_block_complex_expand,
                                              True)
 
+        tuple_explicit_complex = ('brackettedblock/tupleexplicit',
+                                  'nuplet %f fin de nuplet',
+                                  bracketted_block_complex_expand,
+                                  True)
+
+        tuple_implicit_complex = ('brackettedblock/tupleimplicit',
+                                  'nuplet %f',
+                                  bracketted_block_complex_expand,
+                                  True)
+
         parser.add_complex_rule(*bracketted_block_explicit_complex)
         parser.add_complex_rule(*bracketted_block_implicit_complex)
+        parser.add_complex_rule(*tuple_explicit_complex)
+        parser.add_complex_rule(*tuple_implicit_complex)
 
     @classmethod
     def generate_random(cls, b=None, depth=1):

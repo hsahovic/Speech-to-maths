@@ -10,7 +10,7 @@ import random
 
 class BinaryOperator(Formula, BinaryOperatorConstructions):
 
-    def __init__(self, l, o, r, ll = False, lr = False):
+    def __init__(self, l, o, r, ll=False, lr=False):
 
         if o not in self.operators:
             raise ValueError('Unknown binary operator code : %r' % o)
@@ -265,11 +265,49 @@ class BinaryOperator(Formula, BinaryOperatorConstructions):
                                 light_right_expand,
                                 True)
 
+        # Defines implicit times, exponent or index
+        def implicit_mul_expand(formulae):
+            return BinaryOperator(formulae[0], 'MUL', formulae[1])
+
+        def implicit_pow_expand(formulae):
+            return BinaryOperator(formulae[0], 'POW', formulae[1])
+
+        def implicit_idx_expand(formulae):
+            return BinaryOperator(formulae[0], 'IDX', formulae[1])
+
+        implicit_mul_complex = ('binaryoperator/implicitmul',
+                                '%f %f',
+                                implicit_mul_expand,
+                                True)
+
+        implicit_pow_complex = ('binaryoperator/implicitpow',
+                                '%f %f',
+                                implicit_pow_expand,
+                                True)
+
+        implicit_idx_complex = ('binaryoperator/implicitidx',
+                                '%f %f',
+                                implicit_idx_expand,
+                                True)
+
+        # Pair shortcut
+        def pair_expand(formulae):
+            return BinaryOperator(formulae[0], 'PIR', formulae[1])
+
+        pair_complex = ('binaryoperator/pair',
+                        'paire %f %f',
+                        pair_expand,
+                        True)
+
         parser.add_easy_reduce(*binary_operator_easy)
         parser.add_complex_rule(*binary_operator_complex)
         parser.add_complex_rule(*squared_complex)
         parser.add_complex_rule(*binary_operator_light_left)
         parser.add_complex_rule(*binary_operator_light_right)
+        #parser.add_complex_rule(*implicit_mul_complex)
+        #parser.add_complex_rule(*implicit_pow_complex)
+        #parser.add_complex_rule(*implicit_idx_complex)
+        parser.add_complex_rule(*pair_complex)
 
         BinaryOperatorConstructions.teach(parser)
 

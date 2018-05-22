@@ -39,7 +39,7 @@ class Utilisateur(User):
 class Document(models.Model):
 
     address = models.TextField()
-    author = models.ForeignKey('Utilisateur')
+    author = models.ForeignKey('Utilisateur', on_delete=models.CASCADE)
     content = models.TextField(default="")
     creation_date = models.DateField(auto_now_add=True)
     is_in_trash = models.BooleanField(default=False)
@@ -88,7 +88,7 @@ class ElementaryFormula(models.Model):
 class TrainingSample(models.Model):
 
     audio = models.FileField(upload_to="training_data")
-    author = models.ForeignKey('Utilisateur')
+    author = models.ForeignKey('Utilisateur', on_delete=models.CASCADE)
     creation_date = models.DateField(auto_now_add=True)
     converted_to_wav = models.BooleanField(default=False)
     text = models.TextField()
