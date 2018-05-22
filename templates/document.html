@@ -62,7 +62,10 @@
 </div>
 
 <span class = "grid">
-	<div id = "latext-area" class = "latext-area"></div>
+	<!--<div id = "latext-area" class = "latext-area"></div>-->
+	<div class = "text-container">
+			<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
+	</div>
 	<div>
 		{% if doc.pdf %}
 		<iframe id = "pdfframe" src="{{ doc.pdf.url }}"></iframe>
