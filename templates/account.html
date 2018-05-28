@@ -9,11 +9,11 @@
 	<div class = "top-bar-content">
 		<h3> 
 			Mon compte &nbsp;
-			<i class="fa fa-user" aria-hidden="true"></i> &nbsp;
+			<i class="fas fa-user" aria-hidden="true"></i> &nbsp;
 			{{ user.username }}
 		</h3>
 		<span class = "to-the-right">	
-			<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+			<i id = "communication_indicator" class="fas fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 		</span>
 	</div>
 </div>
@@ -21,7 +21,7 @@
 <div class = "centered-content">
 
 	<section class = "form-section"> 
-		<span class = "form-section-title"> <h2> <i class="fa fa-info-circle" aria-hidden="true"></i> &nbsp; Infomations diverses </h2> </span>
+		<span class = "form-section-title"> <h2> <i class="fas fa-info-circle" aria-hidden="true"></i> &nbsp; Infomations diverses </h2> </span>
 		<table>
 			<tr> 
 				<td> <strong> Nom d'utilisateur </strong> </td>
@@ -35,7 +35,7 @@
 	</section>
 	
 	<section class = "form-section">
-		<span class = "form-section-title"> <h2> <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp; Modifier adresse email </h2> </span>
+		<span class = "form-section-title"> <h2> <i class="fas fa-envelope-o" aria-hidden="true"></i> &nbsp; Modifier adresse email </h2> </span>
 		<form method = "POST" id = "change_email" class = "form-on-white">
 			{% csrf_token %}
 			<table> {{ email_form }} </table>
@@ -47,7 +47,7 @@
 	</section>		
 	
 	<section class = "form-section">
-		<span class = "form-section-title"> <h2> <i class="fa fa-unlock-alt" aria-hidden="true"></i> &nbsp; Modifier mot de passe </h2> </span>
+		<span class = "form-section-title"> <h2> <i class="fas fa-unlock-alt" aria-hidden="true"></i> &nbsp; Modifier mot de passe </h2> </span>
 		<form method = "POST" id = "change_password"  class = "form-on-white">
 			{% csrf_token %}
 			<table> {{ password_form }} </table>
@@ -59,7 +59,7 @@
 	</section>	
 	
 	<section class = "form-section dangerous-section">
-		<span class = "form-section-title"> <h2> <i class="fa fa-trash" aria-hidden="true"></i> &nbsp; Supprimer mon compte </h2> </span>
+		<span class = "form-section-title"> <h2> <i class="fas fa-trash" aria-hidden="true"></i> &nbsp; Supprimer mon compte </h2> </span>
 		<form method = "POST" id = "delete_account">
 			{% csrf_token %}
 			<table class = "form-on-white">	{{ suppression_form }} </table>

@@ -96,6 +96,7 @@ function sendAudioBlob(link, manageButtons, responseManager, additionalData = un
 }
 
 function sendContinuousAudio(delay, link, manageButtons, responseManager) {
+	chunks = [];
 	return useAudioBlobs(function(blob){
 		let request = new XMLHttpRequest();
 		let formData = new FormData;

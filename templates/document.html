@@ -9,22 +9,22 @@
 	<div class = "top-bar-content">
 		<a href = "{% url "documents" %}">
 			<h3> 
-				<i class="fa fa-list" aria-hidden="true"> </i> &nbsp;
+				<i class="fas fa-list" aria-hidden="true"> </i> &nbsp;
 				Documents 
 			</h3>
 		</a>
 		<input type = "text" name = "titre" value = "{{ doc.title }}" form = "enregistrement">
 		<span class = "to-the-right">
 		
-			<i id = "communication_indicator" class="fa fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
+			<i id = "communication_indicator" class="fas fa-spinner fa-spin" aria-hidden="true" style = "display : none"></i>
 		
 			<button id = "start_rec">
-				<i class="fa fa-volume-up" aria-hidden="true"></i> &nbsp;
+				<i class="fas fa-volume-up" aria-hidden="true"></i> &nbsp;
 				Commencer la dictée
 			</button>
 		
 			<button  id = "stop_rec" style = "display : none">
-				<i class="fa fa-volume-up blinking-icon" aria-hidden="true"></i> &nbsp;
+				<i class="fas fa-volume-up blinking-icon" aria-hidden="true"></i> &nbsp;
 				Arrêter la dictée
 			</button>
 			&nbsp;
@@ -35,32 +35,35 @@
 
 <div class = "tool-bar"> 
 	<div class = "text-editor-button-group">
-		<button id = "edition-preview" class = "text-editor-button selected-mode" title = "Mode d'édition : preview"><i class="fa fa-font" aria-hidden="true"></i></button><!--
-	 --><button id = "edition-code" class = "text-editor-button" title = "Mode d'édition : code LaTeX"><i class="fa fa-code" aria-hidden="true"></i></button>
+		<button id = "edition-preview" class = "text-editor-button selected-mode" title = "Mode d'édition : preview"><i class="fas fa-font" aria-hidden="true"></i></button><!--
+	 --><button id = "edition-code" class = "text-editor-button" title = "Mode d'édition : code LaTeX"><i class="fas fa-code" aria-hidden="true"></i></button>
 	</div><!--	
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fas fa-undo" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fas fa-redo" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fa fa-align-left" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fa fa-align-center" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fa fa-align-right" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Justifier le texte (Ctrl + J)" onclick="addEnvironnement('work in progress');"><i class="fa fa-align-justify" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fas fa-align-left" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fas fa-align-center" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fas fa-align-right" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Justifier le texte (Ctrl + J)" onclick="addEnvironnement('work in progress');"><i class="fas fa-align-justify" aria-hidden="true"></i></button>
    </div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Exposant (Ctrl + ↑)" onclick="sciptElement('exponent');"><i class="fa fa-superscript" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Indice (Ctrl + ↓)" onclick="sciptElement('subscript');"><i class="fa fa-subscript" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Exposant (Ctrl + ↑)" onclick="sciptElement('exponent');"><i class="fas fa-superscript" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Indice (Ctrl + ↓)" onclick="sciptElement('subscript');"><i class="fas fa-subscript" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Liste (puces)" onclick="listButton('unordered');"><i class="fa fa-list-ul" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Liste (ordonnée)" onclick="listButton('ordered');"><i class="fa fa-list-ol" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Liste (puces)" onclick="listButton('unordered');"><i class="fas fa-list-ul" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" title = "Liste (ordonnée)" onclick="listButton('ordered');"><i class="fas fa-list-ol" aria-hidden="true"></i></button>
    </div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fa fa-table" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fas fa-table" aria-hidden="true"></i></button>
+	</div><!--
+ --><div class = "text-editor-button-group">
+		<button class = "text-editor-button" title = "Regénérer le pdf"><i class="fas fa-file-pdf"></i></button>
 	</div>
 	<span class = "to-the-right help-container" >
-		&nbsp; <i class="fa fa-question-circle" aria-hidden="true"> </i> 
+		&nbsp; <i class="fas fa-question-circle" aria-hidden="true"> </i> 
 		<input class = "help-input" type = "text"  id = "help" name = "help" oninput = "getHelp('help')" placeholder = "Taper une formule ici pour obtenir de l'aide" form = "help">
 	</span>
 </div>

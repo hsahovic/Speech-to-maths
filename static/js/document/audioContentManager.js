@@ -7,7 +7,7 @@ class AudioContentManager {
     }
 
 
-    addElement (content) {
+    addElement(content) {
         let element = document.createElement("span");
         element.onclick = function (evt) {
             insertAtCursor(content);
@@ -20,26 +20,26 @@ class AudioContentManager {
         this.adaptDOMPosition();
     }
 
-    adaptDOMPosition () {
+    adaptDOMPosition() {
 
     }
 
-    manageAJAXResponse (response){
+    manageAJAXResponse(response) {
         let element;
         audioContentManager.reset();
         if (response.instruction == "propose") {
-            for (let i = 0; i < response.content.length && i < this.maxItems ; i++) {
+            for (let i = 0; i < response.content.length && i < this.maxItems; i++) {
                 audioContentManager.addElement(response.content[i]);
-            } 
+            }
         }
     }
 
-    reset () {
-        while(this.DOM.hasChildNodes()) {
+    reset() {
+        while (this.DOM.hasChildNodes()) {
             this.DOM.removeChild(this.DOM.firstChild);
         }
     }
-    
+
 }
 
 var audioContentManager = new AudioContentManager();

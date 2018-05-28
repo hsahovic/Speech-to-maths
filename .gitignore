@@ -58,3 +58,5 @@ s2m/core/sphinx/s2m.jsgf
 s2m/core/sphinx/s2m.jsgf
 media/training_data/s2m.fileids
 *.tex
+*.json
+*.yml

@@ -13,6 +13,26 @@ import uuid
 from s2m.core.formulae import Formula
 from s2m.core.s2m_training import s2m_training
 
+LATEX_BASE_TEMPLATE = """\\documentclass{article}
+\\usepackage[utf8]{inputenc}
+
+\\title{Title}
+\\author{Author}
+\\date{Date}
+
+\\usepackage{natbib}
+\\usepackage{graphicx}
+
+\\begin{document}
+
+\\maketitle
+
+\\section{Introduction}
+
+\\section{Conclusion}
+
+\\end{document}"""
+
 
 @login_required
 def account(request):
@@ -34,6 +54,7 @@ def log_out(request, **kwargs):
 @login_required
 def add_doc(request):
     doc = models.Document()
+    doc.content = LATEX_BASE_TEMPLATE
     user = get_user(request)
     doc.author = user
     n = 1
@@ -102,6 +123,10 @@ def delete_account(request):
 def document(request, address):
     doc = get_document(request, address=address)
     text = doc.content
+    try:
+        doc.generate_pdf()
+    except Exception as exc:
+        print("Something did't work with the generation of the PDF file ; check out the 'save_document' function in interface/views.py")
     if doc:
         if doc.is_in_trash:
             return redirect("error_400")
@@ -153,31 +178,37 @@ def documents_search(request, context_length=50):
 
 
 @login_required
-def save_document(request):
-    data = json.loads(request.POST['data'])
-    doc = get_document(request, id_=data["docID"])
-    doc.content = data["newContent"]
+def regenerate_pdf(request, adress):
+    doc = get_document(request, address=adress)
     try:
         doc.generate_pdf()
     except Exception as exc:
         print("Something did't work with the generation of the PDF file ; check out the 'save_document' function in interface/views.py")
+    doc.save()
+    return HttpResponse(json.dumps({"pdf_url": doc.pdf.url}))
+
+@login_required
+def save_document(request):
+    data=json.loads(request.POST['data'])
+    doc=get_document(request, id_=data["docID"])
+    doc.content=data["newContent"]
     doc.save()
     s2m_training.schedule(doc)
     return HttpResponse(json.dumps({"result": True}))
 
 
 def sign_up(request):
-    form = forms.InscriptionForm(request.POST or None)
+    form=forms.InscriptionForm(request.POST or None)
     if form.is_valid():
-        username = form.cleaned_data['username']
-        psw = form.cleaned_data['password']
-        email = form.cleaned_data['email']
-        user = models.Utilisateur()
-        user.username = username
+        username=form.cleaned_data['username']
+        psw=form.cleaned_data['password']
+        email=form.cleaned_data['email']
+        user=models.Utilisateur()
+        user.username=username
         user.set_password(psw)
-        user.email = email
+        user.email=email
         user.save()
-        user = authenticate(username=username, password=psw)
+        user=authenticate(username=username, password=psw)
         login(request, user)
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
@@ -187,8 +218,8 @@ def sign_up(request):
 def training(request):
 
     def generate_training_data():
-        random_formula = Formula.generate_random()
+        random_formula=Formula.generate_random()
         return random_formula.latex(), random_formula.transcription()
 
-    formule, text = generate_training_data()
+    formule, text=generate_training_data()
     return render(request, 'training.html', locals())
