@@ -67,11 +67,12 @@ class Document(models.Model):
                     "\\documentclass{article}\r\\begin{document}\rVous n'avez rien ecrit.\r\\end{document}")
             else:
                 f.write(self.content)
-        subprocess.call(["pdflatex", "%s.tex" % path])
+        subprocess.call(["rm", path + ".pdf"])
+        subprocess.call(["pdflatex", "-halt-on-error",
+                         "-output-directory", path_to_file, "%s.tex" % path])
         self.pdf = File(open(path + ".pdf", 'rb'))
         self.save()
         subprocess.call(["rm", path + ".tex"])
-        subprocess.call(["rm", path + ".pdf"])
         subprocess.call(["rm", path + ".log"])
         subprocess.call(["rm", path + ".aux"])
 

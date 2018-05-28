@@ -864,8 +864,8 @@ class TextElement extends LatextAreaElement {
             var curseur = this.curseur;
         }
         let newElement = new InputElement(this.latextArea, this.textContent, curseur);
+	this.latextArea.replaceElement(this, newElement);
         newElement.DOM.setSelectionRange(curseur, curseur);
-        this.latextArea.replaceElement(this, newElement);
     }
 
 }
