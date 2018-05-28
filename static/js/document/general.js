@@ -22,7 +22,7 @@ function manageContentChange(ajaxDelay = .5) {
             communicationIndicatorManager.addRequest();
             changeHappened = false;
             var data = { "docID": docID, "newContent": latextArea.text };
-            contentStateManager.newState(data.newContent);
+            // contentStateManager.newState(data.newContent);
             data = JSON.stringify(data);
             formData.append("data", data);
             request.send(formData);
@@ -185,15 +185,18 @@ function getHelp(id) {
                 let divLatexExample = document.createElement("div");
                 let divSpeechExample = document.createElement("div");
                 let divSpeech = document.createElement("div");
+                let divCodeExample = document.createElement("div");
                 
                 div.className = "help-text-container";
                 divHeader.className = "help-text-header";
                 divLatexExample.className  = "help-text-latex-example";
+                divCodeExample.className  = "help-text-code-example";
                 divSpeechExample.className  = "help-text-speech-example";
                 divSpeech.className = "help-text-speech";
 
                 divHeader.innerHTML = element.name;
                 divLatexExample.innerHTML = 'Exemple : $$'  + element["example-latex"] + '$$';
+                divCodeExample.innerHTML = 'écrit <span class = "raw-code">'  + element["example-latex"] + "</span>";
                 divSpeechExample.innerHTML = 'prononcé «'  + element.example + '»'; ;
                 divSpeech.innerHTML = '<strong> Commande </strong>:  «' + element.spelling + '»';
 
@@ -202,6 +205,7 @@ function getHelp(id) {
                 div.appendChild(document.createElement('br'));
                 div.appendChild(divLatexExample);
                 div.appendChild(divSpeechExample);
+                div.appendChild(divCodeExample);
 
                 DOM.appendChild(div);
             }

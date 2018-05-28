@@ -18,6 +18,7 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 			document.getElementById("stop_rec").onclick = function () {
 				mediaRecorder.stop();
 				manualStop = true;
+				document.getElementById("start_rec").style.display = "inline-block";
 			};
 
 			// On permet la concatenation des données audio
@@ -29,7 +30,7 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 			source.connect(dest);
 			mediaRecorder.start();
 
-			if (maxLength) {
+			if (maxLength != 0) {
 				setTimeout(function(){
 					mediaRecorder.stop();
 				}, maxLength);
@@ -57,7 +58,6 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 			};
 			mediaRecorder.onstop = () => {
 				stoppedRecorderManager();
-				console.log("The media recorder was stopped"); // TO DO : DELETE DEBUG
 			}
 		});
 		return mediaRecorder;
@@ -116,7 +116,7 @@ function sendContinuousAudio(delay, link, manageButtons, responseManager) {
 			if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
 				communicationIndicatorManager.endRequest();
 				if (manageButtons) {
-					document.getElementById("start_rec").style.display = "inline-block";
+					// document.getElementById("start_rec").style.display = "inline-block";
 				}
 				let response = JSON.parse(request.responseText);
 				responseManager(response);

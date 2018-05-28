@@ -35,6 +35,10 @@
 
 <div class = "tool-bar"> 
 	<div class = "text-editor-button-group">
+		<button id = "edition-preview" class = "text-editor-button selected-mode" title = "Mode d'édition : preview"><i class="fa fa-font" aria-hidden="true"></i></button><!--
+	 --><button id = "edition-code" class = "text-editor-button" title = "Mode d'édition : code LaTeX"><i class="fa fa-code" aria-hidden="true"></i></button>
+	</div><!--	
+ --><div class = "text-editor-button-group">
 		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fa fa-undo" aria-hidden="true"></i></button><!--
 	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fa fa-repeat" aria-hidden="true"></i></button>
 	</div><!--
@@ -54,7 +58,7 @@
    </div><!--
  --><div class = "text-editor-button-group">
 		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fa fa-table" aria-hidden="true"></i></button>
-	</div>	
+	</div>
 	<span class = "to-the-right help-container" >
 		&nbsp; <i class="fa fa-question-circle" aria-hidden="true"> </i> 
 		<input class = "help-input" type = "text"  id = "help" name = "help" oninput = "getHelp('help')" placeholder = "Taper une formule ici pour obtenir de l'aide" form = "help">
@@ -62,15 +66,15 @@
 </div>
 
 <span class = "grid">
-	<!--<div id = "latext-area" class = "latext-area"></div>-->
-	<div class = "text-container">
+	<div id = "latext-area" class = "latext-area"></div>
+	<!-- <div class = "text-container">
 			<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
-	</div>
+	</div> -->
 	<div>
 		{% if doc.pdf %}
 		<iframe id = "pdfframe" src="{{ doc.pdf.url }}"></iframe>
 		{% else %}
-		<iframe id = "pdfframe" src="{% static 'pdf/default_speech_to_maths_pdf.pdf' %}" style = "position : fixed"></iframe>
+		<iframe id = "pdfframe" src="{% static 'pdf/default_speech_to_maths_pdf.pdf' %}"*></iframe>
 		{% endif %}
 	</div>
 </span>

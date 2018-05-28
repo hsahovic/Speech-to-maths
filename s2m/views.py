@@ -32,7 +32,7 @@ from interface.views_utils import get_document
 
 @login_required
 def voice_analysis(request):
-    #try:
+    try:
         # Chargement du fichier son
         filename_ogg = save_file_from_request(
             request, "ogg", post_arg="file", file_path=os.path.join(MEDIA_ROOT, 'file_analysis'))
@@ -65,9 +65,9 @@ def voice_analysis(request):
             condition.release()
         response = parsing_queue.retrieve(document)
         return HttpResponse(response)
-    #except OSError:
+    except OSError:
         # Windows tests
-        #return HttpResponse(json.dumps({'instruction': 'propose', 'content': [" Text de test", "T'es de test"]}))
+        return HttpResponse(json.dumps({'instruction': 'propose', 'content': [" Text de test", "T'es de test"]}))
 
 
 @login_required

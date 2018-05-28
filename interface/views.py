@@ -13,6 +13,7 @@ import uuid
 from s2m.core.formulae import Formula
 from s2m.core.s2m_training import s2m_training
 
+
 @login_required
 def account(request):
     user = get_user(request)
@@ -156,9 +157,9 @@ def save_document(request):
     data = json.loads(request.POST['data'])
     doc = get_document(request, id_=data["docID"])
     doc.content = data["newContent"]
-    try :
+    try:
         doc.generate_pdf()
-    except Exception as exc :
+    except Exception as exc:
         print("Something did't work with the generation of the PDF file ; check out the 'save_document' function in interface/views.py")
     doc.save()
     s2m_training.schedule(doc)
@@ -181,9 +182,10 @@ def sign_up(request):
         return redirect("documents")
     return render(request, 'sign-up.html', locals())
 
+
 @login_required
 def training(request):
-    
+
     def generate_training_data():
         random_formula = Formula.generate_random()
         return random_formula.latex(), random_formula.transcription()

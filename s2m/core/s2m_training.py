@@ -8,10 +8,13 @@ from s2m.core.evaluator import evaluator
 from s2m.core.utils import print_important
 from interface.models import S2MModel
 
+MAX_TRAINING_QUEUE_SIZE = 20
+
+
 class S2MTraining(Thread):
 
     def __init__(self):
-        self.__queue = Queue(maxsize=20)
+        self.__queue = Queue(maxsize=MAX_TRAINING_QUEUE_SIZE)
         Thread.__init__(self)
 
     def enable_system_training(self):
@@ -43,8 +46,9 @@ class S2MTraining(Thread):
                 try:
                     evaluator.train_model(job, sess, no_obj=no_obj)
                 except Exception as e:
-                    print("Warning! While training S2M model, the following " \
+                    print("Warning! While training S2M model, the following "
                           "exception was raised: " + repr(e))
+
 
 s2m_training = S2MTraining()
 s2m_training.start()
