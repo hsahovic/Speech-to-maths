@@ -568,7 +568,7 @@ class AudioResponseElement extends LatextAreaElement {
         }
         else if (this.latextArea.editionMode == 2) {
             let rect = this.latextArea.DOM.getBoundingClientRect();
-            DOM.style.bottom = (rect.height) + "px";
+            DOM.style.top = (rect.top) + "px";
             DOM.style.left = (rect.left) + "px";
         }
         try {
@@ -594,7 +594,7 @@ class AudioResponseElement extends LatextAreaElement {
         document.getElementById("start_rec").style.display = "inline-block";
         // This is here for debut purposes
         document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, this.latextArea.rebindAudioResponse());
+            sendContinuousAudio(500, voiceAnalysisLink, true, this.latextArea.rebindAudioResponse);
         };
     }
 
