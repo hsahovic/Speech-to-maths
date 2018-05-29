@@ -54,6 +54,9 @@ class BrackettedBlock(Formula):
 
         return self.__b.d_symmetry()
 
+    def count_silsdepths(self):
+        return self.__b.count_silsdepths()
+
     def transcription(self):
 
         return 'ouvrez la parenthèse %s fermez la parenthèse' \

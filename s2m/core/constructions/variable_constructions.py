@@ -104,11 +104,19 @@ class VariableConstructions(Construction):
         for (k, v) in cls.RADIO_ROMAN_PARSED.items():
             help[v] = {'name': v,
                        'latex': v,
-                       'spelling': k}
+                       'spelling': k,
+                       'example': k,
+                       'example-latex': v}
         for (k, v) in cls.GREEK_PARSED.items():
             help[k] = {'name': k,
                        'latex': v,
-                       'spelling': k}
+                       'spelling': k,
+                       'example': k,
+                       'example-latex': v}
         for (k, v) in cls.SET_PARSED.items():
-            help[k] = {'name': k, 'latex': v, 'spelling': k}
+            help[k] = {'name': k,
+                       'latex': v,
+                       'spelling': k,
+                       'example': k,
+                       'example-latex': v}
         return help
