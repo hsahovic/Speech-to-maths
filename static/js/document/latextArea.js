@@ -50,9 +50,9 @@ class LatextArea {
         document.getElementById("moveBackward").onclick = () => {this.contentStateManager.moveBackward();};
         document.getElementById("moveForward").onclick = () => {this.contentStateManager.moveForward();};
         // event bindings
-        document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
-        };
+        
+        this.rebindAudioResponse();
+
         document.getElementById("edition-preview").onclick = () => {
             this.switchEditionMode(1);
             document.getElementById("edition-preview").className = "text-editor-button selected-mode";
@@ -68,6 +68,12 @@ class LatextArea {
         this.changed = false;
         this.ajaxDelay = AJAX_DELAY;
         
+    }
+
+    rebindAudioResponse() {
+        document.getElementById("start_rec").onclick = () => {
+            sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
+        };
     }
 
     get activeElement() {
@@ -588,7 +594,7 @@ class AudioResponseElement extends LatextAreaElement {
         document.getElementById("start_rec").style.display = "inline-block";
         // This is here for debut purposes
         document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
+            sendContinuousAudio(500, voiceAnalysisLink, true, this.latextArea.rebindAudioResponse());
         };
     }
 

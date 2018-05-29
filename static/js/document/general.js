@@ -34,7 +34,6 @@ function manageContentChange(ajaxDelay = .5) {
                     communicationIndicatorManager.endRequest();
                 }
             }
-            manageQueueButtonsStyle();
         }, 1000 * ajaxDelay);
     }
 }
