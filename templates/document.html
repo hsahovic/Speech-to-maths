@@ -75,6 +75,7 @@
 			<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
 	</div> -->
 	<div>
+		<div class = "error-displayer" id = "pdfError"></div>
 		{% if doc.pdf %}
 		<iframe id = "pdfframe" src="{{ doc.pdf.url }}"></iframe>
 		{% else %}
@@ -136,6 +137,10 @@ MathJax.Hub.Config({
 	}
 	muttedResizeIframe = () => resizeIframe("pdfframe");
 	setTimeout(muttedResizeIframe, 0);
+	setTimeout(() => {
+		getPDF('pdfframe');
+	},0);
+	
 	window.addEventListener("resize", muttedResizeIframe, false);
 </script>
 

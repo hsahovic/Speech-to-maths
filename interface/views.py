@@ -188,7 +188,7 @@ def regenerate_pdf(request, address):
         print("Something did't work with the generation of the PDF file ; check out the 'save_document' function in interface/views.py")
         # This line can be used to test that the pdf is indeed changing if the pdf generator does not work
         # return HttpResponse(json.dumps({"toDo" : "newLink", "pdfUrl": "http://lesmaterialistes.com/files/pdf/classiques/machiavel-le-prince.pdf"})) 
-        return HttpResponse(json.dumps({"toDo" : "displayError", "error": "The generation didn't work. The server might not be able to generate PDFs right now, or maybe there's an issue with your file."}))
+        return HttpResponse(json.dumps({"toDo" : "displayError", "error": "La génération de PDF n'a pas fonctionnée. Le serveur n'est peut-être pas en état de le générer pour l'instant, ou votre code LaTeX pose peut-être problème."}))
 
 
 @login_required

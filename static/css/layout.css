@@ -371,3 +371,23 @@ input {
 .raw-code {
     font-family: 'Courier New', Courier, monospace;
 }
+
+.error-displayer {
+    background-color: #f44;
+    color : white;
+    text-align: center;
+}
+
+.close-error {
+    background-color: white;
+    border-radius: .5em;
+    padding: .5em;
+    color : #f44;
+    cursor: pointer;
+    border : 1px solid white;
+}
+
+.close-error:hover {
+    color :white;
+    background-color : #f44;
+}

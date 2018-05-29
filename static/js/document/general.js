@@ -1,3 +1,6 @@
+const ERROR_TIMING = 5000;
+const ERROR_ANIMATION_DURATION = 200;
+
 function audioResponseManager(response) {
     if (response.instruction == "write") {
         insertAtCursor(response.content[0], document.getElementsByName('content')[0]);
@@ -153,16 +156,16 @@ function getHelp(id) {
         if (request.readyState == 4 && request.status == 200) {
             let response = JSON.parse(request.responseText);
             let DOM = document.createElement("div");
-            
+
             oldDOM = document.getElementById("help-text-responses");
             if (oldDOM != null)
                 document.getElementsByTagName('body')[0].removeChild(document.getElementById("help-text-responses"));
-            
+
             communicationIndicatorManager.endRequest();
 
             DOM.id = "help-text-responses";
             DOM.style.position = "absolute";
-            
+
             let setPositions = () => {
                 DOM.style.width = (document.getElementById('help').getBoundingClientRect().width - 2) + "px";
                 DOM.style.top = (document.getElementById('help').getBoundingClientRect().top + document.getElementById('help').getBoundingClientRect().height) + "px";
@@ -186,18 +189,18 @@ function getHelp(id) {
                 let divSpeechExample = document.createElement("div");
                 let divSpeech = document.createElement("div");
                 let divCodeExample = document.createElement("div");
-                
+
                 div.className = "help-text-container";
                 divHeader.className = "help-text-header";
-                divLatexExample.className  = "help-text-latex-example";
-                divCodeExample.className  = "help-text-code-example";
-                divSpeechExample.className  = "help-text-speech-example";
+                divLatexExample.className = "help-text-latex-example";
+                divCodeExample.className = "help-text-code-example";
+                divSpeechExample.className = "help-text-speech-example";
                 divSpeech.className = "help-text-speech";
 
                 divHeader.innerHTML = element.name;
-                divLatexExample.innerHTML = 'Exemple : $$'  + element["example-latex"] + '$$';
-                divCodeExample.innerHTML = 'écrit <span class = "raw-code">'  + element["example-latex"] + "</span>";
-                divSpeechExample.innerHTML = 'prononcé «'  + element.example + '»'; ;
+                divLatexExample.innerHTML = 'Exemple : $$' + element["example-latex"] + '$$';
+                divCodeExample.innerHTML = 'écrit <span class = "raw-code">' + element["example-latex"] + "</span>";
+                divSpeechExample.innerHTML = 'prononcé «' + element.example + '»';;
                 divSpeech.innerHTML = '<strong> Commande </strong>:  «' + element.spelling + '»';
 
                 div.appendChild(divHeader);
@@ -210,8 +213,8 @@ function getHelp(id) {
                 DOM.appendChild(div);
             }
             document.getElementsByTagName('body')[0].append(DOM);
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub,"help-text-responses"]);
-            setTimeout(setPositions,0);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "help-text-responses"]);
+            setTimeout(setPositions, 0);
         }
     }
 }
@@ -229,10 +232,36 @@ function getPDF(id) {
         if (request.readyState == 4 && request.status == 200) {
             let response = JSON.parse(request.responseText);
             communicationIndicatorManager.endRequest();
-            console.log(response);
-            if (response.toDo == ("newLink")){
+            if (response.toDo == ("newLink")) {
                 parent.src = response.pdfUrl;
                 return;
+            }
+            else if (response.toDo == "displayError") {
+                let errorDOM = document.getElementById("pdfError");
+                let closeSpan = document.createElement("span");
+                
+                errorDOM.style.padding = "1em";
+                errorDOM.style.maxHeight = "none";
+                errorDOM.innerHTML = '<i class="fas fa-exclamation-triangle"></i> &nbsp;' + response.error + "<br><br>";
+
+                closeSpan.className = "close-error";
+                closeSpan.innerHTML = 'Fermer <i class="fas fa-times-circle"></i>';
+                closeSpan.onclick = () => {
+                    errorDOM.style.maxHeight = 0 + "px";
+                    errorDOM.style.padding = 0 + "em";
+                };
+                errorDOM.appendChild(closeSpan);
+
+                // setTimeout(() => {
+                //     let currentSize = errorDOM.getBoundingClientRect().height;
+                //     for (let i = 0; i <= 100; i++) {
+                //         setTimeout(()=> {
+                //             console.log("test",ERROR_ANIMATION_DURATION / 100);
+                //             errorDOM.style.maxHeight = (currentSize * ((100 - i) / 100)) + "px";
+                //             errorDOM.style.padding = ((100 - i) / 100) + "em";
+                //         }, ERROR_ANIMATION_DURATION / 100 * i);
+                //     }
+                // }, ERROR_TIMING);
             }
         }
     }

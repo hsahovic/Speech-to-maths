@@ -4,7 +4,7 @@
 // Comment supprimer un saut de ligne
 // meilleure gestion de l'audio continu
 
-AJAX_DELAY = 1; // Delay in seconds
+const AJAX_DELAY = 1; // Delay in seconds
 
 function insertAtCursor(value, field = document.getElementsByName('content')[0]) {
     // Permet de remplacer la selection par ou inserer au curseur, ou le cas échéant, à la fin de contenu, value
