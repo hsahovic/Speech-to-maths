@@ -39,32 +39,6 @@ function manageContentChange(ajaxDelay = .5) {
     }
 }
 
-
-function manageQueueButtonsStyle() {
-    // Gestion de l'apparence des boutons en avant / en arrière
-    if (contentStateManager.isOnLastState()) {
-        if (document.getElementById("moveForward").className.search(" disabled") == -1) {
-            document.getElementById("moveForward").className += " disabled";
-            document.getElementById("moveForward").disabled = true;
-        }
-    }
-    else {
-        document.getElementById("moveForward").className = document.getElementById("moveForward").className.replace(" disabled", "");
-        document.getElementById("moveForward").disabled = false;
-    }
-    if (contentStateManager.isOnFirstState()) {
-        if (document.getElementById("moveBackward").className.search(" disabled") == -1) {
-            document.getElementById("moveBackward").className += " disabled";
-            document.getElementById("moveBackward").disabled = true;
-        }
-    }
-    else {
-        document.getElementById("moveBackward").className = document.getElementById("moveBackward").className.replace(" disabled", "");
-        document.getElementById("moveBackward").disabled = false;
-    }
-}
-
-
 // On gère les raccourcis clavier
 window.addEventListener("keydown", function (event) {
     if (event.defaultPrevented) {
@@ -269,5 +243,3 @@ function getPDF(id) {
 
 var changeHappened = false;
 // Reactivate this
-// var contentStateManager = new ContentStateManager(document.getElementsByName('content')[0]);
-// manageQueueButtonsStyle();

@@ -39,25 +39,25 @@
 	 --><button id = "edition-code" class = "text-editor-button selected-mode" title = "Mode d'édition : code LaTeX"> Code &nbsp;<i class="fas fa-code" aria-hidden="true"></i></button>
 	</div><!--	
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)" onclick="contentStateManager.moveBackward();manageQueueButtonsStyle();"><i class="fas fa-undo" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)" onclick="contentStateManager.moveForward();manageQueueButtonsStyle();"><i class="fas fa-redo" aria-hidden="true"></i></button>
+		<button class = "text-editor-button" id = "moveBackward" title = "Aller en arrière (Ctrl + Z)"><i class="fas fa-undo" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button" id = "moveForward" title = "Aller en avant (Ctrl + Y)"><i class="fas fa-redo" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fas fa-align-left" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fas fa-align-center" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fas fa-align-right" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Justifier le texte (Ctrl + J)" onclick="addEnvironnement('work in progress');"><i class="fas fa-align-justify" aria-hidden="true"></i></button>
+		<button class = "text-editor-button disabled" title = "Aligner à gauche (Ctrl + L)" onclick="addEnvironnement('flushleft');"><i class="fas fa-align-left" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button disabled" title = "Aligner au centre (Ctrl + E)" onclick="addEnvironnement('center');"><i class="fas fa-align-center" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button disabled" title = "Aligner à droite (Ctrl + R)" onclick="addEnvironnement('flushright');"><i class="fas fa-align-right" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button disabled" title = "Justifier le texte (Ctrl + J)" onclick="addEnvironnement('work in progress');"><i class="fas fa-align-justify" aria-hidden="true"></i></button>
    </div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Exposant (Ctrl + ↑)" onclick="sciptElement('exponent');"><i class="fas fa-superscript" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Indice (Ctrl + ↓)" onclick="sciptElement('subscript');"><i class="fas fa-subscript" aria-hidden="true"></i></button>
+		<button class = "text-editor-button disabled" title = "Exposant (Ctrl + ↑)" onclick="sciptElement('exponent');"><i class="fas fa-superscript" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button disabled" title = "Indice (Ctrl + ↓)" onclick="sciptElement('subscript');"><i class="fas fa-subscript" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Liste (puces)" onclick="listButton('unordered');"><i class="fas fa-list-ul" aria-hidden="true"></i></button><!--
-	 --><button class = "text-editor-button" title = "Liste (ordonnée)" onclick="listButton('ordered');"><i class="fas fa-list-ol" aria-hidden="true"></i></button>
+		<button class = "text-editor-button disabled" title = "Liste (puces)" onclick="listButton('unordered');"><i class="fas fa-list-ul" aria-hidden="true"></i></button><!--
+	 --><button class = "text-editor-button disabled" title = "Liste (ordonnée)" onclick="listButton('ordered');"><i class="fas fa-list-ol" aria-hidden="true"></i></button>
    </div><!--
  --><div class = "text-editor-button-group">
-		<button class = "text-editor-button" title = "Insérer un tableau"><i class="fas fa-table" aria-hidden="true"></i></button>
+		<button class = "text-editor-button disabled" title = "Insérer un tableau"><i class="fas fa-table" aria-hidden="true"></i></button>
 	</div><!--
  --><div class = "text-editor-button-group">
 		<button class = "text-editor-button" title = "Regénérer le pdf" onclick = "getPDF('pdfframe');">Régénérer le pdf &nbsp;<i class="fas fa-file-pdf"></i></button>
@@ -71,9 +71,6 @@
 
 <span class = "grid">
 	<div id = "latext-area" class = "latext-area"></div>
-	<!-- <div class = "text-container">
-			<textarea name = "content" id="textArea" autofocus oninput = "setTimeout(manageContentChange, 0)">{{ doc.content }}</textarea>
-	</div> -->
 	<div>
 		<div class = "error-displayer" id = "pdfError"></div>
 		{% if doc.pdf %}
@@ -140,7 +137,6 @@ MathJax.Hub.Config({
 	setTimeout(() => {
 		getPDF('pdfframe');
 	},0);
-	
 	window.addEventListener("resize", muttedResizeIframe, false);
 </script>
 

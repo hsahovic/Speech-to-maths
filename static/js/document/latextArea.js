@@ -37,6 +37,7 @@ class LatextArea {
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
         this.editionMode = 2;
+        this.contentStateManager = new ContentStateManager(this.updateContent.bind(this), 100, this.contentText);
         // Edition mode 1 is preview mode
         //              2 is LaTeX code mode
         this.elements = [];
@@ -46,6 +47,8 @@ class LatextArea {
         this.parse();
         this.generateDOM();
 
+        document.getElementById("moveBackward").onclick = () => {this.contentStateManager.moveBackward();};
+        document.getElementById("moveForward").onclick = () => {this.contentStateManager.moveForward();};
         // event bindings
         document.getElementById("start_rec").onclick = () => {
             sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
@@ -64,6 +67,7 @@ class LatextArea {
         // gestion du changement de contenu
         this.changed = false;
         this.ajaxDelay = AJAX_DELAY;
+        
     }
 
     get activeElement() {
@@ -185,7 +189,7 @@ class LatextArea {
                 this.changed = false;
 
                 communicationIndicatorManager.addRequest();
-                // contentStateManager.newState(data.newContent);
+                this.contentStateManager.newState(this.text);
                 data = JSON.stringify(data);
                 formData.append("data", data);
                 request.send(formData);
@@ -336,6 +340,12 @@ class LatextArea {
             this.parse();
             this.generateDOM();
         }
+    }
+
+    updateContent (newContent) {
+        this.textContent = newContent;
+        this.parse();
+        this.generateDOM();
     }
 
 }
