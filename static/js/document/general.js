@@ -151,14 +151,14 @@ function getHelp(id) {
     request.send(formData);
     request.onreadystatechange = function () {
         if (request.readyState == 4 && request.status == 200) {
-            let result = JSON.parse(request.responseText);
+            let response = JSON.parse(request.responseText);
             let DOM = document.createElement("div");
             
             oldDOM = document.getElementById("help-text-responses");
             if (oldDOM != null)
                 document.getElementsByTagName('body')[0].removeChild(document.getElementById("help-text-responses"));
             
-                communicationIndicatorManager.endRequest();
+            communicationIndicatorManager.endRequest();
 
             DOM.id = "help-text-responses";
             DOM.style.position = "absolute";
@@ -178,7 +178,7 @@ function getHelp(id) {
                 }
             };
 
-            for (element of result) {
+            for (element of response) {
                 let div = document.createElement("div");
 
                 let divHeader = document.createElement("h1");
@@ -212,6 +212,28 @@ function getHelp(id) {
             document.getElementsByTagName('body')[0].append(DOM);
             MathJax.Hub.Queue(["Typeset",MathJax.Hub,"help-text-responses"]);
             setTimeout(setPositions,0);
+        }
+    }
+}
+
+function getPDF(id) {
+    let parent = document.getElementById(id);
+    let formData = new FormData;
+    let request = new XMLHttpRequest();
+
+    request.open("POST", regeneratePDFLink);
+    request.setRequestHeader("X-CSRFToken", document.querySelector("[name=csrfmiddlewaretoken]").value);
+    communicationIndicatorManager.addRequest();
+    request.send(formData);
+    request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+            let response = JSON.parse(request.responseText);
+            communicationIndicatorManager.endRequest();
+            console.log(response);
+            if (response.toDo == ("newLink")){
+                parent.src = response.pdfUrl;
+                return;
+            }
         }
     }
 }

@@ -31,6 +31,7 @@ urlpatterns = [
 
     url(r'^ajax/documents-search/?$',
         views.documents_search, name='documents_search'),
+    url(r"""^ajax/regenerate-pdf/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})/?$""", views.regenerate_pdf, name='regenerate_pdf'),
     url(r'^ajax/save-document/?$', views.save_document, name='save_document'),
 
     url(r'^ajax/change-email/?$', views.change_email, name='change_email'),

@@ -60,3 +60,5 @@ media/training_data/s2m.fileids
 *.tex
 *.json
 *.yml
+*.pyc
+*.pyc

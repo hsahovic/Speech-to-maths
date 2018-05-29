@@ -293,8 +293,8 @@ input {
     resize: none;
     border : 0;
     font-family: 'Lato', sans-serif;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    /* overflow-x: hidden; */
+    /* overflow-y: hidden; */
     white-space: pre;
 }
 
@@ -357,6 +357,9 @@ input {
 .selected-mode {
     background-color: #09f;
     color : white;
+}
+.selected-mode:hover {
+    color : #09f;
 }
 
 .latext-area .documentTextAreaEditor {

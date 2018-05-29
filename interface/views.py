@@ -178,14 +178,18 @@ def documents_search(request, context_length=50):
 
 
 @login_required
-def regenerate_pdf(request, adress):
-    doc = get_document(request, address=adress)
+def regenerate_pdf(request, address):
+    doc = get_document(request, address=address)
     try:
         doc.generate_pdf()
+        doc.save()
+        return HttpResponse(json.dumps({"toDo" : "newLink", "pdfUrl": doc.pdf.url}))
     except Exception as exc:
         print("Something did't work with the generation of the PDF file ; check out the 'save_document' function in interface/views.py")
-    doc.save()
-    return HttpResponse(json.dumps({"pdf_url": doc.pdf.url}))
+        # This line can be used to test that the pdf is indeed changing if the pdf generator does not work
+        # return HttpResponse(json.dumps({"toDo" : "newLink", "pdfUrl": "http://lesmaterialistes.com/files/pdf/classiques/machiavel-le-prince.pdf"})) 
+        return HttpResponse(json.dumps({"toDo" : "displayError", "error": "The generation didn't work. The server might not be able to generate PDFs right now, or maybe there's an issue with your file."}))
+
 
 @login_required
 def save_document(request):

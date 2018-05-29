@@ -36,7 +36,7 @@ class LatextArea {
         // initialisation
         this.parent = document.getElementById(targetId);
         this.textContent = document.getElementById(sourceId).textContent;
-        this.editionMode = 1;
+        this.editionMode = 2;
         // Edition mode 1 is preview mode
         //              2 is LaTeX code mode
         this.elements = [];
@@ -575,6 +575,10 @@ class AudioResponseElement extends LatextAreaElement {
             sendContinuousAudio(500, voiceAnalysisLink, true, this.latextArea.audioResponseManager);
         };
         document.getElementById("start_rec").style.display = "inline-block";
+        // This is here for debut purposes
+        document.getElementById("start_rec").onclick = () => {
+            sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
+        };
     }
 
     destroy() {
@@ -864,8 +868,8 @@ class TextElement extends LatextAreaElement {
             var curseur = this.curseur;
         }
         let newElement = new InputElement(this.latextArea, this.textContent, curseur);
+	this.latextArea.replaceElement(this, newElement);
         newElement.DOM.setSelectionRange(curseur, curseur);
-        this.latextArea.replaceElement(this, newElement);
     }
 
 }
