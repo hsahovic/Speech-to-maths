@@ -496,6 +496,7 @@ class LatextAreaElement {
     }
 
     setSize() {
+        this.DOM.style.height = '1px';
         this.DOM.style.height = this.DOM.scrollHeight + "px";
         this.DOM.style.width = '1px';
         this.DOM.style.width = this.DOM.scrollWidth + "px";
