@@ -391,3 +391,8 @@ input {
     color :white;
     background-color : #f44;
 }
+
+#help-text-responses h1:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

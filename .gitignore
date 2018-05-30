@@ -62,3 +62,5 @@ media/training_data/s2m.fileids
 *.yml
 *.pyc
 *.pyc
+db.sqlite3
+db.sqlite3

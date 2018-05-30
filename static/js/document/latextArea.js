@@ -47,10 +47,10 @@ class LatextArea {
         this.parse();
         this.generateDOM();
 
-        document.getElementById("moveBackward").onclick = () => {this.contentStateManager.moveBackward();};
-        document.getElementById("moveForward").onclick = () => {this.contentStateManager.moveForward();};
+        document.getElementById("moveBackward").onclick = () => { this.contentStateManager.moveBackward(); };
+        document.getElementById("moveForward").onclick = () => { this.contentStateManager.moveForward(); };
         // event bindings
-        
+
         this.rebindAudioResponse();
 
         document.getElementById("edition-preview").onclick = () => {
@@ -67,13 +67,6 @@ class LatextArea {
         // gestion du changement de contenu
         this.changed = false;
         this.ajaxDelay = AJAX_DELAY;
-        
-    }
-
-    rebindAudioResponse() {
-        document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, this.audioResponseManager.bind(this));
-        };
     }
 
     get activeElement() {
@@ -128,7 +121,7 @@ class LatextArea {
             }
             else if (this.choiceHappened == false)
                 this.audioResponseElement.updateChoices(response.content, response.token);
-            else 
+            else
                 this.choiceHappened = false;
         }
     }
@@ -175,6 +168,12 @@ class LatextArea {
                 this.manageChange();
             };
             this.parent.appendChild(this.DOM);
+        }
+    }
+
+    insert(content) {
+        if (this.editionMode == 2) {
+            insertAtCursor(content, this.DOM);
         }
     }
 
@@ -255,14 +254,14 @@ class LatextArea {
         this.elements = [];
 
         let patt = /(\$\$[^\$]*\$\$|\$[^\$]*\$)/g;
-        
+
         if (this.editionMode == 1) {
             let contentByLine = this.textContent.split(/\n/);
             for (let line of contentByLine) {
                 let contentLine = line.split(/\{breaK\}/);
                 let textElement;
                 let textLine = [];
-                
+
                 line = line.replace(patt, "{breaK}$&{breaK}");
 
                 for (let element of contentLine) {
@@ -284,6 +283,12 @@ class LatextArea {
         else if (this.editionMode == 2) {
             return;
         }
+    }
+
+    rebindAudioResponse() {
+        document.getElementById("start_rec").onclick = () => {
+            sendContinuousAudio(500, voiceAnalysisLink, true, (el) => { latextArea.audioResponseManager(el); });
+        };
     }
 
     replaceElement(elementToReplace, newElement = undefined) {
@@ -339,6 +344,10 @@ class LatextArea {
         this.generateDOM();
     }
 
+    stopDisplayingAudioChoices() {
+        this.audioResponseElement.destroy();
+    }
+
     switchEditionMode(mode) {
         if (this.editionMode != mode) {
             this.textContent = this.text;
@@ -348,7 +357,7 @@ class LatextArea {
         }
     }
 
-    updateContent (newContent) {
+    updateContent(newContent) {
         this.textContent = newContent;
         this.parse();
         this.generateDOM();
@@ -538,9 +547,21 @@ class AudioResponseElement extends LatextAreaElement {
         let DOM = document.createElement('div');
         DOM.className = "audio-choice";
         for (let i = 0; i < this.choices.length && i < this.maxElements; i++) {
+
             let span = document.createElement('span');
             span.onclick = () => {
                 this.choose(this.choices[i]);
+
+                this.latextArea.choiceHappened = true;
+                // document.getElementById("start_rec").onclick = () => {
+                //     sendContinuousAudio(500, voiceAnalysisLink, true, (el) => {
+                //         // console.log("test");
+                //         // console.log(this);
+                //         // console.log(this.latextArea);
+                //         this.latextArea.audioResponseManager(el)});
+                // };
+                this.latextArea.rebindAudioResponse();
+                document.getElementById("start_rec").style.display = "inline-block";
 
                 let cSRFToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
                 let formData = new FormData;
@@ -580,27 +601,16 @@ class AudioResponseElement extends LatextAreaElement {
     }
 
     choose(choice) {
-        if (this.latextArea.editionMode == 1) { 
+        if (this.latextArea.editionMode == 1) {
             this.latextArea.activeElement.insert(choice);
         }
         if (this.latextArea.editionMode == 2) {
             insertAtCursor(choice, this.latextArea.DOM);
         }
-
-        this.latextArea.choiceHappened = true;
-        document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, this.latextArea.audioResponseManager);
-        };
-        document.getElementById("start_rec").style.display = "inline-block";
-        // This is here for debut purposes
-        document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, this.latextArea.rebindAudioResponse);
-        };
     }
 
     destroy() {
         this.DOM.remove();
-        this.latextArea.audioResponseManager = undefined;
         this.latextArea.killNextAudio = true;
         document.getElementById("stop_rec").click();
     }
@@ -885,7 +895,7 @@ class TextElement extends LatextAreaElement {
             var curseur = this.curseur;
         }
         let newElement = new InputElement(this.latextArea, this.textContent, curseur);
-	this.latextArea.replaceElement(this, newElement);
+        this.latextArea.replaceElement(this, newElement);
         newElement.DOM.setSelectionRange(curseur, curseur);
     }
 

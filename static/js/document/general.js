@@ -154,7 +154,7 @@ function getHelp(id) {
                 }
             };
 
-            for (element of response) {
+            for (let element of response) {
                 let div = document.createElement("div");
 
                 let divHeader = document.createElement("h1");
@@ -162,6 +162,10 @@ function getHelp(id) {
                 let divSpeechExample = document.createElement("div");
                 let divSpeech = document.createElement("div");
                 let divCodeExample = document.createElement("div");
+
+                divHeader.onclick = () => {
+                    latextArea.insert(element["example-latex"]);
+                };
 
                 div.className = "help-text-container";
                 divHeader.className = "help-text-header";

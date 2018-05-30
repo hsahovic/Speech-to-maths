@@ -1,10 +1,10 @@
 function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 	if (navigator.mediaDevices) {
-		var mediaRecorder = undefined; // TEST DEBUG ?
+		var mediaRecorder = undefined;
 		navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
 			var audioCtx = new AudioContext();
 			var dest = audioCtx.createMediaStreamDestination();
-			mediaRecorder = new MediaRecorder(dest.stream); // TEST DEBUG ?
+			mediaRecorder = new MediaRecorder(dest.stream);
 			var source = audioCtx.createMediaStreamSource(stream);
 			var manualStop = false;
 
@@ -13,12 +13,19 @@ function useAudioBlobs(blobManager, manageButtons = false, maxLength = 0) {
 				document.getElementById("start_rec").style.display = "none";
 				document.getElementById("stop_rec").style.display = 'inline-block';
 			}
-
+			
 			// Permet d'arrêter l'enregistrement par boutton
 			document.getElementById("stop_rec").onclick = function () {
+				try {
+					latextArea.stopDisplayingAudioChoices();
+				}
+				catch {}
 				mediaRecorder.stop();
 				manualStop = true;
-				document.getElementById("start_rec").style.display = "inline-block";
+				if (manageButtons) {
+					document.getElementById("start_rec").style.display = "inline-block";
+					document.getElementById("stop_rec").style.display = 'none';
+				}
 			};
 
 			// On permet la concatenation des données audio
@@ -106,8 +113,6 @@ function sendContinuousAudio(delay, link, manageButtons, responseManager) {
 		request.setRequestHeader("X-CSRFToken", cSRFToken);
 	        formData.append("file", blob);
 	        formData.append('document', docID);
-		//try {formData.append('document', docID);} // la vérité c'est vraiment sale de faire ça mais j'ai la flemme de réécrire cette fonction. Ce bout de code est à destinartion de son execution dans document lors de l'envoie de données audio pour accompagner le signal de l'indication du document source
-		//catch {}
 		// On affiche le fait que l'on communique avec le serveur et on lance la requête
 		communicationIndicatorManager.addRequest();
 		request.send(formData);
@@ -116,14 +121,10 @@ function sendContinuousAudio(delay, link, manageButtons, responseManager) {
 		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
 				communicationIndicatorManager.endRequest();
-				if (manageButtons) {
-					// document.getElementById("start_rec").style.display = "inline-block";
-				}
 				let response = JSON.parse(request.responseText);
 				responseManager(response);
 			}
 		};
-
 	}
 	, manageButtons, delay);
 }
