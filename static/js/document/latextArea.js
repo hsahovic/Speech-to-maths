@@ -51,7 +51,10 @@ class LatextArea {
         document.getElementById("moveForward").onclick = () => { this.contentStateManager.moveForward(); };
         // event bindings
 
-        this.rebindAudioResponse();
+        // this.rebindAudioResponse();
+        document.getElementById("start_rec").onclick = () => {
+            sendContinuousAudio(500, voiceAnalysisLink, true, (el) => { latextArea.audioResponseManager(el); });
+        };
 
         document.getElementById("edition-preview").onclick = () => {
             this.switchEditionMode(1);
@@ -285,11 +288,11 @@ class LatextArea {
         }
     }
 
-    rebindAudioResponse() {
-        document.getElementById("start_rec").onclick = () => {
-            sendContinuousAudio(500, voiceAnalysisLink, true, (el) => { latextArea.audioResponseManager(el); });
-        };
-    }
+    // rebindAudioResponse() {
+    //     document.getElementById("start_rec").onclick = () => {
+    //         sendContinuousAudio(500, voiceAnalysisLink, true, (el) => { latextArea.audioResponseManager(el); });
+    //     };
+    // }
 
     replaceElement(elementToReplace, newElement = undefined) {
         /*
@@ -560,7 +563,10 @@ class AudioResponseElement extends LatextAreaElement {
                 //         // console.log(this.latextArea);
                 //         this.latextArea.audioResponseManager(el)});
                 // };
-                this.latextArea.rebindAudioResponse();
+                // this.latextArea.rebindAudioResponse();
+                document.getElementById("start_rec").onclick = () => {
+                    sendContinuousAudio(500, voiceAnalysisLink, true, (el) => { latextArea.audioResponseManager(el); });
+                };
                 document.getElementById("start_rec").style.display = "inline-block";
 
                 let cSRFToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
