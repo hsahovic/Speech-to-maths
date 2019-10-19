@@ -4,10 +4,17 @@ Speech-recognition for Latex generation project.
 
 Second year project at [Ecole Polytechnique](https://www.polytechnique.edu/fr). This repo contains:
 
-- A Django web-server with a working interface, including document and user management
-- A speech recognition module using [CMUSphinx](https://cmusphinx.github.io/)
-- A custom implementation of the CKY algorithm for parsing mathematical formulae
+- A Django web-server with a working interface, including document, user management and audio communication
+
+![User interface](https://lh3.googleusercontent.com/Zf4rV1Vzp_o6Tvx1rOqkw1Uo20FV0ppzOWunrNkNBRPlWz9qGNSPJzxrQDOCw390ZtSddcmePwEnvOdTIUwupx0JsTWjvXkIDx-kE-OkaMNUhF4zdvbBVKci5RIx3_AJ_IJ9HUnB)
+
+- A speech recognition module using [CMUSphinx](https://cmusphinx.github.io/), with a custom grammar
+- A custom implementation of the Myers algorithm for parsing mathematical formulae
+
+![Example parse tree](https://lh6.googleusercontent.com/7rBHwPL0MU5rDrxCHdrMP_czrqxA_UbWV5_ac2VoAVrM6LW8qg4xHO0hkLBxR2C999B9MDxvOXvHRD4jBcL7-ZYRSQeJzHTiY_2z2c8z6bwH0gNsaju31EKCcR17Q7KJ5Ia4LcSl)
+
 - ML wrapper for formula (tree) choice based on multiple heuristics
+  - Combines global model and custom models _per document_ and _per user_
 
 [Link to the final presentation](https://docs.google.com/presentation/d/e/2PACX-1vTiLNwtbUx39xA1unaswkmVvFD2bo6jYkQH8zcLtenalXyswm6lKN0qxGdOzfX24FhMZedREFTg3RXz/pub?start=false&loop=false&delayms=3000) (in French).
 
